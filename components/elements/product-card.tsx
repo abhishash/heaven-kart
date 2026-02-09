@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Heart, Star } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
+import { ProductTypes } from "@/lib/types";
 
 interface ProductCardProps {
   id: string;
@@ -19,29 +20,40 @@ interface ProductCardProps {
 }
 
 export function ProductCard({
-  id,
+  url,
+  name,
   image,
-  title,
-  description,
   price,
-  originalPrice,
-  quantity,
-  category,
-  rating,
-  reviewCount,
-}: ProductCardProps) {
+  ac_price,
+  stock,
+  in_stock,
+  summer_id,
+  slug,
+  discount,
+  brand
+}: ProductTypes) {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const discountPercent = Math.round(
-    ((originalPrice - price) / originalPrice) * 100,
+    ((parseFloat(ac_price) - parseFloat(price)) / parseFloat(ac_price)) * 100,
   );
 
+  const isOutOfStock = Number(in_stock) === 0;
   return (
-    <div className="flex-shrink-0 w-40 bg-white border border-slate-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+    <div
+      className={`
+    flex-shrink-0 w-56 bg-white border border-slate-200 rounded-lg overflow-hidden
+    transition-all
+    ${isOutOfStock
+          ? "opacity-60 cursor-not-allowed pointer-events-none"
+          : "hover:shadow-md"
+        }
+  `}
+    >
       {/* Image Container */}
-      <div className="relative bg-slate-50 h-40 flex items-center justify-center overflow-hidden">
+      <div className="relative bg-slate-50 h-60 flex items-center justify-center overflow-hidden">
         <Image
-          src={image || "/placeholder.svg"}
-          alt={title}
+          src={`${process.env.ASSET_ENDPOINS}${image}` || "/placeholder.svg"}
+          alt={name}
           width={160}
           height={160}
           className="object-contain w-full h-full p-2"
@@ -67,10 +79,16 @@ export function ProductCard({
           />
         </button>
 
-        {/* Add Button */}
-        <button className="absolute bottom-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full px-3 py-1 text-xs font-bold transition-colors">
-          ADD
-        </button>
+        {isOutOfStock ? (
+          <div className="absolute bottom-2 right-2 bg-red-500/90 text-white rounded-full px-3 py-1 text-xs font-bold">
+            OUT OF STOCK
+          </div>
+        ) : (
+          <button className="absolute bottom-2 cursor-pointer right-2 bg-red-500 hover:bg-red-600 text-white rounded-full px-3 py-1 text-xs font-bold transition-colors">
+            ADD
+          </button>
+        )}
+
       </div>
 
       {/* Content */}
@@ -81,30 +99,27 @@ export function ProductCard({
             ₹{price}
           </span>
           <span className="text-xs text-slate-500 line-through">
-            ₹{originalPrice}
+            ₹{ac_price}
           </span>
         </div>
 
         {/* Title */}
-        <Link href={"product-details"}>
+        <Link href={`product/${url}`}>
           <h3 className="text-xs font-bold text-slate-900 line-clamp-2 mb-1">
-            {title}
+            {name}
           </h3>
 
           {/* Description */}
           <p className="text-xs text-slate-600 line-clamp-1 mb-2">
-            {description}
+            {name}
           </p>
         </Link>
 
         {/* Quantity */}
-        <p className="text-xs text-slate-600 mb-2">{quantity}</p>
-
-        {/* Category */}
-        <p className="text-xs text-green-600 font-semibold mb-2">{category}</p>
+        <p className="text-xs text-slate-600 mb-2">{stock ?? 0}  Quantity</p>
 
         {/* Rating */}
-        <div className="flex items-center gap-1">
+        {/* <div className="flex items-center gap-1">
           <Star size={12} className="fill-green-600 text-green-600" />
           <span className="text-xs font-bold text-slate-900">
             {rating}
@@ -113,7 +128,7 @@ export function ProductCard({
               ({reviewCount.toLocaleString()})
             </span>
           </span>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { ProductCard } from "./product-card";
 import useEmblaCarousel from "embla-carousel-react";
+import { ProductTypes } from "@/lib/types";
 
 export interface Product {
   id: string;
@@ -20,7 +21,7 @@ export interface Product {
 
 interface ProductCarouselProps {
   title: string;
-  products: Product[];
+  products: ProductTypes[];
 }
 
 export function ProductCarousel({ title, products }: ProductCarouselProps) {
@@ -48,8 +49,9 @@ export function ProductCarousel({ title, products }: ProductCarouselProps) {
     emblaApi.on("select", onSelect);
   }, [emblaApi, onSelect]);
 
+
   return (
-    <section className="py-8">
+    <section className="col-span-9">
       {/* Header */}
       <div className="flex items-center justify-between mb-6 px-0">
         <h2 className="text-2xl font-bold text-slate-900">{title}</h2>
@@ -61,7 +63,6 @@ export function ProductCarousel({ title, products }: ProductCarouselProps) {
           <ChevronRight size={16} />
         </a>
       </div>
-
       {/* Carousel Container */}
       <div className="relative">
         {/* Left Navigation Button */}
@@ -72,12 +73,11 @@ export function ProductCarousel({ title, products }: ProductCarouselProps) {
         >
           <ChevronLeft size={20} className="text-slate-900" />
         </button>
-
         {/* Carousel */}
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex px-4 md:px-6">
-            {products.map((product) => (
-              <div key={product.id} className="flex-shrink-0 mr-4">
+            {products?.map((product) => (
+              <div key={product.url} className="flex-shrink-0 mr-4">
                 <ProductCard {...product} />
               </div>
             ))}

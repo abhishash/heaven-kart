@@ -1,288 +1,111 @@
+import { BrandLogoInfinite } from "@/components/elements/brand-logo-infinite";
+import { CategoriesCarousel } from "@/components/elements/categories-carousel";
+import { PermotionBanner } from "@/components/elements/permotion-banner";
 import { ProductCarousel } from "@/components/elements/product-carousel";
+import ImageCarousel from "@/components/homepage/banner/image-carousel";
+import { fetchHandler, methods } from "@/lib/api/auth";
+import { getHomeData } from "@/lib/api/home";
+import { HOME_CATEGORIES, HOMEPAGE_PRODUCTS, HOMEPAGE_SLIDERS, PROMATIONS } from "@/lib/constants";
+import { getQueryClient } from "@/lib/query-client";
+import { CategoryResponse, HomePageDataTypes, PermotionsTypes, ProductsDataTypes } from "@/lib/types";
+import Image from "next/image";
 
-const popularSearches = {
-  products: [
-    "Avocado",
-    "Strawberry",
-    "Pomegranate",
-    "Beetroot",
-    "Ash gourd",
-    "Bottle gourd",
-    "Lady finger",
-    "Potato",
-    "Lemon",
-    "Dalchini",
-    "Fennel seeds",
-    "Blueberry",
-    "Papaya",
-    "Jeera",
-    "Mushroom",
-    "Lettuce",
-  ],
-  brands: [
-    "Yakult",
-    "My Muse",
-    "Aashirvaad Atta",
-    "Too Yumm",
-    "Lays",
-    "Figaro Olive Oil",
-    "Nandini Milk",
-    "Amul",
-    "Mother Dairy Near Me",
-    "Fortune Oil",
-    "Superyou",
-    "Durex Condoms",
-    "Ferns and Petals",
-  ],
-  categories: [
-    "Grocery",
-    "Cigarettes",
-    "Chips",
-    "Curd",
-    "Hukka flavour",
-    "Paan shop near me",
-    "Eggs price",
-    "Cheese slice",
-    "Fresh fruits",
-    "Fresh vegetables",
-    "Refined oil",
-    "Butter price",
-    "Paneer price",
-  ],
-};
+export default async function Home() {
+  const queryClient = getQueryClient();
 
-const categories = [
-  [
-    "Fruits & Vegetables",
-    "Baby Food",
-    "Breakfast & Sauces",
-    "Cleaning Essentials",
-    "Homegrown Brands",
-  ],
-  [
-    "Atta, Rice, Oil & Dals",
-    "Dairy, Bread & Eggs",
-    "Tea, Coffee & More",
-    "Home Needs",
-    "Paan Corner",
-  ],
-  [
-    "Masala & Dry Fruits",
-    "Cold Drinks & Juices",
-    "Biscuits",
-    "Electricals & Accessories",
-  ],
-  ["Sweet Cravings", "Munchies", "Makeup & Beauty", "Hygiene & Grooming"],
-  [
-    "Frozen Food & Ice Creams",
-    "Meats, Fish & Eggs",
-    "Bath & Body",
-    "Health & Baby Care",
-  ],
-];
+  const homePageBanners = await fetchHandler<{
+    data: HomePageDataTypes[]
+  }>({
+    ...HOMEPAGE_SLIDERS as {
+      endpoint: string;
+      method: methods,
+    }
+  });
 
-export const laundryProducts = [
-  {
-    id: "1",
-    image: "/product-1.png",
-    title: "Rin Matic Top Load Detergent Liquid | Pouch",
-    description: "Fresh & Fragrant",
-    price: 181,
-    originalPrice: 249,
-    quantity: "1 pack (2 L)",
-    category: "Fresh & Fragrant",
-    rating: 4.8,
-    reviewCount: 29800,
-  },
-  {
-    id: "2",
-    image: "/product-2.png",
-    title: "Surf Excel Matic Top Load Detergent Liquid Refill | Tough Dried",
-    description: "Stain Removal",
-    price: 262,
-    originalPrice: 329,
-    quantity: "1 pack (2 L)",
-    category: "Stain Removal",
-    rating: 4.8,
-    reviewCount: 10600,
-  },
-  {
-    id: "3",
-    image: "/product-3.png",
-    title: "Surf Excel Matic Front Load Detergent Liquid Refill | Tough Dried",
-    description: "Stain Removal",
-    price: 296,
-    originalPrice: 374,
-    quantity: "1 pack (2 L)",
-    category: "Stain Removal",
-    rating: 4.7,
-    reviewCount: 6600,
-  },
-  {
-    id: "4",
-    image: "/product-4.png",
-    title: "Surf Excel Matic Front Load Detergent Liquid | Pouch",
-    description: "Stain Removal",
-    price: 610,
-    originalPrice: 858,
-    quantity: "1 pack (5 L)",
-    category: "Stain Removal",
-    rating: 4.9,
-    reviewCount: 3800,
-  },
-  {
-    id: "5",
-    image: "/product-5.png",
-    title: "Ariel Power Gel Liquid Detergent for Top load washing machine",
-    description: "Fresh & Fragrant",
-    price: 291,
-    originalPrice: 335,
-    quantity: "1 pack (2 kg)",
-    category: "Fresh & Fragrant",
-    rating: 4.8,
-    reviewCount: 8100,
-  },
-  {
-    id: "6",
-    image: "/product-6.png",
-    title: "Ariel Power Gel Liquid Detergent for Front load washing machine",
-    description: "Stain Removal",
-    price: 330,
-    originalPrice: 389,
-    quantity: "1 pack (2 kg)",
-    category: "Stain Removal",
-    rating: 5.0,
-    reviewCount: 4840,
-  },
-  {
-    id: "7",
-    image: "/product-7.png",
-    title: "Surf Excel Matic Top Load Detergent Liquid Refill | Tough Dried",
-    description: "Stain Removal",
-    price: 192,
-    originalPrice: 225,
-    quantity: "1 pc (1 L)",
-    category: "Stain Removal",
-    rating: 4.7,
-    reviewCount: 10400,
-  },
-  {
-    id: "8",
-    image: "/product-8.png",
-    title: "Rin Matic Front Load Detergent Liquid | Pouch",
-    description: "Fresh & Fragrant",
-    price: 218,
-    originalPrice: 285,
-    quantity: "1 pack (2 L)",
-    category: "Fresh & Fragrant",
-    rating: 4.7,
-    reviewCount: 5500,
-  },
-  {
-    id: "5",
-    image: "/product-5.png",
-    title: "Ariel Power Gel Liquid Detergent for Top load washing machine",
-    description: "Fresh & Fragrant",
-    price: 291,
-    originalPrice: 335,
-    quantity: "1 pack (2 kg)",
-    category: "Fresh & Fragrant",
-    rating: 4.8,
-    reviewCount: 8100,
-  },
-  {
-    id: "6",
-    image: "/product-6.png",
-    title: "Ariel Power Gel Liquid Detergent for Front load washing machine",
-    description: "Stain Removal",
-    price: 330,
-    originalPrice: 389,
-    quantity: "1 pack (2 kg)",
-    category: "Stain Removal",
-    rating: 5.0,
-    reviewCount: 4840,
-  },
-  {
-    id: "7",
-    image: "/product-7.png",
-    title: "Surf Excel Matic Top Load Detergent Liquid Refill | Tough Dried",
-    description: "Stain Removal",
-    price: 192,
-    originalPrice: 225,
-    quantity: "1 pc (1 L)",
-    category: "Stain Removal",
-    rating: 4.7,
-    reviewCount: 10400,
-  },
-  {
-    id: "8",
-    image: "/product-8.png",
-    title: "Rin Matic Front Load Detergent Liquid | Pouch",
-    description: "Fresh & Fragrant",
-    price: 218,
-    originalPrice: 285,
-    quantity: "1 pack (2 L)",
-    category: "Fresh & Fragrant",
-    rating: 4.7,
-    reviewCount: 5500,
-  },
-  {
-    id: "5",
-    image: "/product-5.png",
-    title: "Ariel Power Gel Liquid Detergent for Top load washing machine",
-    description: "Fresh & Fragrant",
-    price: 291,
-    originalPrice: 335,
-    quantity: "1 pack (2 kg)",
-    category: "Fresh & Fragrant",
-    rating: 4.8,
-    reviewCount: 8100,
-  },
-  {
-    id: "6",
-    image: "/product-6.png",
-    title: "Ariel Power Gel Liquid Detergent for Front load washing machine",
-    description: "Stain Removal",
-    price: 330,
-    originalPrice: 389,
-    quantity: "1 pack (2 kg)",
-    category: "Stain Removal",
-    rating: 5.0,
-    reviewCount: 4840,
-  },
-  {
-    id: "7",
-    image: "/product-7.png",
-    title: "Surf Excel Matic Top Load Detergent Liquid Refill | Tough Dried",
-    description: "Stain Removal",
-    price: 192,
-    originalPrice: 225,
-    quantity: "1 pc (1 L)",
-    category: "Stain Removal",
-    rating: 4.7,
-    reviewCount: 10400,
-  },
-  {
-    id: "8",
-    image: "/product-8.png",
-    title: "Rin Matic Front Load Detergent Liquid | Pouch",
-    description: "Fresh & Fragrant",
-    price: 218,
-    originalPrice: 285,
-    quantity: "1 pack (2 L)",
-    category: "Fresh & Fragrant",
-    rating: 4.7,
-    reviewCount: 5500,
-  },
-];
+  const { data: homePageBannerLists }: {
+    data: HomePageDataTypes[]
+  } = homePageBanners;
 
-export default function Home() {
+
+  const res = await fetchHandler<{
+    data: ProductsDataTypes[]
+  }>({
+    ...HOMEPAGE_PRODUCTS as {
+      endpoint: string;
+      method: methods,
+    }
+  });
+
+  const { data }: { data: ProductsDataTypes[] } = res;
+
+  const permotionsResponse = await fetchHandler<{
+    data: PermotionsTypes[]
+  }>({
+    ...PROMATIONS as {
+      endpoint: string;
+      method: methods,
+    }
+  });
+
+  const { data: permotions }: {
+    data: PermotionsTypes[]
+  } = permotionsResponse;
+
+
+  const categoriesResponse = await fetchHandler<{
+    data: CategoryResponse[]
+  }>({
+    ...HOME_CATEGORIES as {
+      endpoint: string;
+      method: methods,
+    }
+  });
+
+  const { data: categoryResponse }: CategoryResponse = categoriesResponse;
+
+  console.log(homePageBannerLists);
   return (
-    <div className="container mx-auto px-6 py-12">
+    <>
+      <ImageCarousel options={homePageBannerLists} />
+      <BrandLogoInfinite />
       {/* Product Carousel Section */}
-      <ProductCarousel title="Laundry Care" products={laundryProducts} />
-      <ProductCarousel title="Clothes" products={laundryProducts} />{" "}
-      <ProductCarousel title="Grocery" products={laundryProducts} />
-    </div>
+      {
+        data?.map((item, index) =>
+          <div key={index} className="grid grid-cols-12 gap-x-4 py-8">
+            <div className="col-span-3">
+              {/* Image Container */}
+              <div className="relative bg-slate-50 h-full flex items-center justify-center overflow-hidden">
+                <Image
+                  src={`${process.env.ASSET_ENDPOINS}${item?.banner}` || "/placeholder.svg"}
+                  alt={item?.name}
+                  width={160}
+                  height={160}
+                  className="object-fill rounded-xl w-full h-full p-2"
+                />
+              </div>
+            </div>
+            <ProductCarousel key={index} title={item?.name} products={item?.products} />
+          </div>
+        )
+      }
+
+      {/* Permotions products */}
+      <div className="flex flex-col gap-y-6 py-6" >
+        <h2 className="text-2xl font-bold text-slate-900">Permotions</h2>
+        <div className="grid grid-cols-3 gap-x-6">
+          {
+            permotions?.map((item, index) => <PermotionBanner key={index} values={item} />)
+          }
+        </div>
+      </div>
+
+      {/* Category sections */}
+
+      {
+        categoryResponse?.map((item, index) =>
+          <CategoriesCarousel key={index} title={item?.name} subCategories={item?.subCategories} />
+        )
+      }
+    </>
   );
 }

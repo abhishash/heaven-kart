@@ -71,7 +71,7 @@ function NavItem({ icon, label, href, active = false }: {
         <Link
             href={href}
             className={`w-full flex items-center cursor-pointer gap-3 px-4 py-3 rounded-lg transition-colors ${active
-                ? 'bg-green-50 text-primary font-medium'
+                ? 'bg-linear-to-r from-primary to-secondary text-black font-medium'
                 : 'text-gray-600 hover:bg-gray-50'
                 }`}
         >

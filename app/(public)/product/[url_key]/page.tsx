@@ -9,7 +9,7 @@ import ProductGallery from "@/components/elements/product-gallery";
 import ProductReviews from "@/components/elements/product-reviews";
 import ProductInfo from "@/components/elements/product-info";
 import Image from "next/image";
-import { laundryProducts } from "../page";
+import { laundryProducts } from "../../page";
 import { ProductCarousel } from "@/components/elements/product-carousel";
 
 export default function ProductPage() {

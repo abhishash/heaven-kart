@@ -24,6 +24,7 @@ import { useState } from "react";
 import { ChevronRightIcon } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { OrderDetails } from "./order-details";
+import Link from "next/link";
 
 export default function Cart() {
     const [isOpen, setIsOpen] = useState(false);
@@ -228,9 +229,9 @@ export default function Cart() {
                             Add More Items
                         </Button>
                     </div>
-                    <Button className="cursor-pointer" size="lg" color="primary">
-                        Add Address & Checkout
-                    </Button>
+                    <Link href={"/checkout"} className="cursor-pointer rounded-lg py-2.5 bg-primary text-center text-white text-lg font-semibold" >
+                        Checkout
+                    </Link>
                 </DrawerFooter>
             </DrawerContent>
         </Drawer>

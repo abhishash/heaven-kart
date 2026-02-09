@@ -123,3 +123,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+/* Brand logo infinite scroll */
+@keyframes brand-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
