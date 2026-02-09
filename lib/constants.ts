@@ -11,6 +11,11 @@ export const HOMEPAGE_PRODUCTS = {
     method: "GET",
 }
 
+export const PRODUCTS_DETAIL = {
+    endpoint: "products",
+    method: "GET",
+}
+
 export const PROMATIONS = {
     endpoint: "promotionals",
     method: "GET",

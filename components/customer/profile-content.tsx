@@ -23,7 +23,6 @@ export function ProfileContent() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Profile updated:', formData)
   }
 
   return (

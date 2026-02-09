@@ -1,20 +1,35 @@
-"use client";
 
-import { useState } from "react";
-import { Heart, Truck, RotateCcw, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // import RelatedProducts from '@/components/product/related-products';
-import ProductGallery from "@/components/elements/product-gallery";
 import ProductReviews from "@/components/elements/product-reviews";
-import ProductInfo from "@/components/elements/product-info";
 import Image from "next/image";
-import { laundryProducts } from "../../page";
+import { fetchHandler, methods } from "@/lib/api/auth";
+import { Product, ProductResponse } from "@/lib/types";
+import { PRODUCTS_DETAIL } from "@/lib/constants";
+import ProductInfo from "@/components/elements/product-info";
+import ProductImageGallery from "@/components/elements/product/product-image-gallery";
+import ProductBarcode from "@/components/elements/product/product-barcode";
+import HtmlRender from "@/components/elements/html-render";
 import { ProductCarousel } from "@/components/elements/product-carousel";
 
-export default function ProductPage() {
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(0);
+export default async function ProductPage({ params }: {
+  params: Promise<{ url_key: string }>
+}) {
+  const { url_key } = await params
+
+
+  const productResponse = await fetchHandler<ProductResponse>({
+    endpoint: `${PRODUCTS_DETAIL.endpoint}/${url_key}`
+    // ...PRODUCTS_DETAIL as {
+    //   endpoint: string;
+    //   method: methods,
+    // }
+  });
+
+  const productInformation: Product = productResponse?.data;
+  const relatedProducts = productResponse?.similar_products;
+
 
   const product = {
     id: 1,
@@ -48,25 +63,6 @@ export default function ProductPage() {
     },
   };
 
-  const productHighlights = {
-    Brand: "Dalda",
-    "Product Type": "Mustard Oil",
-    "Key Features":
-      "Strong aroma and high pungency, made from quality mustard seeds, rich in Omega 3, contains vitamins A, D, and E",
-    "Processing Type": "Kachi Ghani",
-    Weight: "1 L",
-    Ingredients: "Kachi ghani mustard oil, vitamin A and vitamin D",
-    "Used For": "Cooking, Frying, and Sauteing",
-    "FSSAI License": "10013022002173",
-    "Nutrition Information":
-      "Energy 900 Kcal, protein 0g, carbohydrate 0g, sugar 0g, fat 100g, saturated fat 8g, MUFA 66g, PUFA 26g, trans fat 0g, vitamin A 750 µg RE, vitamin D 11.25 µg, vitamin E 30 mg",
-    "Dietary Preference": "Veg",
-    Unit: "1 pc (1 L)",
-    "Packaging Type": "Bottle",
-    "Storage Instruction":
-      "Store in a cool, dry and hygienic place and avoid direct sunlight",
-  };
-
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
@@ -90,27 +86,13 @@ export default function ProductPage() {
       <div className="mx-auto container px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid gap-5 lg:grid-cols-2">
           {/* Product Gallery */}
-          <div className="flex flex-col  gap-4">
-            <div className="sticky top-[100px]">
-              <ProductGallery
-                images={[
-                  "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80",
-                  "https://images.unsplash.com/photo-1487215078519-e21cc028cb29?w=800&q=80",
-                  "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=800&q=80",
-                  "https://images.unsplash.com/photo-1487215078519-e21cc028cb29?w=800&q=80",
-                ]}
-                selectedIndex={selectedImage}
-                onSelectImage={setSelectedImage}
-              />
-            </div>
-          </div>
+          <ProductImageGallery thumbnailImg={productInformation?.image} images={productResponse?.gallery} />
 
           {/* Product Info */}
           <div className="flex flex-col gap-6">
             <ProductInfo
-              product={product}
-              isFavorite={isFavorite}
-              onFavoriteChange={setIsFavorite}
+              product={productInformation}
+              productUrl={url_key}
             />
 
             {/* Buy Options */}
@@ -135,7 +117,7 @@ export default function ProductPage() {
             </div>
 
             {/* Trust Badges */}
-            <div className="grid grid-cols-2 gap-4 rounded-lg shadow-lg border border-border bg-card/50 p-4">
+            <div className="grid grid-cols-2 gap-4 rounded-lg bg-green-50 border border-border p-4">
               <div className="flex items-center gap-3">
                 <Image
                   src="/icon/free.png"
@@ -201,97 +183,32 @@ export default function ProductPage() {
             </div>
             {/* Trust Badges */}
             <div className="flex flex-col gap-y-2 rounded-md border border-solid px-3 py-3">
-              {Object.entries(productHighlights).map(([label, value]) => (
-                <div className="flex items-start " key={label}>
-                  <div className="w-1/2 overflow-hidden break-words capitalize">
-                    <h3 className="text-slate-900 text-sm">{label}</h3>
-                  </div>
-
-                  <div className="w-1/2 break-words">
-                    <p className="text-slate-600 text-sm">
-                      <span>{value}</span>
-                    </p>
-                  </div>
-                </div>
-              ))}
+              <h2 className="text-xl font-semibold mb-3">Basic Information</h2>
+              <ProductBarcode product={
+                { barcode: productInformation?.barcode, name: productInformation?.brand_name }
+              } />
+              <HtmlRender html={productInformation?.description} />
             </div>
           </div>
         </div>
 
         {/* Tabs Section */}
-        <div className="mt-12">
-          <Tabs defaultValue="description" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="description">Description</TabsTrigger>
-              <TabsTrigger value="features">Features</TabsTrigger>
-              <TabsTrigger value="specs">Specifications</TabsTrigger>
-              <TabsTrigger value="reviews">Reviews</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="description" className="mt-6">
-              <div className="rounded-lg border border-border bg-card p-6">
-                <h3 className="mb-4 text-lg font-semibold">
-                  About this product
-                </h3>
-                <p className="mb-4 leading-relaxed text-muted-foreground">
-                  {product.description}
-                </p>
-                <p className="leading-relaxed text-muted-foreground">
-                  Designed for audio enthusiasts and professionals alike, these
-                  headphones deliver exceptional clarity and deep bass. The
-                  intuitive controls and seamless connectivity make them perfect
-                  for work, travel, or entertainment.
-                </p>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="features" className="mt-6">
-              <div className="rounded-lg border border-border bg-card p-6">
-                <h3 className="mb-4 text-lg font-semibold">Key Features</h3>
-                <ul className="grid gap-3 sm:grid-cols-2">
-                  {product.features.map((feature, idx) => (
-                    <li
-                      key={idx}
-                      className="flex items-start gap-3 text-muted-foreground"
-                    >
-                      <span className="mt-1.5 inline-block h-2 w-2 flex-shrink-0 rounded-full bg-primary" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="specs" className="mt-6">
-              <div className="rounded-lg border border-border bg-card p-6">
-                <h3 className="mb-4 text-lg font-semibold">Specifications</h3>
-                <div className="space-y-4">
-                  {Object.entries(product.specs).map(([key, value]) => (
-                    <div
-                      key={key}
-                      className="flex justify-between border-b border-border pb-4 last:border-0"
-                    >
-                      <span className="font-medium text-foreground">{key}</span>
-                      <span className="text-muted-foreground">{value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="reviews" className="mt-6">
+        <div className=" my-12 border-t border-gray-900">
+          <div defaultValue="description" className="w-full py-6">
+            <h2 className="text-xl font-semibold">Reviews</h2>
+            <div className="mt-6">
               <ProductReviews
                 rating={product.rating}
                 reviewCount={product.reviewCount}
               />
-            </TabsContent>
-          </Tabs>
+            </div>
+          </div>
         </div>
 
         {/* Related Products */}
-        <ProductCarousel title="Recently View" products={laundryProducts} />
-        <ProductCarousel title="Related Products" products={laundryProducts} />
-        <ProductCarousel title="Explore More" products={laundryProducts} />
+        {/* <ProductCarousel title="Recently View" products={laundryProducts} /> */}
+        <ProductCarousel title="Related Products" products={relatedProducts} />
+        {/* <ProductCarousel title="Explore More" products={laundryProducts} /> */}
       </div>
     </div>
   );

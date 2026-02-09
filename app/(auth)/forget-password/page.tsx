@@ -1,14 +1,10 @@
 "use client";
 
-import { EyeFilledIcon, EyeSlashFilledIcon } from "@/components/icons";
-import { Button } from "@heroui/button";
-import { Input } from "@heroui/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { addToast } from "@heroui/toast";
 
 type FormValues = {
     password: string;
@@ -71,18 +67,13 @@ const ForgetPassowrd = () => {
 
                             <Link href="/login" className="bg-linear-to-br ml-auto font-medium bg-clip-text text-transparent bg-gradient-to-r from-[#3C006B] from-[7.58%] to-[#8C1D75] to-[98.88%]" >Back to Login </Link>
                         </div>
-
-
-
-
-
-
+                        
                         {/* Submit */}
                         <Button
                             type="submit"
-                            isLoading={loading}
-                            disabled={loading}
-                            isDisabled={loading}
+                            // isLoading={loading}
+                            // disabled={loading}
+                            // isDisabled={loading}
                             className="w-full mt-6 py-6 text-base cursor-pointer rounded-md text-white font-semibold bg-gradient-to-r from-[#3C006B] to-[#8C1D75] hover:opacity-90 transition"
                         >
                             Generate New Password

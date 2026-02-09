@@ -1,14 +1,18 @@
 "use client";
 
-import { EyeFilledIcon, EyeSlashFilledIcon } from "@/components/icons";
-import { Button } from "@heroui/button";
-import { Input } from "@heroui/input";
+// import { EyeFilledIcon, EyeSlashFilledIcon } from "@/components/icons";
+// import { Button } from "@heroui/button";
+// import { Input } from "@heroui/input";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { addToast } from "@heroui/toast";
+import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
+import { EyeClosedIcon, ScanEyeIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+// import { addToast } from "@heroui/toast";
 
 type FormValues = {
     password: string;
@@ -42,16 +46,10 @@ const LoginPage = () => {
             if (response?.ok) {
                 router.push("/");
             } else {
-                addToast({
-                    description: response?.error,
-                    color: "danger",
-                });
+                toast.success(response?.error);
             }
         } catch (error) {
-            addToast({
-                description: "Something went wrong",
-                color: "danger",
-            });
+            toast.warning("Something went wrong");
         } finally {
             setLoading(false);
         }
@@ -88,26 +86,27 @@ const LoginPage = () => {
                         <p className="text-sm text-gray-500 mb-6">
                             Create your account to start selling
                         </p>
-
-
                         <div className="flex flex-col gap-y-4">
-
-                            <Input label="Email" color="secondary" {...register("email", { required: "Email is required" })} type="email" variant="bordered" />
+                            <Input label="Email" color="secondary" {...register("email", { required: "Email is required" })} type="email"  />
                             <div className="flex flex-col gap-y-1.5 justify-end">
-                                <Input label="Password" color="secondary" {...register("password", { required: "Password is required" })} type={isVisible ? "text" : "password"} variant="bordered" endContent={
-                                    <button
-                                        aria-label="toggle password visibility"
-                                        className="focus:outline-solid outline-transparent"
-                                        type="button"
-                                        onClick={toggleVisibility}
-                                    >
-                                        {isVisible ? (
-                                            <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                                        ) : (
-                                            <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                                        )}
-                                    </button>
-                                } />
+                                <Input label="Password" color="secondary" {...register("password", { required: "Password is required" })} type={isVisible ? "text" : "password"}  
+                                
+                                // endContent={
+                                //     <button
+                                //         aria-label="toggle password visibility"
+                                //         className="focus:outline-solid outline-transparent"
+                                //         type="button"
+                                //         onClick={toggleVisibility}
+                                //     >
+                                //         {isVisible ? (
+                                //             <EyeClosedIcon className="text-2xl text-default-400 pointer-events-none" />
+                                //         ) : (
+                                //             <ScanEyeIcon className="text-2xl text-default-400 pointer-events-none" />
+                                //         )}
+                                //     </button>
+                                // } 
+                                
+                                />
                                 <Link href="/forget-password" className="bg-linear-to-br ml-auto font-medium bg-clip-text text-transparent bg-gradient-to-r from-[#3C006B] from-[7.58%] to-[#8C1D75] to-[98.88%]" >Forget Password</Link>
                             </div>
 
@@ -117,9 +116,9 @@ const LoginPage = () => {
                         {/* Submit */}
                         <Button
                             type="submit"
-                            isLoading={loading}
+                            // isLoading={loading}
                             disabled={loading}
-                            isDisabled={loading}
+                            // isDisabled={loading}
                             className="w-full mt-6 py-6 text-base cursor-pointer rounded-md text-white font-semibold bg-gradient-to-r from-[#3C006B] to-[#8C1D75] hover:opacity-90 transition"
                         >
                             Login

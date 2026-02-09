@@ -7,17 +7,6 @@ interface ProductReviewsProps {
   rating: number;
   reviewCount: number;
 }
-
-interface Review {
-  id: number;
-  author: string;
-  rating: number;
-  date: string;
-  title: string;
-  text: string;
-  verified: boolean;
-}
-
 const mockReviews: Review[] = [
   {
     id: 1,
@@ -47,7 +36,6 @@ const mockReviews: Review[] = [
     verified: true,
   },
 ];
-
 export default function ProductReviews({
   rating,
   reviewCount,
@@ -63,20 +51,19 @@ export default function ProductReviews({
   return (
     <div className="space-y-8">
       {/* Rating Summary */}
-      <div className="rounded-lg border border-border bg-card p-6">
+      <div className="">
         <div className="grid gap-8 md:grid-cols-3">
           {/* Overall Rating */}
-          <div className="flex flex-col items-center justify-center">
+          <div className="flex flex-col bg-green-50 rounded-sm items-center justify-center">
             <div className="text-4xl font-bold text-foreground">{rating}</div>
             <div className="mt-2 flex gap-1">
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                  className={`h-5 w-5 ${
-                    i < Math.floor(rating)
-                      ? 'fill-yellow-400 text-yellow-400'
-                      : 'fill-muted text-muted'
-                  }`}
+                  className={`h-8 w-8 ${i < Math.floor(rating)
+                      ? 'fill-primary text-primary'
+                      : 'fill-muted text-gray-200'
+                    }`}
                 />
               ))}
             </div>
@@ -92,9 +79,9 @@ export default function ProductReviews({
                 <span className="min-w-12 text-sm font-medium text-muted-foreground">
                   {item.stars} star
                 </span>
-                <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
+                <div className="flex-1 h-5 rounded-full bg-muted overflow-hidden">
                   <div
-                    className="h-full bg-yellow-400 rounded-full transition-all"
+                    className="h-full bg-primary rounded-full transition-all"
                     style={{ width: `${item.percentage}%` }}
                   />
                 </div>
@@ -142,11 +129,10 @@ export default function ProductReviews({
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className={`h-4 w-4 ${
-                      i < review.rating
+                    className={`h-4 w-4 ${i < review.rating
                         ? 'fill-yellow-400 text-yellow-400'
                         : 'fill-muted text-muted'
-                    }`}
+                      }`}
                   />
                 ))}
               </div>

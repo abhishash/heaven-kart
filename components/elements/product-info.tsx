@@ -4,40 +4,68 @@ import { Heart, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "../ui/button";
 import { useState } from "react";
-
-interface Product {
-  name: string;
-  brand: string;
-  price: number;
-  originalPrice: number;
-  rating: number;
-  reviewCount: number;
-  inStock: boolean;
-  sku: string;
-  color: string;
-  warranty: string;
-}
+import { Product } from "@/lib/types";
+import Link from "next/link";
+import {
+  Breadcrumb,
+  BreadcrumbEllipsis,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 
 interface ProductInfoProps {
   product: Product;
-  isFavorite: boolean;
-  onFavoriteChange: (value: boolean) => void;
+  productUrl: string;
 }
 
 export default function ProductInfo({
   product,
-  onFavoriteChange,
+  productUrl
 }: ProductInfoProps) {
   const [isFavorite, setIsFavorite] = useState(false);
   const discountPercentage = Math.round(
-    ((product.originalPrice - product.price) / product.originalPrice) * 100,
+    ((parseFloat(product.ac_price) - parseFloat(product.price)) / parseFloat(product.ac_price)) * 100,
   );
 
   return (
     <div className="space-y-4">
       {/* Brand and Title */}
       <div>
-        <p className="text-sm font-semibold text-primary">{product.brand}</p>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link className="text-base" href={`/product/${productUrl}`}>{product?.brand_name}</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+           
+            {
+              product?.sub_category_url && <>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem >
+                  <BreadcrumbLink asChild>
+                    <Link className="text-base" href={`/category/${product?.sub_category}`}>{product?.sub_category_url}</Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+              </>
+            }
+            {
+              product?.category && <>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink>
+                    <Link href={`/category/${product?.category}`} className="text-primary text-base">{product?.category}</Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+              </>
+            }
+
+          </BreadcrumbList>
+        </Breadcrumb>
+     
         <div className="flex justify-between items-start">
           <h1 className="mt-2 text-xl font-bold text-foreground">
             {product.name}
@@ -63,11 +91,11 @@ export default function ProductInfo({
             <div className="flex items-center gap-1">
               <Star className="h-4 w-4 fill-green-500 text-green-400" />
               <span className="font-semibold text-foreground">
-                {product.rating}
+                {/* {product.rating} */} 0
               </span>
             </div>
             <span className="text-sm text-muted-foreground">
-              ({product.reviewCount.toLocaleString()} reviews)
+              {/* ({product.reviewCount.toLocaleString()} reviews) */} 21
             </span>
           </div>
         </div>
@@ -89,10 +117,10 @@ export default function ProductInfo({
       <div className="flex items-center gap-4">
         <div className="flex items-baseline gap-2">
           <span className="text-xl font-bold text-foreground">
-            ${product.price.toFixed(2)}
+            ${parseInt(product.price).toFixed(2)}
           </span>
           <span className="text-base text-muted-foreground line-through">
-            ${product.originalPrice.toFixed(2)}
+            ${parseInt(product.ac_price).toFixed(2)}
           </span>
         </div>
         <Badge className="bg-red-100 text-red-800">
@@ -103,12 +131,12 @@ export default function ProductInfo({
       {/* Stock Status */}
       <div className="flex items-center gap-2">
         <div
-          className={`h-3 w-3 rounded-full ${product.inStock ? "bg-green-500" : "bg-red-500"}`}
+          className={`h-3 w-3 rounded-full ${parseInt(product?.in_stock) ? "bg-green-500" : "bg-red-500"}`}
         />
         <span
-          className={`font-medium ${product.inStock ? "text-green-600" : "text-red-600"}`}
+          className={`font-medium ${parseInt(product?.in_stock) ? "text-green-600" : "text-red-600"}`}
         >
-          {product.inStock ? "In Stock" : "Out of Stock"}
+          {parseInt(product?.in_stock) ? "In Stock" : "Out of Stock"}
         </span>
       </div>
 

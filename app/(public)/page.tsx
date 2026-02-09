@@ -63,7 +63,6 @@ export default async function Home() {
 
   const { data: categoryResponse }: CategoryResponse = categoriesResponse;
 
-  console.log(homePageBannerLists);
   return (
     <>
       <ImageCarousel options={homePageBannerLists} />

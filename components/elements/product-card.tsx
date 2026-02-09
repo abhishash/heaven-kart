@@ -104,7 +104,7 @@ export function ProductCard({
         </div>
 
         {/* Title */}
-        <Link href={`product/${url}`}>
+        <Link href={`/product/${url}`}>
           <h3 className="text-xs font-bold text-slate-900 line-clamp-2 mb-1">
             {name}
           </h3>

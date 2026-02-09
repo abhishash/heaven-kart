@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/header";
 import ReactQueryProviders from "./providers/react-providers";
 import { getQueryClient } from "@/lib/query-client";
 import { getHomeData } from "@/lib/api/home";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,6 +37,7 @@ export default async function RootLayout({
           <main className="min-h-[calc(100vh-522px)]">
             {children}
           </main>
+          <Toaster />
         </ReactQueryProviders>
       </body>
     </html>

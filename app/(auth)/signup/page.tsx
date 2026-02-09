@@ -1,18 +1,19 @@
 "use client";
 
-import { EyeFilledIcon, EyeSlashFilledIcon } from "@/components/icons";
 import { fetchHandler } from "@/lib/api/auth";
-import { Input } from "@heroui/input";
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { useState } from "react";
-import { Checkbox } from "@heroui/checkbox";
 import { useForm } from "react-hook-form";
-import { Button } from "@heroui/button";
-import { addToast, useToast } from "@heroui/toast";
-import { InputOtp } from "@heroui/input-otp";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
+import { EyeClosed, ScanEye } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { Field, FieldLabel } from "@/components/ui/field";
 
 type FormValues = {
   phone: string;
@@ -77,53 +78,30 @@ const SignupPage = () => {
             if (response?.ok) {
               router.push("/");
             } else {
-              addToast({
-                description: response?.error,
-                color: "danger",
-              });
+              toast.warning(response?.error);
             }
           } catch (error) {
-            addToast({
-              description: "Something went wrong",
-              color: "danger",
-            });
+            toast.warning("Something went wrong");
           } finally {
             setLoading(false);
           }
         } else {
-          addToast({
-            description: res?.errors?.email?.[0],
-            color: "danger",
-            variant: "bordered"
-          })
+          toast.warning("Something went wrong");
         }
       }).catch((error) => {
-        addToast({
-          description: "Something Wrong",
-          color: "danger",
-        });
+        toast.warning("Something went wrong");
       });
     } else {
       const payload = { name: data?.name, phone: data?.phone, email: data?.email, password: data?.password };
       mutateAsync(payload)?.then((res) => {
         if (res?.status) {
           setIsOtp(true);
-          addToast({
-            description: "OTP has been send your registered email",
-            color: "success",
-          })
+          toast.success("OTP has been send your registered email");
           return;
         }
-        addToast({
-          description: res?.errors?.email?.[0],
-          color: "danger",
-          variant: "bordered"
-        })
+        toast.error(res?.errors?.email?.[0]);
       }).catch((error) => {
-        addToast({
-          description: "Something Wrong",
-          color: "danger",
-        });
+        toast.error("Something Wrong");
       });
     }
     setLoading(false)
@@ -162,20 +140,31 @@ const SignupPage = () => {
             </p>
             {
               isOtp ? <div className="flex justify-center">
-                <InputOtp
-                  isRequired
-                  aria-label="OTP input field"
-                  length={4}
-                  {...register("otp", { required: "OTP is required" })}
-                  color="secondary"
-                  size="lg"
-                  placeholder="Enter code"
-                />
+
+                <Field className="w-fit">
+                  <FieldLabel htmlFor="digits-only">Digits Only</FieldLabel>
+                  <InputOTP id="digits-only" maxLength={6} pattern={REGEXP_ONLY_DIGITS}>
+                    <InputOTPGroup>
+                      <InputOTPSlot index={0} />
+                      <InputOTPSlot index={1} />
+                      <InputOTPSlot index={2} />
+                      <InputOTPSlot index={3} />
+                      <InputOTPSlot index={4} />
+                      <InputOTPSlot index={5} />
+                    </InputOTPGroup>
+                  </InputOTP>
+                </Field>
               </div> :
                 <>
                   <div className="grid grid-cols-1 w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
-                    <Input label="Name" color="secondary"   {...register("name", { required: "Name is required" })}
-                      type="text" variant="bordered" />
+                    <Field>
+                      <FieldLabel htmlFor="input-field-username">Name</FieldLabel>
+                      <Input
+                        id="input-field-username"
+                        type="text"
+                        placeholder="Enter your username"
+                      />
+                    </Field>
                     <Input label="Email" color="secondary" {...register("email", { required: "Email is required" })} type="email" variant="bordered" />
                     <Input label="Phone" color="secondary" {...register("phone", { required: "Phone is required" })} type="number" variant="bordered" />
                     <Input label="Password" color="secondary" {...register("password", { required: "Password is required" })} type={isVisible ? "text" : "password"} variant="bordered" endContent={
@@ -186,9 +175,9 @@ const SignupPage = () => {
                         onClick={toggleVisibility}
                       >
                         {isVisible ? (
-                          <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                          <EyeClosed className="text-2xl text-default-400 pointer-events-none" />
                         ) : (
-                          <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                          <ScanEye className="text-2xl text-default-400 pointer-events-none" />
                         )}
                       </button>
                     } />
@@ -207,7 +196,7 @@ const SignupPage = () => {
             {/* Submit */}
             <Button
               disabled={isPending || isOtpPending || loading}
-              isLoading={isPending || isOtpPending || loading}
+              // isLoading={isPending || isOtpPending || loading}
               type="submit"
               className="w-full mt-6 py-6 cursor-pointer rounded-md text-white font-semibold bg-gradient-to-r from-[#3C006B] to-[#8C1D75] hover:opacity-90 transition"
             > {
