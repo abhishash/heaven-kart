@@ -15,7 +15,7 @@ export interface BagistoErrorLike {
     );
   };
   
-  export const isArray = (arr: any) => {
+  export const isArray = (arr: unknown) => {
     return arr && Array.isArray(arr) && arr.length > 0;
   };
   
