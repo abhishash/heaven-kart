@@ -16,7 +16,7 @@ export function OrderDetails() {
                     </div>
                     <div>
                         <p className="font-semibold text-gray-900 text-sm">
-                            I don't need a paper bag!
+                            I don&apos;t need a paper bag!
                         </p>
                         <p className="text-xs text-gray-500">Opt in to save paper</p>
                     </div>
