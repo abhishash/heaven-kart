@@ -87,7 +87,7 @@ export interface Product {
   ac_price: string;
   sku: string;
   hsn: string;
-  description: ReactNode;
+  description: string;
   tags: string;
   meta_tag: string;
   category: string | null;

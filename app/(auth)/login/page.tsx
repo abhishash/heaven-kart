@@ -87,9 +87,9 @@ const LoginPage = () => {
                             Create your account to start selling
                         </p>
                         <div className="flex flex-col gap-y-4">
-                            <Input label="Email" color="secondary" {...register("email", { required: "Email is required" })} type="email"  />
+                            <Input  color="secondary" {...register("email", { required: "Email is required" })} type="email"  />
                             <div className="flex flex-col gap-y-1.5 justify-end">
-                                <Input label="Password" color="secondary" {...register("password", { required: "Password is required" })} type={isVisible ? "text" : "password"}  
+                                <Input  color="secondary" {...register("password", { required: "Password is required" })} type={isVisible ? "text" : "password"}  
                                 
                                 // endContent={
                                 //     <button

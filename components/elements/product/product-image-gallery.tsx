@@ -17,7 +17,7 @@ export default function ProductImageGallery({ images, thumbnailImg }: { images: 
                     {/* Main Image */}
                     <div className="relative w-full overflow-hidden rounded-lg border border-border bg-muted aspect-square">
                         <Image
-                            src={images?.[selectedImage]?.image ? ` ${imageBaseUrl}/${images?.[selectedImage]?.image}` : `${imageBaseUrl}/${thumbnailImg}`}
+                            src={selectedImage !== null && images?.[selectedImage]?.image ? ` ${imageBaseUrl}/${images?.[selectedImage]?.image}` : `${imageBaseUrl}/${thumbnailImg}`}
                             alt="Product image"
                             fill
                             className="object-cover"

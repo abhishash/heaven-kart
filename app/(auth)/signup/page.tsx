@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Field, FieldLabel } from "@/components/ui/field";
+import { REGEXP_ONLY_DIGITS } from "input-otp";
 
 type FormValues = {
   phone: string;
@@ -165,28 +166,13 @@ const SignupPage = () => {
                         placeholder="Enter your username"
                       />
                     </Field>
-                    <Input label="Email" color="secondary" {...register("email", { required: "Email is required" })} type="email" variant="bordered" />
-                    <Input label="Phone" color="secondary" {...register("phone", { required: "Phone is required" })} type="number" variant="bordered" />
-                    <Input label="Password" color="secondary" {...register("password", { required: "Password is required" })} type={isVisible ? "text" : "password"} variant="bordered" endContent={
-                      <button
-                        aria-label="toggle password visibility"
-                        className="focus:outline-solid outline-transparent"
-                        type="button"
-                        onClick={toggleVisibility}
-                      >
-                        {isVisible ? (
-                          <EyeClosed className="text-2xl text-default-400 pointer-events-none" />
-                        ) : (
-                          <ScanEye className="text-2xl text-default-400 pointer-events-none" />
-                        )}
-                      </button>
-                    } />
+                    <Input  color="secondary" {...register("email", { required: "Email is required" })} type="email"  />
+                    <Input  color="secondary" {...register("phone", { required: "Phone is required" })} type="number"  />
+                    <Input  color="secondary" {...register("password", { required: "Password is required" })} type={isVisible ? "text" : "password"} />
                   </div>
                   {/* Checkbox */}
                   <div className="mt-4">
-                    <Checkbox defaultSelected color="secondary" classNames={{
-                      label: "text-gray-500 text-sm"
-                    }} className="text-gray-400" >
+                    <Checkbox color="secondary" className="text-gray-400" >
                       I want to receive important updates on Email & WhatsApp
                     </Checkbox>
                   </div>

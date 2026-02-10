@@ -60,10 +60,7 @@ const ForgetPassowrd = () => {
                         </p>
 
                         <div className="flex flex-col gap-y-1.5 justify-end">
-                            <Input label="Email" classNames={{
-                                input : "text-sm",
-                                label: "text-sm semibbold"
-                            }} color="secondary" {...register("email", { required: "Email is required" })} type="email" variant="bordered" />
+                            <Input color="secondary" {...register("email", { required: "Email is required" })} type="email" />
 
                             <Link href="/login" className="bg-linear-to-br ml-auto font-medium bg-clip-text text-transparent bg-gradient-to-r from-[#3C006B] from-[7.58%] to-[#8C1D75] to-[98.88%]" >Back to Login </Link>
                         </div>

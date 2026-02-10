@@ -4,14 +4,11 @@ import { PermotionBanner } from "@/components/elements/permotion-banner";
 import { ProductCarousel } from "@/components/elements/product-carousel";
 import ImageCarousel from "@/components/homepage/banner/image-carousel";
 import { fetchHandler, methods } from "@/lib/api/auth";
-import { getHomeData } from "@/lib/api/home";
 import { HOME_CATEGORIES, HOMEPAGE_PRODUCTS, HOMEPAGE_SLIDERS, PROMATIONS } from "@/lib/constants";
-import { getQueryClient } from "@/lib/query-client";
-import { CategoryResponse, HomePageDataTypes, PermotionsTypes, ProductsDataTypes } from "@/lib/types";
+import { BannerDataTypes, CategoryResponse, HomePageDataTypes, PermotionsTypes, ProductsDataTypes } from "@/lib/types";
 import Image from "next/image";
 
 export default async function Home() {
-  const queryClient = getQueryClient();
 
   const homePageBanners = await fetchHandler<{
     data: HomePageDataTypes[]
@@ -23,7 +20,7 @@ export default async function Home() {
   });
 
   const { data: homePageBannerLists }: {
-    data: HomePageDataTypes[]
+    data: BannerDataTypes[]
   } = homePageBanners;
 
 

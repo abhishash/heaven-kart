@@ -1,11 +1,10 @@
 "use client";
 
 import { FC, useState, useEffect, useCallback, useRef } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { Shimmer } from "@/components/elements/shimmer";
 import { imageBaseUrl } from "@/lib/constants";
-import { BannerDataTypes } from "@/lib/types";
+import { BannerDataTypes, HomePageDataTypes } from "@/lib/types";
 
 interface ImageCarouselProps {
     options: BannerDataTypes[];

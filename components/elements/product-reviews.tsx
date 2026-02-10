@@ -7,7 +7,7 @@ interface ProductReviewsProps {
   rating: number;
   reviewCount: number;
 }
-const mockReviews: Review[] = [
+const mockReviews: any[] = [
   {
     id: 1,
     author: 'John D.',

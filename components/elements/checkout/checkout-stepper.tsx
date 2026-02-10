@@ -546,7 +546,7 @@ export function CheckoutStepper() {
                                                 value={paymentData.cardNumber}
                                                 onChange={(e) => handlePaymentChange('cardNumber', e.target.value)}
                                                 placeholder="1234 5678 9012 3456"
-                                                maxLength="19"
+                                                maxLength={19}
                                                 className={`border font-mono ${paymentErrors.cardNumber ? 'border-red-500' : 'border-gray-300'}`}
                                             />
                                             {paymentErrors.cardNumber && (
@@ -566,7 +566,7 @@ export function CheckoutStepper() {
                                                     value={paymentData.expiryDate}
                                                     onChange={(e) => handlePaymentChange('expiryDate', e.target.value)}
                                                     placeholder="MM/YY"
-                                                    maxLength="5"
+                                                    maxLength={5}
                                                     className={`border ${paymentErrors.expiryDate ? 'border-red-500' : 'border-gray-300'}`}
                                                 />
                                                 {paymentErrors.expiryDate && (
@@ -586,7 +586,7 @@ export function CheckoutStepper() {
                                                         value={paymentData.cvv}
                                                         onChange={(e) => handlePaymentChange('cvv', e.target.value)}
                                                         placeholder="123"
-                                                        maxLength="4"
+                                                        maxLength={4}
                                                         className={`border pr-10 ${paymentErrors.cvv ? 'border-red-500' : 'border-gray-300'}`}
                                                     />
                                                     <button
