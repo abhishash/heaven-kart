@@ -6,19 +6,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { ProductTypes } from "@/lib/types";
 
-interface ProductCardProps {
-  id: string;
-  image: string;
-  title: string;
-  description: string;
-  price: number;
-  originalPrice: number;
-  quantity: string;
-  category: string;
-  rating: number;
-  reviewCount: number;
-}
-
 export function ProductCard({
   url,
   name,
@@ -39,16 +26,8 @@ export function ProductCard({
 
   const isOutOfStock = Number(in_stock) === 0;
   return (
-    <div
-      className={`
-    flex-shrink-0 w-56 bg-white border border-slate-200 rounded-lg overflow-hidden
-    transition-all
-    ${isOutOfStock
-          ? "opacity-60 cursor-not-allowed pointer-events-none"
-          : "hover:shadow-md"
-        }
-  `}
-    >
+    <div className={`shrink-0 w-56 bg-white border border-slate-200 rounded-lg overflow-hidden transition-all ${isOutOfStock
+      ? "opacity-60 cursor-not-allowed pointer-events-none" : "hover:shadow-md"}`} >
       {/* Image Container */}
       <div className="relative bg-slate-50 h-60 flex items-center justify-center overflow-hidden">
         <Image

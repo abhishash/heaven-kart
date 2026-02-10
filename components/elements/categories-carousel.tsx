@@ -48,8 +48,16 @@ export function CategoriesCarousel({ title, subCategories }: ProductCarouselProp
 
     useEffect(() => {
         if (!emblaApi) return;
-        onSelect();
+
+        // Register listener
         emblaApi.on("select", onSelect);
+
+        // Trigger once via Embla lifecycle (not React effect body)
+        emblaApi.emit("select");
+
+        return () => {
+            emblaApi.off("select", onSelect);
+        };
     }, [emblaApi, onSelect]);
 
 
@@ -82,19 +90,19 @@ export function CategoriesCarousel({ title, subCategories }: ProductCarouselProp
                         >
                             {/* Image */}
                             <div className="relative bg-slate-100 rounded-2xl h-56 flex items-center justify-center">
-                            <SafeImage
-  src={product.image}
-  alt={product.name}
-  width={160}
-  height={160}
-  className="
+                                <SafeImage
+                                    src={product.image}
+                                    alt={product.name}
+                                    width={160}
+                                    height={160}
+                                    className="
     object-contain
     transition-transform
     duration-300
     rounded-2xl
     group-hover:scale-105
   "
-/>
+                                />
                             </div>
 
                             {/* Content */}
@@ -118,32 +126,32 @@ export function CategoriesCarousel({ title, subCategories }: ProductCarouselProp
 
 
 interface SafeImageProps {
-  src?: string;
-  alt: string;
-  width: number;
-  height: number;
-  className?: string;
+    src?: string;
+    alt: string;
+    width: number;
+    height: number;
+    className?: string;
 }
 
 export function SafeImage({
-  src,
-  alt,
-  width,
-  height,
-  className,
+    src,
+    alt,
+    width,
+    height,
+    className,
 }: SafeImageProps) {
-  const [imgSrc, setImgSrc] = useState(
-    src ? `${process.env.ASSET_ENDPOINS}${src}` : imageNotFound
-  );
+    const [imgSrc, setImgSrc] = useState(
+        src ? `${process.env.ASSET_ENDPOINS}${src}` : imageNotFound
+    );
 
-  return (
-    <Image
-      src={imgSrc}
-      alt={alt}
-      width={width}
-      height={height}
-      onError={() => setImgSrc(imageNotFound)}
-      className={className}
-    />
-  );
+    return (
+        <Image
+            src={imgSrc}
+            alt={alt}
+            width={width}
+            height={height}
+            onError={() => setImgSrc(imageNotFound)}
+            className={className}
+        />
+    );
 }

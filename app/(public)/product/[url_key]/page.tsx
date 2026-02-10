@@ -20,11 +20,8 @@ export default async function ProductPage({ params }: {
 
 
   const productResponse = await fetchHandler<ProductResponse>({
-    endpoint: `${PRODUCTS_DETAIL.endpoint}/${url_key}`
-    // ...PRODUCTS_DETAIL as {
-    //   endpoint: string;
-    //   method: methods,
-    // }
+    endpoint: `${PRODUCTS_DETAIL.endpoint}/${url_key}`,
+    method: PRODUCTS_DETAIL?.method as methods,
   });
 
   const productInformation: Product = productResponse?.data;

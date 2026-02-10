@@ -45,8 +45,16 @@ export function ProductCarousel({ title, products }: ProductCarouselProps) {
 
   useEffect(() => {
     if (!emblaApi) return;
-    onSelect();
+
+    // Register listener
     emblaApi.on("select", onSelect);
+
+    // Trigger once via Embla lifecycle (not React effect body)
+    emblaApi.emit("select");
+
+    return () => {
+      emblaApi.off("select", onSelect);
+    };
   }, [emblaApi, onSelect]);
 
 

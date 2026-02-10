@@ -13,15 +13,15 @@ import Link from "next/link";
 import Cart from "../elements/cart";
 
 const categories = [
-  { label: "All", icon: "🛍️" },
-  { label: "Cafe", icon: "☕" },
-  { label: "Home", icon: "🏠" },
-  { label: "Toys", icon: "🧸" },
-  { label: "Fresh", icon: "🥬" },
-  { label: "Electronics", icon: "📱" },
-  { label: "Mobiles", icon: "📲" },
-  { label: "Beauty", icon: "💄" },
-  { label: "Fashion", icon: "👔" },
+  { label: "All", icon: "🛍️", href: "/catalog" },
+  { label: "Cafe", icon: "☕", href: "/catalog" },
+  { label: "Home", icon: "🏠", href: "/catalog" },
+  { label: "Toys", icon: "🧸", href: "/catalog" },
+  { label: "Fresh", icon: "🥬", href: "/catalog" },
+  { label: "Electronics", icon: "📱", href: "/catalog" },
+  { label: "Mobiles", icon: "📲", href: "/catalog" },
+  { label: "Beauty", icon: "💄", href: "/catalog" },
+  { label: "Fashion", icon: "👔", href: "/catalog" },
 ];
 
 export function Header() {
@@ -72,7 +72,7 @@ export function Header() {
               <User className="h-6 w-6" /> Login
             </Link>
             {/* </Button> */}
-            <Cart  />
+            <Cart />
           </div>
         </div>
       </div>
@@ -84,7 +84,8 @@ export function Header() {
       <nav className="border-t bg-white">
         <div className="container mx-auto flex gap-8 px-6">
           {categories.map((c, i) => (
-            <button
+            <Link
+              href={c.href}
               key={c.label}
               className={`flex gap-2 py-4 text-sm font-medium border-b-2 ${i === 0
                 ? "text-green-600 border-green-600"
@@ -93,7 +94,7 @@ export function Header() {
             >
               <span>{c.icon}</span>
               {c.label}
-            </button>
+            </Link>
           ))}
         </div>
       </nav>

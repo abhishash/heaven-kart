@@ -71,6 +71,11 @@ export interface ProductResponse {
   similar_products: SimilarProduct[];
 }
 
+export interface ProductDataTypesList {
+  status: boolean;
+  data: ProductTypes[];
+}
+
 
 export interface Product {
   id: number;
@@ -82,7 +87,7 @@ export interface Product {
   ac_price: string;
   sku: string;
   hsn: string;
-  description : ReactNode;
+  description: ReactNode;
   tags: string;
   meta_tag: string;
   category: string | null;

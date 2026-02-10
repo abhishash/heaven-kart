@@ -16,6 +16,16 @@ export const PRODUCTS_DETAIL = {
     method: "GET",
 }
 
+export const ALL_PRODUCTS = {
+    endpoint: "all-products",
+    method: "GET",
+}
+
+export const CATALOG_DETAIL = {
+    endpoint: "category-products",
+    method: "GET",
+}
+
 export const PROMATIONS = {
     endpoint: "promotionals",
     method: "GET",
