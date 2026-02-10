@@ -45,9 +45,15 @@ export function ProductCarousel({ title, products }: ProductCarouselProps) {
 
   useEffect(() => {
     if (!emblaApi) return;
-    onSelect();
     emblaApi.on("select", onSelect);
-  }, [emblaApi, onSelect]);
+    emblaApi.on("reInit", onSelect);
+
+  // cleanup
+  return () => {
+    emblaApi.off("select", onSelect);
+    emblaApi.off("reInit", onSelect);
+  };
+}, [emblaApi, onSelect]);
 
 
   return (
