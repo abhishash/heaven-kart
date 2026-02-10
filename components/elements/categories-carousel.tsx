@@ -47,18 +47,17 @@ export function CategoriesCarousel({ title, subCategories }: ProductCarouselProp
     }, [emblaApi]);
 
     useEffect(() => {
-        if (!emblaApi) return;
+  if (!emblaApi) return;
 
-        // Register listener
-        emblaApi.on("select", onSelect);
+  emblaApi.on("select", onSelect);
+  emblaApi.on("reInit", onSelect);
 
-        // Trigger once via Embla lifecycle (not React effect body)
-        emblaApi.emit("select");
-
-        return () => {
-            emblaApi.off("select", onSelect);
-        };
-    }, [emblaApi, onSelect]);
+  // cleanup
+  return () => {
+    emblaApi.off("select", onSelect);
+    emblaApi.off("reInit", onSelect);
+  };
+}, [emblaApi, onSelect]);
 
 
     return (
@@ -144,14 +143,14 @@ export function SafeImage({
         src ? `${process.env.ASSET_ENDPOINS}${src}` : imageNotFound
     );
 
-    return (
-        <Image
-            src={imgSrc}
-            alt={alt}
-            width={width}
-            height={height}
-            onError={() => setImgSrc(imageNotFound)}
-            className={className}
-        />
-    );
+  return (
+    <Image
+      src={imgSrc}
+      alt={alt}
+      width={width}
+      height={height}
+      onError={() => setImgSrc(imageNotFound)}
+      className={className}
+    />
+  );
 }
