@@ -47,10 +47,17 @@ export function CategoriesCarousel({ title, subCategories }: ProductCarouselProp
     }, [emblaApi]);
 
     useEffect(() => {
-        if (!emblaApi) return;
-        onSelect();
-        emblaApi.on("select", onSelect);
-    }, [emblaApi, onSelect]);
+  if (!emblaApi) return;
+
+  emblaApi.on("select", onSelect);
+  emblaApi.on("reInit", onSelect);
+
+  // cleanup
+  return () => {
+    emblaApi.off("select", onSelect);
+    emblaApi.off("reInit", onSelect);
+  };
+}, [emblaApi, onSelect]);
 
 
     return (
