@@ -4,7 +4,7 @@ import { FC, useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { Shimmer } from "@/components/elements/shimmer";
 import { imageBaseUrl } from "@/lib/constants";
-import { BannerDataTypes, HomePageDataTypes } from "@/lib/types";
+import { BannerDataTypes } from "@/lib/types";
 
 interface ImageCarouselProps {
     options: BannerDataTypes[];
@@ -96,9 +96,9 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
     };
 
     return (
-        <section className="mt-7.5 w-[100vh] h-[100vw]">
+        <section className=" h-full w-full">
             <div
-                className="group relative w-full overflow-hidden rounded-xl md:rounded-2xl aspect-[1.97/1]"
+                className="group relative w-full overflow-hidden rounded-xl md:rounded-2xl h-[60dvh]"
                 style={{
                     position: 'relative',
                     width: '100%'
@@ -112,7 +112,6 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
                 onMouseUp={handleMouseUp}
             >
                 {images.map((img, index) => {
-                    const imageUrl = getFullImageUrl(img.image);
                     const isActive = index === currentIndex;
                     const altText = img.name || `Banner ${index + 1}`;
 
@@ -132,10 +131,10 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
                             <div className="relative h-full w-full">
                                 <Shimmer className="h-full w-full" />
                                 <Image
-                                    src={imageUrl}
+                                    src={`${imageBaseUrl}${img.image}`}
                                     alt={altText}
                                     fill
-                                    className="object-cover !z-0"
+                                    className="object-center object-fill !z-0"
                                     priority={index === 0}
                                     sizes="100vw"
                                 />
