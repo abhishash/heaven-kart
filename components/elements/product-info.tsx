@@ -47,7 +47,7 @@ export default function ProductInfo({
                 <BreadcrumbSeparator />
                 <BreadcrumbItem >
                   <BreadcrumbLink asChild>
-                    <Link className="text-base" href={`/category/${product?.sub_category_url}`}>{product?.sub_category}</Link>
+                    <Link className="text-base" href={`/catalog/${product?.sub_category_url}`}>{product?.sub_category}</Link>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
               </>
