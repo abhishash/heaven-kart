@@ -15,7 +15,6 @@ export default function RootLayout({
     <div >
       <Header />
       <div className="container mx-auto px-6 py-12" >
-
         {children}
       </div>
       <Footer />

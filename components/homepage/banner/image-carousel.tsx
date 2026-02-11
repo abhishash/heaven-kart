@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Shimmer } from "@/components/elements/shimmer";
 import { imageBaseUrl } from "@/lib/constants";
 import { BannerDataTypes, HomePageDataTypes } from "@/lib/types";
+import Link from "next/link";
 
 interface ImageCarouselProps {
     options: BannerDataTypes[];
@@ -96,7 +97,7 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
     };
 
     return (
-        <section className="mt-7.5 w-[100vh] h-[100vw]">
+        <section className="mt-0 w-full">
             <div
                 className="group relative w-full overflow-hidden rounded-xl md:rounded-2xl aspect-[1.97/1]"
                 style={{
@@ -129,13 +130,13 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
                             }}
                         >
 
-                            <div className="relative h-full w-full">
+                            <div className="relative max-h-140 w-full">
                                 <Shimmer className="h-full w-full" />
                                 <Image
                                     src={imageUrl}
                                     alt={altText}
                                     fill
-                                    className="object-cover !z-0"
+                                    className="object-fill object-center !z-0"
                                     priority={index === 0}
                                     sizes="100vw"
                                 />
