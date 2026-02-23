@@ -57,7 +57,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex h-screen w-full">~
+    <div className="flex h-screen w-full">
       {/* LEFT */}
       <div className="flex-1 bg-secondary relative px-6">
         {/* Header */}
@@ -67,7 +67,7 @@ const LoginPage = () => {
             alt="Zepto"
             className="w-8 h-8 mr-3"
           />
-          <h1 className="text-xl font-bold bg-linear-to-r from-green-700 to-green-400 bg-clip-text text-transparent">
+          <h1 className="text-xl font-bold bg-linear-to-r from-green-700 to-[#4ADE80] bg-clip-text text-transparent">
             Vendor Portal
           </h1>
         </header>
