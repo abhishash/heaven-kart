@@ -33,9 +33,9 @@ export default function Cart() {
         <Drawer direction="right" open={isOpen} onOpenChange={setIsOpen}>
             <DrawerTrigger asChild>
                 <button
-                    className="text-gray-900 cursor-pointer font-semibold flex gap-x-1"
+                    className="text-gray-900 text-sm cursor-pointer font-normal flex gap-x-1"
                 >
-                    <ShoppingCart  className="h-6 w-6 " /> Cart
+                    <ShoppingCart  className="h-5 w-5 " /> Cart
                 </button>
             </DrawerTrigger>
             <DrawerContent className="w-[420px] sm:w-[500px] md:min-w-[400px]">

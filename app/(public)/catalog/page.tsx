@@ -167,7 +167,7 @@ export default async function Products() {
                 </div>
 
                 {/* Products Grid */}
-                <div className=" px-4 py-8 lg:px-6">
+                <div className=" px-4 py-8 lg:px-0">
                     {isArray(productList) ? (
                         <>
                             <p className="mb-6 text-sm text-muted-foreground">

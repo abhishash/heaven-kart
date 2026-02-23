@@ -124,13 +124,13 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
                             }}
                         >
 
-                            <div className="relative max-h-[560px] aspect-video w-full">
+                            <div className="relative h-full w-full">
                                 <Shimmer className="h-full w-full" />
                                 <Image
                                     src={`${imageBaseUrl}${img.image}`}
                                     alt={altText}
                                     fill
-                                    className="object-center object-fill !z-0"
+                                    className="object-center object-container !z-0"
                                     priority={index === 0}
                                     sizes="100vw"
                                 />

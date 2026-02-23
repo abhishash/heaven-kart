@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import Cart from "../elements/cart";
+import { useEffect, useState } from "react";
 
 const categories = [
   { label: "All", icon: "🛍️", href: "/catalog" },
@@ -25,10 +26,23 @@ const categories = [
 ];
 
 export function Header() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10); // 👈 scroll threshold
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   return (
     <header className="bg-white border-b">
       {/* ✅ FIXED Top Bar ONLY */}
-      <div className="fixed top-0 left-0 shadow-xl right-0 z-50 bg-white border-b">
+      <div
+        className={`fixed top-0 left-0 right-0 z-50 bg-white transition-all duration-300 
+        ${scrolled ? "shadow-lg" : "shadow-none"}`}
+      >
         <div className="container mx-auto flex items-center justify-between gap-6 px-6 py-4">
           {/* Logo & Location */}
           <div className="flex items-center gap-6">
@@ -68,8 +82,11 @@ export function Header() {
               aria-label="User profile"
               className="text-gray-700 hover:text-gray-900"
             > */}
-            <Link href={"/customer/profile"} className="text-gray-900 cursor-pointer font-semibold flex gap-x-1">
-              <User className="h-6 w-6" /> Login
+            <Link
+              href={"/customer/profile"}
+              className="text-gray-900 cursor-pointer font-normal text-sm flex gap-x-1"
+            >
+              <User className="h-5 w-5" /> Login
             </Link>
             {/* </Button> */}
             <Cart />
@@ -87,10 +104,11 @@ export function Header() {
             <Link
               href={c.href}
               key={c.label}
-              className={`flex gap-2 py-4 text-sm font-medium border-b-2 ${i === 0
-                ? "text-green-600 border-green-600"
-                : "border-transparent text-gray-700 hover:text-black"
-                }`}
+              className={`flex gap-2 py-4 text-sm font-medium border-b-2 ${
+                i === 0
+                  ? "text-green-600 border-green-600"
+                  : "border-transparent text-gray-700 hover:text-black"
+              }`}
             >
               <span>{c.icon}</span>
               {c.label}
