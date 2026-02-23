@@ -16,10 +16,6 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
     const [isPaused, setIsPaused] = useState(false);
     const autoplayRef = useRef<NodeJS.Timeout | null>(null);
 
-    const getFullImageUrl = useCallback((imagePath: string): string => {
-        return `${imageBaseUrl}${imagePath}`;
-    }, []);
-
     const startAutoplay = useCallback(() => {
         if (!images || images.length <= 1) return;
 
