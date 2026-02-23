@@ -96,7 +96,7 @@ export default async function Products() {
                 {/* Top Filter Bar */}
                 <div className="border-b border-border bg-card p-4 lg:p-6">
                     <div className="mx-auto max-w-7xl">
-                        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                             {/* Search */}
                             {/* <div className="relative flex-1 md:max-w-sm">
                                 <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
@@ -174,7 +174,7 @@ export default async function Products() {
                                 Showing {productList.length} product
                                 {productList.length !== 1 ? 's' : ''}
                             </p>
-                            <div className="grid grid-cols-4 gap-4">
+                            <div className="grid grid-cols-6 gap-4">
                                 {productList?.map((product, index) => (
                                     <ProductCard key={index} {...product as ProductTypes} />
                                 ))}
