@@ -45,15 +45,18 @@ export function ProductCarousel({ title, products }: ProductCarouselProps) {
 
   useEffect(() => {
     if (!emblaApi) return;
+  
     emblaApi.on("select", onSelect);
     emblaApi.on("reInit", onSelect);
-
-  // cleanup
-  return () => {
-    emblaApi.off("select", onSelect);
-    emblaApi.off("reInit", onSelect);
-  };
-}, [emblaApi, onSelect]);
+  
+    // 🔥 VERY IMPORTANT: Call once on mount
+    onSelect();
+  
+    return () => {
+      emblaApi.off("select", onSelect);
+      emblaApi.off("reInit", onSelect);
+    };
+  }, [emblaApi, onSelect]);
 
 
   return (
@@ -75,7 +78,7 @@ export function ProductCarousel({ title, products }: ProductCarouselProps) {
         <button
           onClick={scrollPrev}
           disabled={prevBtnDisabled}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg hover:shadow-xl disabled:opacity-50 active:cursor-pointer disabled:cursor-not-allowed transition-all"
         >
           <ChevronLeft size={20} className="text-slate-900" />
         </button>
@@ -94,7 +97,7 @@ export function ProductCarousel({ title, products }: ProductCarouselProps) {
         <button
           onClick={scrollNext}
           disabled={nextBtnDisabled}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg hover:shadow-xl disabled:opacity-50 active:cursor-pointer disabled:cursor-not-allowed transition-all"
         >
           <ChevronRight size={20} className="text-slate-900" />
         </button>
