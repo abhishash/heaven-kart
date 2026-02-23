@@ -142,6 +142,7 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
                         </div>
                     );
                 })}
+                
 
                 {images.length > 1 && (
                     <div className="absolute bottom-4 left-1/2 z-0 flex -translate-x-1/2 gap-2 rounded-full bg-black/30 px-3 py-2 backdrop-blur-sm md:bottom-6">
