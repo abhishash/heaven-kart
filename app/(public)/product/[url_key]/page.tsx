@@ -92,7 +92,6 @@ export default async function ProductPage({ params }: {
               productUrl={url_key}
             />
 
-            {/* Buy Options */}
            
 
             {/* Trust Badges */}

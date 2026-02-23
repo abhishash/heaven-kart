@@ -26,7 +26,7 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
   const discountPercentage = Math.round(
     ((parseFloat(product.ac_price) - parseFloat(product.price)) /
       parseFloat(product.ac_price)) *
-      100,
+    100,
   );
 
   const [qty, setQty] = useState(1);
@@ -193,6 +193,7 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
           </Button>
         </div>
 
+<<<<<<< HEAD
         {/* Buttons */}
         <div className="flex gap-4">
           {/* Buy Now */}
@@ -219,6 +220,40 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
           <Button variant="outline" className="flex-1">
             Buy Now
           </Button>
+=======
+
+
+        {/* Buy Now */}
+        <Button
+          variant="outline"
+          size="lg"
+          className="w-full border-2 border-green-600 text-green-600 hover:bg-green-50 text-lg font-semibold py-4 rounded-xl transition-all duration-200"
+        >
+          ⚡ Buy Now
+        </Button>
+
+        {/* Divider */}
+        <div className="border-t pt-4 flex items-center justify-between">
+          <span className="text-sm text-gray-500">Share this product</span>
+
+          <button
+            onClick={() => {
+              if (navigator.share) {
+                navigator.share({
+                  title: "Product Name",
+                  text: "Check out this product!",
+                  url: window.location.href,
+                });
+              } else {
+                navigator.clipboard.writeText(window.location.href);
+              }
+            }}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition text-sm font-medium"
+          >
+            <Share2 className="h-4 w-4" />
+            Share
+          </button>
+>>>>>>> c50373c3b097fd64320f0ab1873d6280c3f49534
         </div>
       </div>
     </div>
