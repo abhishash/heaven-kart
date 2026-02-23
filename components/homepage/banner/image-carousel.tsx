@@ -128,7 +128,7 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
                             }}
                         >
 
-                            <div className="relative h-full w-full">
+                            <div className="relative max-h-140 w-full">
                                 <Shimmer className="h-full w-full" />
                                 <Image
                                     src={`${imageBaseUrl}${img.image}`}

@@ -26,8 +26,12 @@ export function ProductCard({
 
   const isOutOfStock = Number(in_stock) === 0;
   return (
-    <div className={`shrink-0 w-56 bg-white border border-slate-200 rounded-lg overflow-hidden transition-all ${isOutOfStock
-      ? "opacity-60 cursor-not-allowed pointer-events-none" : "hover:shadow-md"}`} >
+    <div
+      className={`group shrink-0 w-56 bg-white border border-slate-200 rounded-lg overflow-hidden transition-all ${isOutOfStock
+          ? "opacity-60 cursor-not-allowed pointer-events-none"
+          : "hover:shadow-md"
+        }`}
+    >
       {/* Image Container */}
       <div className="relative bg-slate-50 h-60 flex items-center justify-center overflow-hidden">
         <Image
@@ -35,7 +39,7 @@ export function ProductCard({
           alt={name}
           width={160}
           height={160}
-          className="object-contain w-full h-full p-2"
+          className="object-contain w-full h-full p-2 transition-transform duration-500 ease-out group-hover:scale-110"
         />
 
         {/* Discount Badge */}
