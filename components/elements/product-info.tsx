@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, Star } from "lucide-react";
+import { Heart, Share2, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "../ui/button";
 import { useState } from "react";
@@ -14,20 +14,19 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+} from "@/components/ui/breadcrumb";
 
 interface ProductInfoProps {
   product: Product;
   productUrl: string;
 }
 
-export default function ProductInfo({
-  product,
-  productUrl
-}: ProductInfoProps) {
+export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
   const [isFavorite, setIsFavorite] = useState(false);
   const discountPercentage = Math.round(
-    ((parseFloat(product.ac_price) - parseFloat(product.price)) / parseFloat(product.ac_price)) * 100,
+    ((parseFloat(product.ac_price) - parseFloat(product.price)) /
+      parseFloat(product.ac_price)) *
+      100,
   );
 
   return (
@@ -38,34 +37,45 @@ export default function ProductInfo({
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link className="text-base" href={`/product/${productUrl}`}>{product?.brand_name}</Link>
+                <Link className="text-base" href={`/product/${productUrl}`}>
+                  {product?.brand_name}
+                </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
-           
-            {
-              product?.sub_category_url && <>
+
+            {product?.sub_category_url && (
+              <>
                 <BreadcrumbSeparator />
-                <BreadcrumbItem >
+                <BreadcrumbItem>
                   <BreadcrumbLink asChild>
-                    <Link className="text-base" href={`/catalog/${product?.sub_category_url}`}>{product?.sub_category}</Link>
+                    <Link
+                      className="text-base"
+                      href={`/catalog/${product?.sub_category_url}`}
+                    >
+                      {product?.sub_category}
+                    </Link>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
               </>
-            }
-            {
-              product?.category && <>
+            )}
+            {product?.category && (
+              <>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
                   <BreadcrumbLink>
-                    <Link href={`/catalog/${product?.category_url}`} className="text-primary text-base">{product?.category}</Link>
+                    <Link
+                      href={`/catalog/${product?.category_url}`}
+                      className="text-primary text-base"
+                    >
+                      {product?.category}
+                    </Link>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
               </>
-            }
-
+            )}
           </BreadcrumbList>
         </Breadcrumb>
-     
+
         <div className="flex justify-between items-start">
           <h1 className="mt-2 text-xl font-bold text-foreground">
             {product.name}
@@ -76,7 +86,9 @@ export default function ProductInfo({
             className="cursor-pointer"
             onClick={() => setIsFavorite(!isFavorite)}
           >
-            <Heart className={`h-5 w-5 ${isFavorite ? "fill-green-600 stroke-green-600" : ""}`} />
+            <Heart
+              className={`h-5 w-5 ${isFavorite ? "fill-green-600 stroke-green-600" : ""}`}
+            />
           </Button>
         </div>
 
@@ -100,7 +112,6 @@ export default function ProductInfo({
           </div>
         </div>
       </div>
-
       <div className="">
         {/* Product Details */}
         <div className="space-y-3">
@@ -112,7 +123,6 @@ export default function ProductInfo({
           </div>
         </div>
       </div>
-
       {/* Price */}
       <div className="flex items-center gap-4">
         <div className="flex items-baseline gap-2">
@@ -127,7 +137,6 @@ export default function ProductInfo({
           {discountPercentage}% OFF
         </Badge>
       </div>
-
       {/* Stock Status */}
       <div className="flex items-center gap-2">
         <div
@@ -139,19 +148,74 @@ export default function ProductInfo({
           {parseInt(product?.in_stock) ? "In Stock" : "Out of Stock"}
         </span>
       </div>
-
       {/* Quantity Selector */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Quantity</label>
-        <div className="flex items-center gap-3 rounded-lg border border-border bg-card p-2">
-          <button className="h-8 w-8 rounded hover:bg-muted">−</button>
-          <input
-            type="text"
-            defaultValue="1"
-            readOnly
-            className="flex-1 text-center font-semibold"
-          />
-          <button className="h-8 w-8 rounded hover:bg-muted">+</button>
+      <div className="space-y-6">
+        {/* Quantity */}
+        <div>
+          <label className="text-sm font-medium text-gray-700 mb-2 block">
+            Quantity
+          </label>
+
+          <div className="flex items-center justify-between w-[140px] rounded-xl border bg-white shadow-sm px-2 py-1">
+            <button className="h-9 w-9 flex items-center justify-center rounded-lg hover:bg-gray-100 transition">
+              −
+            </button>
+
+            <input
+              type="text"
+              defaultValue="1"
+              readOnly
+              className="w-10 text-center font-semibold text-lg outline-none bg-transparent"
+            />
+
+            <button className="h-9 w-9 flex items-center justify-center rounded-lg hover:bg-gray-100 transition">
+              +
+            </button>
+          </div>
+        </div>
+
+        {/* Buttons */}
+        <div className="flex gap-4">
+          {/* Add to Cart */}
+          <Button
+            size="lg"
+            className="flex-1 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold py-4 rounded-xl shadow-md transition-all duration-200"
+          >
+            🛒 Add to Cart
+          </Button>
+
+          {/* Buy Now */}
+          <Button
+            variant="outline"
+            size="lg"
+            className="flex-1 border-2 border-green-500 text-green-600 hover:bg-green-50 text-lg font-semibold py-4 rounded-xl shadow-sm transition-all duration-200"
+          >
+            ⚡ Buy Now
+          </Button>
+        </div>
+
+        {/* Share Button */}
+        <div className="flex items-center justify-between border-t pt-4">
+          <span className="text-sm text-gray-500">Share this product</span>
+
+          <button
+            onClick={() => {
+              if (navigator.share) {
+                navigator.share({
+                  title: "Product Name",
+                  text: "Check out this product!",
+                  url: window.location.href,
+                });
+              } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert("Link copied!");
+              }
+            }}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border hover:bg-gray-100 transition text-sm font-medium"
+          >
+            <Share2 className="h-4 w-4" />
+            Share
+          </button>
         </div>
       </div>
     </div>

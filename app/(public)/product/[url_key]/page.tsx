@@ -93,25 +93,7 @@ export default async function ProductPage({ params }: {
             />
 
             {/* Buy Options */}
-            <div className="space-y-4">
-              <div className="flex gap-4">
-                <Button
-                  size="lg"
-                  color="primary"
-                  className="cursor-pointer !py-6 shadow-md text-lg flex-1 font-bold tracking-wide"
-                >
-                  Add to Cart
-                </Button>
-
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="w-full flex-1 text-lg !py-6 shadow-md text-green-500 hover:text-green-600 rounded-sm border-green-400 cursor-pointer bg-transparent"
-                >
-                  Buy Now
-                </Button>
-              </div>
-            </div>
+           
 
             {/* Trust Badges */}
             <div className="grid grid-cols-2 gap-4 rounded-lg bg-green-50 border border-border p-4">
