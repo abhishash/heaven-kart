@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, Share2, Star } from "lucide-react";
+import { Heart, Minus, Plus, Share2, ShoppingCart, Star, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "../ui/button";
 import { useState } from "react";
@@ -28,6 +28,26 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
       parseFloat(product.ac_price)) *
       100,
   );
+
+  const [qty, setQty] = useState(1);
+
+  const increaseQty = () => setQty(qty + 1);
+  const decreaseQty = () => {
+    if (qty > 1) setQty(qty - 1);
+  };
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: product.name,
+        text: "Check out this product!",
+        url: window.location.href,
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      alert("Link copied!");
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -148,74 +168,57 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
           {parseInt(product?.in_stock) ? "In Stock" : "Out of Stock"}
         </span>
       </div>
-      {/* Quantity Selector */}
-      <div className="space-y-6">
-        {/* Quantity */}
-        <div>
-          <label className="text-sm font-medium text-gray-700 mb-2 block">
-            Quantity
-          </label>
-
-          <div className="flex items-center justify-between w-[140px] rounded-xl border bg-white shadow-sm px-2 py-1">
-            <button className="h-9 w-9 flex items-center justify-center rounded-lg hover:bg-gray-100 transition">
-              −
+      <div className="space-y-5">
+        {/* Quantity + Wishlist */}
+        <div className="flex items-center justify-between gap-4">
+          {/* Quantity */}
+          <div className="flex items-center justify-between  min-w-36 gap-3 border rounded-xl px-3 py-2">
+            <button onClick={decreaseQty} className="cursor-pointer">
+              <Minus className="h-4 w-4" />
             </button>
 
-            <input
-              type="text"
-              defaultValue="1"
-              readOnly
-              className="w-10 text-center font-semibold text-lg outline-none bg-transparent"
-            />
+            <span className="font-medium min-w-8 text-center">{qty}</span>
 
-            <button className="h-9 w-9 flex items-center justify-center rounded-lg hover:bg-gray-100 transition">
-              +
+            <button onClick={increaseQty} className="cursor-pointer">
+              <Plus className="h-4 w-4" />
             </button>
           </div>
+
+          {/* Add to Cart */}
+          <Button
+            size="lg"
+            className="flex-1 cursor-pointer bg-green-400 hover:bg-green-500 text-white text-sm font-semibold py-4 rounded-lg shadow-md hover:scale-[1.02] active:scale-[0.98] transition"
+          >
+           <ShoppingCart /> Add to Cart
+          </Button>
         </div>
 
         {/* Buttons */}
         <div className="flex gap-4">
-          {/* Add to Cart */}
-          <Button
-            size="lg"
-            className="flex-1 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold py-4 rounded-xl shadow-md transition-all duration-200"
-          >
-            🛒 Add to Cart
-          </Button>
-
           {/* Buy Now */}
           <Button
             variant="outline"
             size="lg"
-            className="flex-1 border-2 border-green-500 text-green-600 hover:bg-green-50 text-lg font-semibold py-4 rounded-xl shadow-sm transition-all duration-200"
+            className=" flex-1 border-1 border-green-400 text-green-400 hover:text-green-500 hover:bg-green-50 text-sm font-normal py-4 rounded-lg hover:scale-[1.02] active:scale-[0.98] transition cursor-pointer"
           >
-            ⚡ Buy Now
+            <Zap /> Buy Now
           </Button>
+          <button
+            onClick={handleShare}
+            className="flex items-center border-green-400 text-green-400 hover:text-green-500 hover:bg-green-50 justify-center flex-1 cursor-pointer gap-2 px-4 py-2 rounded-lg border hover:bg-gray-100 transition text-sm font-medium hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <Share2 className="h-4 w-4" /> Share this Product
+          </button>
         </div>
 
-        {/* Share Button */}
-        <div className="flex items-center justify-between border-t pt-4">
-          <span className="text-sm text-gray-500">Share this product</span>
-
-          <button
-            onClick={() => {
-              if (navigator.share) {
-                navigator.share({
-                  title: "Product Name",
-                  text: "Check out this product!",
-                  url: window.location.href,
-                });
-              } else {
-                navigator.clipboard.writeText(window.location.href);
-                alert("Link copied!");
-              }
-            }}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border hover:bg-gray-100 transition text-sm font-medium"
-          >
-            <Share2 className="h-4 w-4" />
-            Share
-          </button>
+        {/* Sticky Bottom Bar (Mobile UX 🔥) */}
+        <div className="fixed bottom-0 left-0 w-full bg-white border-t p-3 flex gap-3 md:hidden z-50">
+          <Button className="flex-1 bg-green-600 text-white">
+            Add to Cart
+          </Button>
+          <Button variant="outline" className="flex-1">
+            Buy Now
+          </Button>
         </div>
       </div>
     </div>

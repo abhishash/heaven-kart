@@ -116,3 +116,17 @@ export interface SimilarProduct {
   barcode: string; // base64 image
   url: string;
 }
+
+
+
+export interface CartItem {
+  id: number;
+  name: string;
+  price: number;
+  image?: string;
+  qty: number;
+}
+
+export interface CartState {
+  cart: CartItem[];
+}
