@@ -75,19 +75,14 @@ export function Header() {
           </div>
 
           {/* Right Icons */}
-          <div className="flex items-center gap-3">
-            {/* <Button
-              variant="ghost"
-              size="icon"
-              aria-label="User profile"
-              className="text-gray-700 hover:text-gray-900"
-            > */}
+          <div className="flex items-center gap-4">
             <Link
               href={"/customer/profile"}
               className="text-gray-900 cursor-pointer font-normal text-sm flex gap-x-1"
             >
-              <User className="h-5 w-5" /> Login
+              <User className="h-5 w-5" />
             </Link>
+            
             {/* </Button> */}
             <Cart />
           </div>

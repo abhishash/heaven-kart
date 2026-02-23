@@ -1,6 +1,14 @@
 "use client";
 
-import { Heart, Minus, Plus, Share2, ShoppingCart, Star, Zap } from "lucide-react";
+import {
+  Heart,
+  Minus,
+  Plus,
+  Share2,
+  ShoppingCart,
+  Star,
+  Zap,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "../ui/button";
 import { useState } from "react";
@@ -15,6 +23,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { useMutation } from "@tanstack/react-query";
+import { fetchHandler } from "@/lib/api/auth";
+import { addToCart } from "./store/cartSlice";
+import { useDispatch } from "react-redux";
 
 interface ProductInfoProps {
   product: Product;
@@ -22,12 +34,29 @@ interface ProductInfoProps {
 }
 
 export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
+  const dispatch = useDispatch();
   const [isFavorite, setIsFavorite] = useState(false);
+
   const discountPercentage = Math.round(
     ((parseFloat(product.ac_price) - parseFloat(product.price)) /
       parseFloat(product.ac_price)) *
-    100,
+      100,
   );
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: (payload: {
+      user_id: number;
+      product_id: number;
+      qty: number;
+      price: number;
+      type: "custom" | "remove" | "add";
+    }) =>
+      fetchHandler({
+        endpoint: "cart/add",
+        method: "POST",
+        data: payload,
+      }),
+  });
 
   const [qty, setQty] = useState(1);
 
@@ -36,16 +65,22 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
     if (qty > 1) setQty(qty - 1);
   };
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: product.name,
-        text: "Check out this product!",
-        url: window.location.href,
+  const handleAddToCart = async () => {
+    try {
+      await mutateAsync({
+        user_id: 1,
+        product_id: product?.id,
+        qty: qty,
+        price: parseInt(product?.ac_price) ,
+        type: "custom",
+      }).then((res)=> {
+        if(res?.status) {
+          dispatch(addToCart({...res?.data, id: product?.id})); // ✅ Redux update
+        }
       });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert("Link copied!");
+    } catch (error) {
+      console.error(error);
+      alert("Error adding to cart");
     }
   };
 
@@ -187,13 +222,13 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
           {/* Add to Cart */}
           <Button
             size="lg"
+            onClick={handleAddToCart}
+            disabled={isPending}
             className="flex-1 cursor-pointer bg-green-400 hover:bg-green-500 text-white text-sm font-semibold py-4 rounded-lg shadow-md hover:scale-[1.02] active:scale-[0.98] transition"
           >
-           <ShoppingCart /> Add to Cart
+            <ShoppingCart /> Add to Cart
           </Button>
         </div>
-
-
 
         {/* Buy Now */}
         <Button

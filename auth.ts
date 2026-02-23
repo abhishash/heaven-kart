@@ -23,12 +23,15 @@ export const authOptions: NextAuthOptions = {
                     password: credentials?.password,
                 };
 
+
                 try {
                     const res = await fetchHandler<any>({
                         endpoint: "login",
                         method: "POST",
                         data: input,
                     });
+
+                    console.log(res);
 
                     if (
                         res?.status &&
@@ -46,6 +49,7 @@ export const authOptions: NextAuthOptions = {
                         throw new Error(res?.message as string);
                     }
                 } catch (error: any) {
+                    console.log(error)
                     throw new Error(
                         (error?.error?.message as string) || "Something went wrong!"
                     );

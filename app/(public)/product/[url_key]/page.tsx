@@ -91,9 +91,6 @@ export default async function ProductPage({ params }: {
               product={productInformation}
               productUrl={url_key}
             />
-
-           
-
             {/* Trust Badges */}
             <div className="grid grid-cols-2 gap-4 rounded-lg bg-green-50 border border-border p-4">
               <div className="flex items-center gap-3">

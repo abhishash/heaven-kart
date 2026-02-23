@@ -49,6 +49,7 @@ const LoginPage = () => {
         toast.success(response?.error);
       }
     } catch (error) {
+      console.log(error)
       toast.warning("Something went wrong");
     } finally {
       setLoading(false);
