@@ -66,7 +66,7 @@ const LoginPage = () => {
             alt="Zepto"
             className="w-8 h-8 mr-3"
           />
-          <h1 className="text-xl font-bold bg-gradient-to-r from-green-700 to-primary bg-clip-text text-transparent">
+          <h1 className="text-xl font-bold bg-linear-to-r from-green-700 to-green-400 bg-clip-text text-transparent">
             Vendor Portal
           </h1>
         </header>

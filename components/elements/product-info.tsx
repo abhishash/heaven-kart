@@ -193,34 +193,6 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
           </Button>
         </div>
 
-<<<<<<< HEAD
-        {/* Buttons */}
-        <div className="flex gap-4">
-          {/* Buy Now */}
-          <Button
-            variant="outline"
-            size="lg"
-            className=" flex-1 border-1 border-green-400 text-green-400 hover:text-green-500 hover:bg-green-50 text-sm font-normal py-4 rounded-lg hover:scale-[1.02] active:scale-[0.98] transition cursor-pointer"
-          >
-            <Zap /> Buy Now
-          </Button>
-          <button
-            onClick={handleShare}
-            className="flex items-center border-green-400 text-green-400 hover:text-green-500 hover:bg-green-50 justify-center flex-1 cursor-pointer gap-2 px-4 py-2 rounded-lg border hover:bg-gray-100 transition text-sm font-medium hover:scale-[1.02] active:scale-[0.98]"
-          >
-            <Share2 className="h-4 w-4" /> Share this Product
-          </button>
-        </div>
-
-        {/* Sticky Bottom Bar (Mobile UX 🔥) */}
-        <div className="fixed bottom-0 left-0 w-full bg-white border-t p-3 flex gap-3 md:hidden z-50">
-          <Button className="flex-1 bg-green-600 text-white">
-            Add to Cart
-          </Button>
-          <Button variant="outline" className="flex-1">
-            Buy Now
-          </Button>
-=======
 
 
         {/* Buy Now */}
@@ -253,7 +225,6 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
             <Share2 className="h-4 w-4" />
             Share
           </button>
->>>>>>> c50373c3b097fd64320f0ab1873d6280c3f49534
         </div>
       </div>
     </div>
