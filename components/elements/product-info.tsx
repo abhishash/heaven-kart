@@ -26,7 +26,7 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
   const discountPercentage = Math.round(
     ((parseFloat(product.ac_price) - parseFloat(product.price)) /
       parseFloat(product.ac_price)) *
-      100,
+    100,
   );
 
   return (
@@ -148,54 +148,61 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
           {parseInt(product?.in_stock) ? "In Stock" : "Out of Stock"}
         </span>
       </div>
-      {/* Quantity Selector */}
-      <div className="space-y-6">
-        {/* Quantity */}
+      {/* Purchase Section */}
+      <div className="space-y-6 bg-white p-6 rounded-2xl shadow-lg border">
+
+        {/* Quantity Label */}
         <div>
-          <label className="text-sm font-medium text-gray-700 mb-2 block">
-            Quantity
+          <label className="text-sm font-semibold text-gray-700 mb-3 block">
+            Select Quantity
           </label>
+          <div className="flex gap-x-4">
 
-          <div className="flex items-center justify-between w-[140px] rounded-xl border bg-white shadow-sm px-2 py-1">
-            <button className="h-9 w-9 flex items-center justify-center rounded-lg hover:bg-gray-100 transition">
-              −
-            </button>
+            {/* Quantity Selector */}
+            <div className="flex w-fit min-w-[120px] items-center rounded-lg border border-gray-300 bg-gray-50 overflow-hidden shadow-sm">
 
-            <input
-              type="text"
-              defaultValue="1"
-              readOnly
-              className="w-10 text-center font-semibold text-lg outline-none bg-transparent"
-            />
+              <button
+                className="h-11 w-11 px-4 py-1 flex cursor-pointer items-center justify-center text-xl font-bold text-gray-600 hover:bg-gray-200 transition"
+              >
+                −
+              </button>
 
-            <button className="h-9 w-9 flex items-center justify-center rounded-lg hover:bg-gray-100 transition">
-              +
-            </button>
+              <input
+                type="text"
+                value="1"
+                readOnly
+                className="w-12 text-center font-semibold text-lg bg-white outline-none"
+              />
+
+              <button
+                className="h-11 w-11 px-4 py-1 flex cursor-pointer items-center justify-center text-xl font-bold text-gray-600 hover:bg-gray-200 transition"
+              >
+                +
+              </button>
+            </div>
+            {/* Add to Cart */}
+            <Button
+              size="lg"
+              className="w-full  cursor-pointer py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold rounded-lg shadow-md transition-all duration-200 hover:scale-[1.02]"
+            >
+              🛒 Add to Cart
+            </Button>
           </div>
         </div>
 
-        {/* Buttons */}
-        <div className="flex gap-4">
-          {/* Add to Cart */}
-          <Button
-            size="lg"
-            className="flex-1 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold py-4 rounded-xl shadow-md transition-all duration-200"
-          >
-            🛒 Add to Cart
-          </Button>
 
-          {/* Buy Now */}
-          <Button
-            variant="outline"
-            size="lg"
-            className="flex-1 border-2 border-green-500 text-green-600 hover:bg-green-50 text-lg font-semibold py-4 rounded-xl shadow-sm transition-all duration-200"
-          >
-            ⚡ Buy Now
-          </Button>
-        </div>
 
-        {/* Share Button */}
-        <div className="flex items-center justify-between border-t pt-4">
+        {/* Buy Now */}
+        <Button
+          variant="outline"
+          size="lg"
+          className="w-full border-2 border-green-600 text-green-600 hover:bg-green-50 text-lg font-semibold py-4 rounded-xl transition-all duration-200"
+        >
+          ⚡ Buy Now
+        </Button>
+
+        {/* Divider */}
+        <div className="border-t pt-4 flex items-center justify-between">
           <span className="text-sm text-gray-500">Share this product</span>
 
           <button
@@ -208,10 +215,9 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
                 });
               } else {
                 navigator.clipboard.writeText(window.location.href);
-                alert("Link copied!");
               }
             }}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border hover:bg-gray-100 transition text-sm font-medium"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition text-sm font-medium"
           >
             <Share2 className="h-4 w-4" />
             Share
