@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import Cart from "../elements/cart";
 import { useEffect, useState } from "react";
-
+import { SearchResults } from "@/components/search-results";
 const categories = [
   { label: "All", icon: "🛍️", href: "/catalog" },
   { label: "Cafe", icon: "☕", href: "/catalog" },
@@ -73,6 +73,7 @@ export function Header() {
               <Input placeholder='Search for "amul butter"' className="pl-10" />
             </div>
           </div>
+          <SearchBar placeholder="Search by name, description, or category..." />
 
           {/* Right Icons */}
           <div className="flex items-center gap-4">
