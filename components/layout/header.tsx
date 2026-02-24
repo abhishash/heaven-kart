@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import Cart from "../elements/cart";
 import { useEffect, useState } from "react";
-import { SearchResults } from "@/components/search-results";
+import { SearchBar } from "@/components/search-bar";
 const categories = [
   { label: "All", icon: "🛍️", href: "/catalog" },
   { label: "Cafe", icon: "☕", href: "/catalog" },
