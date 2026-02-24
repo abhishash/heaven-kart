@@ -143,10 +143,10 @@ export function Header() {
       </div>
 
       {/* Spacer */}
-      <div className="h-[110px] md:h-[70px]" />
+      <div className="h-[110px] md:h-[70px] hidden sm:block" />
 
       {/* 🔥 Categories */}
-      <nav className="border-t bg-white">
+      <nav className="border-t bg-white hidden">
         <div className="container mx-auto px-4">
           {/* Mobile */}
           <div className="flex gap-6 overflow-x-auto no-scrollbar md:hidden">

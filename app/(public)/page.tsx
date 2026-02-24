@@ -106,7 +106,7 @@ export default async function Home() {
       {/* Permotions products */}
       <div className="flex flex-col gap-y-6 py-6">
         <h2 className="text-2xl font-bold text-slate-900">Permotions</h2>
-        <div className="grid grid-cols-3 gap-x-6">
+        <div className="grid grid-cols-3 gap-x-2 sm:gap-x-6">
           {permotions?.map((item, index) => (
             <PermotionBanner key={index} values={item} />
           ))}

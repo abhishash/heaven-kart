@@ -111,7 +111,7 @@ export function SearchBar({
   }, []);
 
   return (
-    <div className="min-w-sm w-full relative" ref={dropdownRef}>
+    <div className="sm:min-w-sm w-full relative" ref={dropdownRef}>
       <div className="relative flex items-center">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
         <Input
