@@ -69,6 +69,12 @@ export interface ProductResponse {
   data: Product;
   gallery: GalleryImage[];
   similar_products: SimilarProduct[];
+  aplus: AplusBanner[];
+}
+
+export interface AplusBanner {
+  type: "single" | "two" | "three",
+  images: String[]
 }
 
 export interface ProductDataTypesList {

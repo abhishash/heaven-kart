@@ -12,6 +12,7 @@ import ProductImageGallery from "@/components/elements/product/product-image-gal
 import ProductBarcode from "@/components/elements/product/product-barcode";
 import HtmlRender from "@/components/elements/html-render";
 import { ProductCarousel } from "@/components/elements/product-carousel";
+import SingleBanner from "@/components/elements/product/aplus-banner";
 
 export default async function ProductPage({ params }: {
   params: Promise<{ url_key: string }>
@@ -166,6 +167,8 @@ export default async function ProductPage({ params }: {
             </div>
           </div>
         </div>
+        <SingleBanner />
+
 
         {/* Tabs Section */}
         <div className=" my-12 border-t border-gray-900">
