@@ -52,49 +52,7 @@ export function Header() {
           {/* 🔹 Top Row */}
           <div className="flex items-center justify-between">
             {/* LEFT */}
-            <div className="flex items-center gap-3">
-              {/* ✅ SHADCN SIDEBAR */}
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Menu className="h-6 w-6 md:hidden cursor-pointer" />
-                </SheetTrigger>
-
-                <SheetContent side="left" className="w-[260px] p-4">
-                  {/* Header */}
-                  <div className="text-lg font-semibold text-green-600 mb-6">
-                    HeavenKart
-                  </div>
-
-                  {/* Categories */}
-                  <div className="space-y-2">
-                    {categories.map((c, i) => (
-                      <Link
-                        href={c.href}
-                        key={c.label}
-                        className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm ${
-                          i === 0
-                            ? "bg-green-100 text-green-600"
-                            : "text-gray-700 hover:bg-gray-100"
-                        }`}
-                      >
-                        <span className="text-lg">{c.icon}</span>
-                        {c.label}
-                      </Link>
-                    ))}
-                  </div>
-
-                  <div className="my-6 border-t" />
-
-                  {/* Extra */}
-                  <div className="space-y-3 text-sm text-gray-600">
-                    <Link href="#">My Account</Link>
-                    <Link href="#">Orders</Link>
-                    <Link href="#">Wishlist</Link>
-                    <Link href="#">Support</Link>
-                  </div>
-                </SheetContent>
-              </Sheet>
-
+            <div className="flex items-center gap-3">            
               {/* Logo */}
               <Link
                 href="/"

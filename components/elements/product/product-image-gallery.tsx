@@ -13,7 +13,7 @@ export default function ProductImageGallery({ images, thumbnailImg }: { images: 
     return (
         <div className="flex flex-col  gap-4">
             <div className="sticky top-[100px]">
-                <div className="flex flex-row-reverse gap-x-3">
+                <div className="flex flex-col sm:flex-row-reverse gap-3">
                     {/* Main Image */}
                     <div className="relative w-full overflow-hidden rounded-lg border border-border bg-muted aspect-square">
                         <Image
@@ -37,7 +37,7 @@ export default function ProductImageGallery({ images, thumbnailImg }: { images: 
                     </div>
 
                     {/* Thumbnail Images */}
-                    <div className="flex max-h-[520px] flex-col gap-2">
+                    <div className="flex max-h-[520px] flex-row sm:flex-col gap-2">
                         {images.map((image, idx) => (
                             <button
                                 key={idx}

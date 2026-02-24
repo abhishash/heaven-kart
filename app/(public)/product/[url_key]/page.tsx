@@ -66,7 +66,7 @@ export default async function ProductPage({
     <div className="min-h-screen bg-background">
       {/* Navigation */}
       <nav className="border-b border-border bg-card">
-        <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+        <div className="mx-auto px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <a href="#" className="hover:text-foreground">
               Home
@@ -76,13 +76,13 @@ export default async function ProductPage({
               Electronics
             </a>
             <span>/</span>
-            <span className="text-foreground">{product.name}</span>
+            <span className="text-foreground text-nowrap">{product.name}</span>
           </div>
         </div>
       </nav>
 
       {/* Main Product Section */}
-      <div className="mx-auto container px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto container px-0 py-8 sm:px-6 lg:px-8">
         <div className="grid gap-5 lg:grid-cols-2">
           {/* Product Gallery */}
           <ProductImageGallery
