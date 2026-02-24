@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, ShoppingCart, User, ChevronDown } from "lucide-react";
+import { User, ChevronDown, Menu } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,11 +8,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import Cart from "../elements/cart";
 import { useEffect, useState } from "react";
-import { SearchBar } from "@/components/search-bar";
+import { SearchBar } from "./Search-bar";
+
 const categories = [
   { label: "All", icon: "🛍️", href: "/catalog" },
   { label: "Cafe", icon: "☕", href: "/catalog" },
@@ -30,86 +30,110 @@ export function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 10); // 👈 scroll threshold
+      setScrolled(window.scrollY > 10);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
   return (
     <header className="bg-white border-b">
-      {/* ✅ FIXED Top Bar ONLY */}
+      {/* 🔥 Fixed Header */}
       <div
-        className={`fixed top-0 left-0 right-0 z-50 bg-white transition-all duration-300 
-        ${scrolled ? "shadow-lg" : "shadow-none"}`}
+        className={`fixed top-0 left-0 right-0 z-50 bg-white transition-all duration-300 ${
+          scrolled ? "shadow-lg" : "shadow-none"
+        }`}
       >
-        <div className="container mx-auto flex items-center justify-between gap-6 px-6 py-4">
-          {/* Logo & Location */}
-          <div className="flex items-center gap-6">
-            <div className="text-2xl font-semibold text-green-600">
-              <Link href="/">HeavenKart</Link>
+        <div className="container mx-auto px-4 py-3">
+          {/* 🔹 Top Row */}
+          <div className="flex items-center justify-between">
+            {/* Left */}
+            <div className="flex items-center gap-3">
+              {/* Mobile Menu */}
+              <Menu className="h-6 w-6 md:hidden" />
+
+              <div className="text-xl md:text-2xl font-semibold text-green-600">
+                <Link href="/">HeavenKart</Link>
+              </div>
+               {/* Desktop Location */}
+            <div className="hidden md:block">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="flex gap-2">
+                    Select Location
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem>New York</DropdownMenuItem>
+                  <DropdownMenuItem>Los Angeles</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
             </div>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex gap-2">
-                  Select Location
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start">
-                <DropdownMenuItem>New York</DropdownMenuItem>
-                <DropdownMenuItem>Los Angeles</DropdownMenuItem>
-                <DropdownMenuItem>Chicago</DropdownMenuItem>
-                <DropdownMenuItem>Houston</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+           
 
-          {/* Search */}
-          <div className="flex-1 max-w-xl">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <Input placeholder='Search for "amul butter"' className="pl-10" />
+            {/* Right */}
+            <div className="flex items-center gap-3">
+              {/* 🔹 Desktop Search */}
+              <div className="hidden md:block">
+                <SearchBar placeholder="Search by name, description, or category..." />
+              </div>
+              <Link href="/customer/profile">
+                <User className="h-5 w-5 text-gray-500" />
+              </Link>
+              <Cart />
             </div>
           </div>
-          <SearchBar placeholder="Search by name, description, or category..." />
 
-          {/* Right Icons */}
-          <div className="flex items-center gap-4">
-            <Link
-              href={"/customer/profile"}
-              className="text-gray-900 cursor-pointer font-normal text-sm flex gap-x-1"
-            >
-              <User className="h-5 w-5" />
-            </Link>
-            
-            {/* </Button> */}
-            <Cart />
+          {/* 🔹 Mobile Search */}
+          <div className="mt-3 md:hidden">
+            <SearchBar placeholder="Search products..." />
           </div>
         </div>
       </div>
 
-      {/* ✅ Spacer for fixed header height */}
-      <div className="h-[68px]" />
+      {/* Spacer */}
+      <div className="h-[110px] md:h-[60px]" />
 
-      {/* ❌ NOT fixed – scrolls normally */}
+      {/* 🔥 Categories */}
       <nav className="border-t bg-white">
-        <div className="container mx-auto flex gap-8 px-6">
-          {categories.map((c, i) => (
-            <Link
-              href={c.href}
-              key={c.label}
-              className={`flex gap-2 py-4 text-sm font-medium border-b-2 ${
-                i === 0
-                  ? "text-green-600 border-green-600"
-                  : "border-transparent text-gray-700 hover:text-black"
-              }`}
-            >
-              <span>{c.icon}</span>
-              {c.label}
-            </Link>
-          ))}
+        <div className="container mx-auto px-4">
+          {/* Mobile → scroll */}
+          <div className="flex gap-6 overflow-x-auto no-scrollbar md:hidden">
+            {categories.map((c, i) => (
+              <Link
+                href={c.href}
+                key={c.label}
+                className={`flex flex-col items-center py-3 text-xs min-w-[60px] ${
+                  i === 0 ? "text-green-600" : "text-gray-600"
+                }`}
+              >
+                <span className="text-lg">{c.icon}</span>
+                {c.label}
+              </Link>
+            ))}
+          </div>
+
+          {/* Desktop */}
+          <div className="hidden md:flex gap-8">
+            {categories.map((c, i) => (
+              <Link
+                href={c.href}
+                key={c.label}
+                className={`flex gap-2 py-4 text-sm font-medium border-b-2 ${
+                  i === 0
+                    ? "text-green-600 border-green-600"
+                    : "border-transparent text-gray-700 hover:text-black"
+                }`}
+              >
+                <span>{c.icon}</span>
+                {c.label}
+              </Link>
+            ))}
+          </div>
         </div>
       </nav>
     </header>

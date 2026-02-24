@@ -41,7 +41,7 @@ export default function Cart() {
     <Drawer direction="right" open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger asChild>
         <button className="text-gray-900 relative text-sm cursor-pointer font-normal flex gap-x-1">
-          <ShoppingCart className="h-5 w-5 " />
+          <ShoppingCart className="h-5 w-5 text-gray-500" />
           {totalQty > 0 && (
             <span className="absolute -top-2 -right-4 bg-green-400 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
               {totalQty}
