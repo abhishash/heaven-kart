@@ -74,7 +74,7 @@ export interface ProductResponse {
 
 export interface AplusBanner {
   type: "single" | "two" | "three",
-  images: String[]
+  images: string[]
 }
 
 export interface ProductDataTypesList {

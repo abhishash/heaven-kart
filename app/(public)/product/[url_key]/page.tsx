@@ -1,11 +1,10 @@
-
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // import RelatedProducts from '@/components/product/related-products';
 import ProductReviews from "@/components/elements/product-reviews";
 import Image from "next/image";
 import { fetchHandler, methods } from "@/lib/api/auth";
-import { Product, ProductResponse } from "@/lib/types";
+import { AplusBanner, Product, ProductResponse } from "@/lib/types";
 import { PRODUCTS_DETAIL } from "@/lib/constants";
 import ProductInfo from "@/components/elements/product-info";
 import ProductImageGallery from "@/components/elements/product/product-image-gallery";
@@ -13,12 +12,14 @@ import ProductBarcode from "@/components/elements/product/product-barcode";
 import HtmlRender from "@/components/elements/html-render";
 import { ProductCarousel } from "@/components/elements/product-carousel";
 import SingleBanner from "@/components/elements/product/aplus-banner";
+import { isArray } from "@/lib/type-guards";
 
-export default async function ProductPage({ params }: {
-  params: Promise<{ url_key: string }>
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ url_key: string }>;
 }) {
-  const { url_key } = await params
-
+  const { url_key } = await params;
 
   const productResponse = await fetchHandler<ProductResponse>({
     endpoint: `${PRODUCTS_DETAIL.endpoint}/${url_key}`,
@@ -27,7 +28,7 @@ export default async function ProductPage({ params }: {
 
   const productInformation: Product = productResponse?.data;
   const relatedProducts = productResponse?.similar_products;
-
+  const aplusBanner = productResponse?.aplus;
 
   const product = {
     id: 1,
@@ -84,14 +85,14 @@ export default async function ProductPage({ params }: {
       <div className="mx-auto container px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid gap-5 lg:grid-cols-2">
           {/* Product Gallery */}
-          <ProductImageGallery thumbnailImg={productInformation?.image} images={productResponse?.gallery} />
+          <ProductImageGallery
+            thumbnailImg={productInformation?.image}
+            images={productResponse?.gallery}
+          />
 
           {/* Product Info */}
           <div className="flex flex-col gap-6">
-            <ProductInfo
-              product={productInformation}
-              productUrl={url_key}
-            />
+            <ProductInfo product={productInformation} productUrl={url_key} />
             {/* Trust Badges */}
             <div className="grid grid-cols-2 gap-4 rounded-lg bg-green-50 border border-border p-4">
               <div className="flex items-center gap-3">
@@ -160,15 +161,25 @@ export default async function ProductPage({ params }: {
             {/* Trust Badges */}
             <div className="flex flex-col gap-y-2 rounded-md border border-solid px-3 py-3">
               <h2 className="text-xl font-semibold mb-3">Basic Information</h2>
-              <ProductBarcode product={
-                { barcode: productInformation?.barcode, name: productInformation?.brand_name }
-              } />
+              <ProductBarcode
+                product={{
+                  barcode: productInformation?.barcode,
+                  name: productInformation?.brand_name,
+                }}
+              />
               <HtmlRender html={productInformation?.description} />
             </div>
           </div>
         </div>
-        <SingleBanner />
-
+        {/* A Plus Bannner */}
+        {isArray(aplusBanner) ? (
+          <div className="my-6 max-w-5xl mx-auto space-y-3">
+            <h2 className="text-2xl font-semibold">Product Permotion </h2>
+            {aplusBanner?.map((item: AplusBanner, index: number) => (
+              <SingleBanner key={index} bannerType={item?.type} bannerImage={item?.images} />
+            ))}
+          </div>
+        ) : null}
 
         {/* Tabs Section */}
         <div className=" my-12 border-t border-gray-900">
