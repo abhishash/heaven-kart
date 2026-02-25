@@ -18,6 +18,7 @@ import {
   PermotionsTypes,
   ProductsDataTypes,
 } from "@/lib/types";
+import clsx from "clsx";
 import Image from "next/image";
 
 export default async function Home() {
@@ -80,26 +81,28 @@ export default async function Home() {
       {/* Product Carousel Section */}
       {data?.map((item, index) => (
         <div key={index} className="grid grid-cols-12 gap-x-4 py-8">
-          <div className="col-span-3">
-            {/* Image Container */}
-            <div className="relative bg-slate-50 h-full flex items-center justify-center overflow-hidden">
-              <Image
-                src={
-                  `${process.env.ASSET_ENDPOINS}${item?.banner}` ||
-                  "/placeholder.svg"
-                }
-                alt={item?.name}
-                width={160}
-                height={160}
-                className="object-fill rounded-xl w-full h-full p-2"
-              />
-            </div>
-          </div>
-          <ProductCarousel
-            key={index}
-            title={item?.name}
-            products={item?.products}
-          />
+          {
+            item?.banner ? <div className="col-span-3">
+              {/* Image Container */}
+              <div className="relative bg-slate-50 h-full flex items-center justify-center overflow-hidden">
+                <Image
+                  src={
+                    `${process.env.ASSET_ENDPOINS}${item?.banner}` ||
+                    "/placeholder.svg"
+                  }
+                  alt={item?.name}
+                  width={160}
+                  height={160}
+                  className="object-fill rounded-xl w-full h-full p-2"
+                />
+              </div>
+            </div> : null
+          }
+            <ProductCarousel
+              key={index}
+              title={item?.name}
+              products={item?.products}
+            />
         </div>
       ))}
 

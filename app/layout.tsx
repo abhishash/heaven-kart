@@ -7,6 +7,9 @@ import { getQueryClient } from "@/lib/query-client";
 import { getHomeData } from "@/lib/api/home";
 import { Toaster } from "@/components/ui/sonner";
 import ReduxProviders from "./providers/redux-provider";
+import SessionProviders from "./providers/session-providers";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,17 +31,21 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession(authOptions)
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ReduxProviders>
-          <ReactQueryProviders>
-            <main className="min-h-[calc(100vh-522px)]">{children}</main>
-            <Toaster />
-          </ReactQueryProviders>
-        </ReduxProviders>
+        <SessionProviders session={session}>
+          <ReduxProviders>
+            <ReactQueryProviders>
+              <main className="min-h-[calc(100vh-522px)]">{children}</main>
+              <Toaster />
+            </ReactQueryProviders>
+          </ReduxProviders>
+        </SessionProviders>
       </body>
     </html>
   );

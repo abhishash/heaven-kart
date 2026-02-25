@@ -31,8 +31,6 @@ export const authOptions: NextAuthOptions = {
                         data: input,
                     });
 
-                    console.log(res);
-
                     if (
                         res?.status &&
                         isObject(res?.data)
@@ -40,7 +38,7 @@ export const authOptions: NextAuthOptions = {
                         const customerInfo = res?.data;
                         return {
                             name: customerInfo?.name,
-                            token: customerInfo?.token,
+                            token: res?.token,
                             email: customerInfo?.email,
                             phone: customerInfo?.phone,
                             id: customerInfo?.id,
@@ -59,6 +57,9 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     secret: process.env.NEXTAUTH_SECRET,
+    session: {
+        strategy: "jwt",
+    },
     callbacks: {
         jwt: async ({ token, user }) => {
             if (isObject(user) && user.token) {
@@ -67,6 +68,7 @@ export const authOptions: NextAuthOptions = {
             }
             return token;
         },
+
         async session({ session, token }) {
             return {
                 ...session,

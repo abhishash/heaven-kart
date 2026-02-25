@@ -27,6 +27,7 @@ import { useMutation } from "@tanstack/react-query";
 import { fetchHandler } from "@/lib/api/auth";
 import { addToCart } from "./store/cartSlice";
 import { useDispatch } from "react-redux";
+import { useSession } from "next-auth/react";
 
 interface ProductInfoProps {
   product: Product;
@@ -36,11 +37,13 @@ interface ProductInfoProps {
 export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
   const dispatch = useDispatch();
   const [isFavorite, setIsFavorite] = useState(false);
+  const { data : session} = useSession();
+  console.log(session, "--0--")
 
   const discountPercentage = Math.round(
     ((parseFloat(product.ac_price) - parseFloat(product.price)) /
       parseFloat(product.ac_price)) *
-      100,
+    100,
   );
 
   const { mutateAsync, isPending } = useMutation({
@@ -55,6 +58,7 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
         endpoint: "cart/add",
         method: "POST",
         data: payload,
+        token : session?.user?.accessToken,
       }),
   });
 
@@ -71,11 +75,11 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
         user_id: 1,
         product_id: product?.id,
         qty: qty,
-        price: parseInt(product?.ac_price) ,
+        price: parseInt(product?.ac_price),
         type: "custom",
-      }).then((res)=> {
-        if(res?.status) {
-          dispatch(addToCart({...res?.data, id: product?.id})); // ✅ Redux update
+      }).then((res) => {
+        if (res?.status) {
+          dispatch(addToCart({ ...res?.data, id: product?.id })); // ✅ Redux update
         }
       });
     } catch (error) {
