@@ -29,25 +29,32 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { imageBaseUrl } from "@/lib/constants";
 import Image from "next/image";
+import { useCartDetail } from "@/components/hooks/useCartDetails";
 
 export default function Cart() {
   const [isOpen, setIsOpen] = useState(false);
   const [quantity, setQuantity] = useState(2);
+  useCartDetail()
+
+  const { items, totalAmount, loading } = useSelector(
+    (state: RootState) => state.cart
+  );
+
   const dispatch = useDispatch();
-  const cart = useSelector((state: RootState) => state.cart.cart);
+  const cart = useSelector((state: RootState) => state.cart.items);
   const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
   
   return (
     <Drawer direction="right" open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger asChild>
-        <button className="text-gray-900 relative text-sm cursor-pointer font-normal flex gap-x-1">
+        <button disabled={loading} className="text-gray-900 bg-transparent relative text-sm cursor-pointer font-normal flex gap-x-1">
           <ShoppingCart className="h-5 w-5 text-gray-500" />
           {totalQty > 0 && (
             <span className="absolute -top-2 -right-4 bg-green-400 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
-              {totalQty}
+              {totalAmount}
             </span>
           )}
-        </button>
+        </button >
       </DrawerTrigger>
       <DrawerContent className="w-[420px] sm:w-[500px] md:min-w-[400px]">
         <DrawerHeader className="shadow-xl py-0 px-0">

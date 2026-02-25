@@ -128,12 +128,24 @@ export interface SimilarProduct {
 
 export interface CartItem {
   id: number;
+  cart_id: number;
   name: string;
   price: number;
   image?: string;
   qty: number;
 }
 
+export interface CartItemPayload {
+  id: number;
+  cart_id: number;
+  name: string;
+  price: number;
+  image?: string;
+  qty: string;
+}
+
 export interface CartState {
-  cart: CartItem[];
+  items: CartItem[];
+  loading: boolean;
+  totalAmount: number;
 }

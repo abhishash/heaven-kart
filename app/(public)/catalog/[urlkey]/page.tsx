@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { ProductCard } from '@/components/elements/product-card'
 import CategorySidebar from '@/components/elements/product/category-sidebar'
-import { fetchHandler, methods } from '@/lib/api/auth'
+import { fetchHandler, methods } from '@/lib/fetch-handler'
 import { ProductResponse, ProductTypes } from '@/lib/types'
 import { CATALOG_DETAIL, PRODUCTS_DETAIL } from '@/lib/constants'
 import { Filter } from 'lucide-react'

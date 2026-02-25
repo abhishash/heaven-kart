@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // import RelatedProducts from '@/components/product/related-products';
 import ProductReviews from "@/components/elements/product-reviews";
 import Image from "next/image";
-import { fetchHandler, methods } from "@/lib/api/auth";
+import { fetchHandler, methods } from "@/lib/fetch-handler";
 import { AplusBanner, Product, ProductResponse } from "@/lib/types";
 import { PRODUCTS_DETAIL } from "@/lib/constants";
 import ProductInfo from "@/components/elements/product-info";
@@ -167,6 +167,7 @@ export default async function ProductPage({
                   name: productInformation?.brand_name,
                 }}
               />
+              
               <HtmlRender html={productInformation?.description} />
             </div>
           </div>

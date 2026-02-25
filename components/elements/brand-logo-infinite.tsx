@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { BrandCarousel } from "./brand-carousel";
-import { fetchHandler, methods } from "@/lib/api/auth";
+import { fetchHandler, methods } from "@/lib/fetch-handler";
 import { BRAND_LOGOS } from "@/lib/constants";
 
 export function BrandLogoInfinite() {

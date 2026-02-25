@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { ScrollArea } from "../ui/scroll-area";
 import { useQuery } from "@tanstack/react-query";
-import { fetchHandler, methods } from "@/lib/api/auth";
+import { fetchHandler, methods } from "@/lib/fetch-handler";
 import { SEARCH_PRODUCTS } from "@/lib/constants";
 import { ProductDataTypesList } from "@/lib/types";
 import Link from "next/link";
@@ -118,7 +118,7 @@ export function SearchBar({
               <div className="divide-y">
                 {results.map((product) => (
                   <Link
-                    href={product?.url}
+                    href={`/product/${product?.url}`}
                     key={product.url}
                     onClick={handleClear}
                   >

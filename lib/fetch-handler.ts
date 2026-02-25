@@ -5,7 +5,7 @@ export type FetchHandlerProps<T> = {
   endpoint: string;
   method?: "GET" | "POST" | "PUT" | "DELETE";
   data?: T;
-  token? : string;
+  token?: string;
 };
 export const fetchHandler = async <T>({
   endpoint,
@@ -18,11 +18,10 @@ export const fetchHandler = async <T>({
     method,
     headers: {
       "Content-Type": "application/json",
-      Authorization:
-        `Bearer ${token}`,
+      ...(token && { Authorization: `Bearer ${token}` }),
     },
     body: data ? JSON.stringify(data) : undefined,
-    cache: "no-store",
+    // cache: "no-store",
   });
 
   if (!res.ok) {

@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { ProductCard } from '@/components/elements/product-card'
 import CategorySidebar from '@/components/elements/product/category-sidebar'
-import { fetchHandler, methods } from '@/lib/api/auth'
+import { fetchHandler, methods } from '@/lib/fetch-handler'
 import { ProductDataTypesList, ProductResponse, ProductTypes, SimilarProduct } from '@/lib/types'
 import { ALL_PRODUCTS, CATALOG_DETAIL, PRODUCTS_DETAIL } from '@/lib/constants'
 import { isArray } from '@/lib/type-guards'

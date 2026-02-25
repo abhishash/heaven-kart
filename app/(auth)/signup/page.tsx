@@ -1,6 +1,6 @@
 "use client";
 
-import { fetchHandler } from "@/lib/api/auth";
+import { fetchHandler } from "@/lib/fetch-handler";
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { useState } from "react";

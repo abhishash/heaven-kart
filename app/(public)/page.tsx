@@ -3,7 +3,7 @@ import { CategoriesCarousel } from "@/components/elements/categories-carousel";
 import { PermotionBanner } from "@/components/elements/permotion-banner";
 import { ProductCarousel } from "@/components/elements/product-carousel";
 import ImageCarousel from "@/components/homepage/banner/image-carousel";
-import { fetchHandler, methods } from "@/lib/api/auth";
+import { fetchHandler, methods } from "@/lib/fetch-handler";
 import {
   HOME_CATEGORIES,
   HOMEPAGE_PRODUCTS,

@@ -84,11 +84,9 @@ export function Header() {
               <div className="hidden md:block w-[400px]">
                 <SearchBar placeholder="Search products..." />
               </div>
-
               <Link href="/customer/profile">
                 <User className="h-5 w-5 text-gray-600 hover:text-black" />
               </Link>
-
               <Cart />
             </div>
           </div>

@@ -5,6 +5,7 @@ import {
   Minus,
   Plus,
   Share2,
+  ShoppingBasket,
   ShoppingCart,
   Star,
   Zap,
@@ -24,10 +25,13 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { useMutation } from "@tanstack/react-query";
-import { fetchHandler } from "@/lib/api/auth";
+import { fetchHandler } from "@/lib/fetch-handler";
 import { addToCart } from "./store/cartSlice";
 import { useDispatch } from "react-redux";
 import { useSession } from "next-auth/react";
+import { Input } from "../ui/input";
+import { Field, FieldLabel } from "../ui/field";
+import { FieldValues, useForm } from "react-hook-form";
 
 interface ProductInfoProps {
   product: Product;
@@ -37,8 +41,7 @@ interface ProductInfoProps {
 export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
   const dispatch = useDispatch();
   const [isFavorite, setIsFavorite] = useState(false);
-  const { data : session} = useSession();
-  console.log(session, "--0--")
+  const { data: session } = useSession();
 
   const discountPercentage = Math.round(
     ((parseFloat(product.ac_price) - parseFloat(product.price)) /
@@ -48,7 +51,6 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (payload: {
-      user_id: number;
       product_id: number;
       qty: number;
       price: number;
@@ -58,7 +60,7 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
         endpoint: "cart/add",
         method: "POST",
         data: payload,
-        token : session?.user?.accessToken,
+        token: session?.user?.accessToken,
       }),
   });
 
@@ -68,18 +70,22 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
   const decreaseQty = () => {
     if (qty > 1) setQty(qty - 1);
   };
+  const { register, handleSubmit, setValue, watch } = useForm({
+    defaultValues: {
+      qty: 1
+    }
+  });
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (data: FieldValues) => {
     try {
       await mutateAsync({
-        user_id: 1,
         product_id: product?.id,
-        qty: qty,
+        qty: data?.qty || 1,
         price: parseInt(product?.ac_price),
         type: "custom",
       }).then((res) => {
         if (res?.status) {
-          dispatch(addToCart({ ...res?.data, id: product?.id })); // ✅ Redux update
+          dispatch(addToCart({ ...res?.data })); // ✅ Redux update
         }
       });
     } catch (error) {
@@ -166,7 +172,7 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
               </span>
             </div>
             <span className="text-sm text-muted-foreground">
-              {/* ({product.reviewCount.toLocaleString()} reviews) */} 21
+              {/* ({product.reviewCount.toLocaleString()} reviews) */}
             </span>
           </div>
         </div>
@@ -207,51 +213,81 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
           {parseInt(product?.in_stock) ? "In Stock" : "Out of Stock"}
         </span>
       </div>
-      <div className="space-y-5">
-        {/* Quantity + Wishlist */}
-        <div className="flex items-center justify-between gap-4">
-          {/* Quantity */}
-          <div className="flex items-center justify-between  min-w-36 gap-3 border rounded-xl px-3 py-2">
-            <button onClick={decreaseQty} className="cursor-pointer">
-              <Minus className="h-4 w-4" />
+      <div className="space-y-6">
+        {/* Stock Info */}
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-medium text-gray-600">
+            Available:
+            <span className="ml-2 text-green-700 font-semibold">
+              {product?.stock} in stock
+            </span>
+          </p>
+        </div>
+
+        {/* Quantity + Add To Cart */}
+        <form
+          onSubmit={handleSubmit(handleAddToCart)}
+          className="flex flex-col sm:flex-row gap-4"
+        >
+          {/* Quantity Selector */}
+          <div className="flex items-center border border-green-500 rounded-xl overflow-hidden shadow-sm">
+            <button
+              type="button"
+              onClick={() => setValue("qty", Math.max(1, Number(watch("qty")) - 1))}
+              className="px-4 py-0 bg-gray-50 hover:bg-gray-100 transition text-lg font-semibold"
+            >
+              −
             </button>
 
-            <span className="font-medium min-w-8 text-center">{qty}</span>
+            <input
+              {...register("qty")}
+              type="number"
+              min={1}
+              className="w-12 text-center border-0 !outline-0 !focus:ring-0 text-sm font-medium"
+            />
 
-            <button onClick={increaseQty} className="cursor-pointer">
-              <Plus className="h-4 w-4" />
+            <button
+              type="button"
+              onClick={() =>
+                setValue(
+                  "qty",
+                  Math.min(parseInt(product?.stock)  || 1, Number(watch("qty")) + 1)
+                )
+              }
+              className="px-4 py-0 bg-gray-50 hover:bg-gray-100 transition text-lg font-semibold"
+            >
+              +
             </button>
           </div>
 
-          {/* Add to Cart */}
+          {/* Add to Cart Button */}
           <Button
             size="lg"
-            onClick={handleAddToCart}
+            type="submit"
             disabled={isPending}
-            className="flex-1 cursor-pointer bg-green-400 hover:bg-green-500 text-white text-sm font-semibold py-4 rounded-lg shadow-md hover:scale-[1.02] active:scale-[0.98] transition"
+            className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold px-16 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 active:scale-[0.98]"
           >
-            <ShoppingCart /> Add to Cart
+            <ShoppingCart className="h-5 w-5" />
+            Add to Cart
           </Button>
-        </div>
+        </form>
 
-        {/* Buy Now */}
-        <Button
-          variant="outline"
-          size="lg"
-          className="w-full border-2 border-green-600 text-green-600 hover:bg-green-50 text-lg font-semibold py-4 rounded-xl transition-all duration-200"
-        >
-          ⚡ Buy Now
-        </Button>
-
-        {/* Divider */}
-        <div className="border-t pt-4 flex items-center justify-between">
-          <span className="text-sm text-gray-500">Share this product</span>
+        {/* Buy Now + Share */}
+        <div className="flex flex-wrap gap-4 items-center">
+          <Button
+            variant="outline"
+            size="lg"
+            className="flex items-center  !bg-white gap-2 border-2 border-green-600  hover:bg-green-50 rounded-xl px-12 font-medium transition"
+          >
+            <ShoppingBasket className="h-5 w-5" />
+            Buy Now
+          </Button>
 
           <button
             onClick={() => {
               if (navigator.share) {
                 navigator.share({
-                  title: "Product Name",
+                  title: product?.name,
                   text: "Check out this product!",
                   url: window.location.href,
                 });
@@ -259,10 +295,10 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
                 navigator.clipboard.writeText(window.location.href);
               }
             }}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition text-sm font-medium"
+            className="flex items-center gap-2 px-12 cursor-pointer py-3 rounded-xl border border-gray-300 hover:bg-gray-100 transition text-sm font-medium"
           >
             <Share2 className="h-4 w-4" />
-            Share
+            Share this Product
           </button>
         </div>
       </div>

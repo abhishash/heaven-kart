@@ -1,7 +1,7 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { isObject } from "./lib/type-guards";
-import { fetchHandler } from "./lib/api/auth";
+import { fetchHandler } from "./lib/fetch-handler";
 export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
