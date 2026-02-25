@@ -7,7 +7,11 @@ import { getQueryClient } from "@/lib/query-client";
 import { getHomeData } from "@/lib/api/home";
 import { Toaster } from "@/components/ui/sonner";
 import ReduxProviders from "./providers/redux-provider";
-
+const manrope = Manrope({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
+});
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -31,7 +35,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+  className={`${manrope.variable} font-display antialiased bg-surface text-slate-900`}
       >
         <ReduxProviders>
           <ReactQueryProviders>
