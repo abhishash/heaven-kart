@@ -176,7 +176,7 @@ export default async function ProductPage({
           <div className="my-6 max-w-5xl mx-auto space-y-3">
             <h2 className="text-2xl font-semibold">Product Permotion </h2>
             {aplusBanner?.map((item: AplusBanner, index: number) => (
-              <SingleBanner key={index} bannerType={item?.type} bannerImage={item?.images} isBanner={false}/>
+              <SingleBanner key={index} bannerType={item?.type} bannerImage={item?.images} />
             ))}
           </div>
         ) : null}
@@ -196,7 +196,7 @@ export default async function ProductPage({
 
         {/* Related Products */}
         {/* <ProductCarousel title="Recently View" products={laundryProducts} /> */}
-        <ProductCarousel title="Related Products" products={relatedProducts} />
+        <ProductCarousel title="Related Products" products={relatedProducts} isBanner={false} />
         {/* <ProductCarousel title="Explore More" products={laundryProducts} /> */}
       </div>
     </div>
