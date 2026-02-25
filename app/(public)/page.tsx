@@ -80,35 +80,39 @@ export default async function Home() {
       <BrandLogoInfinite />
       {/* Product Carousel Section */}
       {data?.map((item, index) => (
-        <div key={index} className="grid grid-cols-12 gap-x-4 py-8">
+        <div key={index} className="grid grid-cols-12 gap-2 sm:gap-4 py-2 sm:py-8">
           {
-            item?.banner ? <div className="col-span-3">
+            item?.banner ? <div className="col-span-12 sm:col-span-3">
               {/* Image Container */}
-              <div className="relative bg-slate-50 h-full flex items-center justify-center overflow-hidden">
+              <div className="relative bg-slate-50 max-h-28 sm:h-full rounded-sm md:rounded-xl flex items-center justify-center overflow-hidden">
                 <Image
                   src={
-                    `${process.env.ASSET_ENDPOINS}${item?.banner}` ||
-                    "/placeholder.svg"
+                    item?.banner
+                      ? `${process.env.ASSET_ENDPOINS}${item.banner}`
+                      : "/placeholder.svg"
                   }
                   alt={item?.name}
                   width={160}
                   height={160}
-                  className="object-fill rounded-xl w-full h-full p-2"
+                  className="object-contain rounded-sm md:rounded-xl w-full h-full p-0 sm:p-2"
                 />
               </div>
             </div> : null
           }
-            <ProductCarousel
-              key={index}
-              title={item?.name}
-              products={item?.products}
-            />
+
+          <ProductCarousel
+            key={index}
+            title={item?.name}
+            url={item?.url}
+            isBanner={item?.banner ? true : false}
+            products={item?.products}
+          />
         </div>
       ))}
 
       {/* Permotions products */}
-      <div className="flex flex-col gap-y-6 py-6">
-        <h2 className="text-2xl font-bold text-slate-900">Permotions</h2>
+      <div className="flex flex-col gap-y-2 sm:gap-y-6 py-2 sm:py-6">
+        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900">Permotions</h2>
         <div className="grid grid-cols-3 gap-x-2 sm:gap-x-6">
           {permotions?.map((item, index) => (
             <PermotionBanner key={index} values={item} />

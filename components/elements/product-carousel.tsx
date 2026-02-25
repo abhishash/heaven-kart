@@ -1,10 +1,12 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ProductCard } from "./product-card";
 import useEmblaCarousel from "embla-carousel-react";
 import { ProductTypes } from "@/lib/types";
+import clsx from "clsx";
+import Link from "next/link";
 
 export interface Product {
   id: string;
@@ -22,12 +24,21 @@ export interface Product {
 interface ProductCarouselProps {
   title: string;
   products: ProductTypes[];
+  isBanner : boolean;
+  url?: string;
 }
 
-export function ProductCarousel({ title, products }: ProductCarouselProps) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ slidesToScroll: 4 });
+export function ProductCarousel({ title, products, isBanner, url }: ProductCarouselProps) {
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+  slidesToScroll: 1,
+  breakpoints: {
+    "(min-width: 768px)": { slidesToScroll: 2 },
+    "(min-width: 1024px)": { slidesToScroll: 4 },
+  },
+});
   const [prevBtnDisabled, setPrevBtnDisabled] = useState(true);
   const [nextBtnDisabled, setNextBtnDisabled] = useState(true);
+  const productsMemo = useMemo(() => products, [products]);
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
@@ -60,17 +71,17 @@ export function ProductCarousel({ title, products }: ProductCarouselProps) {
 
 
   return (
-    <section className="col-span-9">
+    <section className={clsx(isBanner ? "col-span-12 sm:col-span-9" : "col-span-12")}>
       {/* Header */}
-      <div className="flex items-center justify-between mb-6 px-0">
-        <h2 className="text-2xl font-bold text-slate-900">{title}</h2>
-        <a
-          href="#"
-          className="text-green-600 hover:text-green-700 font-semibold text-sm flex items-center gap-1"
+      <div className="flex items-center justify-between mb-2 md:mb-6 px-0">
+        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900">{title}</h2>
+        <Link
+          href={`/catalog/${url || "/"}`}
+          className="text-green-600 hover:text-green-700 font-semibold text-xs sm:text-sm flex items-center gap-1"
         >
           See All
           <ChevronRight size={16} />
-        </a>
+        </Link>
       </div>
       {/* Carousel Container */}
       <div className="relative">
@@ -78,15 +89,15 @@ export function ProductCarousel({ title, products }: ProductCarouselProps) {
         <button
           onClick={scrollPrev}
           disabled={prevBtnDisabled}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg hover:shadow-xl disabled:opacity-50 active:cursor-pointer disabled:cursor-not-allowed transition-all"
+          className="absolute md:block hidden left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg hover:shadow-xl disabled:opacity-50 active:cursor-pointer disabled:cursor-not-allowed transition-all"
         >
           <ChevronLeft size={20} className="text-slate-900" />
         </button>
         {/* Carousel */}
         <div className="overflow-hidden" ref={emblaRef}>
-          <div className="flex px-4 md:px-6">
-            {products?.map((product) => (
-              <div key={product.url} className="flex-shrink-0 mr-4">
+          <div className="flex gap-2 px-0 md:px-6">
+            {productsMemo?.map((product) => (
+              <div key={product.url} className="flex-shrink-0 mr-1 sm:mr-4">
                 <ProductCard {...product} />
               </div>
             ))}
@@ -97,7 +108,7 @@ export function ProductCarousel({ title, products }: ProductCarouselProps) {
         <button
           onClick={scrollNext}
           disabled={nextBtnDisabled}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg hover:shadow-xl disabled:opacity-50 active:cursor-pointer disabled:cursor-not-allowed transition-all"
+          className="absolute md:block hidden right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg hover:shadow-xl disabled:opacity-50 active:cursor-pointer disabled:cursor-not-allowed transition-all"
         >
           <ChevronRight size={20} className="text-slate-900" />
         </button>

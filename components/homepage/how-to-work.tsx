@@ -22,17 +22,17 @@ const steps = [
 
 export default function HowToWorks() {
   return (
-    <main className="pt-10 pb-20">
+    <main className="pt-4 sm:pt-10 pb-20">
       <div className="max-w-6xl mx-auto px-4">
         {/* Heading */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">
+        <div className="text-center mb-6 sm:mb-16">
+          <h1 className=" text-2xl sm:text-4xl font-bold text-slate-900 mb-2">
             How it Works
           </h1>
         </div>
 
         {/* Steps Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-8">
           {steps.map((step, index) => (
             <div
               key={index}
@@ -45,7 +45,7 @@ export default function HowToWorks() {
                   alt={step.title}
                   width={80}
                   height={80}
-                  className="w-20 h-20 object-contain"
+                  className="w-16 sm:w-20 h-16 sm:h-20 object-contain"
                 />
               </div>
 

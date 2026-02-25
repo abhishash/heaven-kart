@@ -22,6 +22,7 @@ export const fetchHandler = async <T>({
         `Bearer ${token}`,
     },
     body: data ? JSON.stringify(data) : undefined,
+    cache: "no-store",
   });
 
   if (!res.ok) {
