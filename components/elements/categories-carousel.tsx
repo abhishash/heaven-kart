@@ -61,14 +61,14 @@ export function CategoriesCarousel({ title, subCategories }: ProductCarouselProp
 
 
     return (
-        <section className="space-y-6">
+        <section className="space-y-3 sm:space-y-6">
             {/* Section Title */}
-            <h1 className="text-2xl  font-semibold text-slate-900 px-4">
+            <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900">
                 {title}
             </h1>
 
             {/* Cards Row */}
-            <div className="grid grid-cols-6 gap-4 overflow-x-auto px-4 pb-4 scrollbar-hide">
+            <div className="grid grid-cols-4 sm:grid-cols-6 gap-4 overflow-x-auto px-0 sm:px-4 pb-4 scrollbar-hide">
                 {subCategories?.map((product) => (
                     <Link
                         key={product.url}
@@ -79,7 +79,6 @@ export function CategoriesCarousel({ title, subCategories }: ProductCarouselProp
                             className="
             w-auto
             bg-white
-            rounded-3xl
             overflow-hidden
             hover:-translate-y-1
             transition-all
@@ -88,7 +87,7 @@ export function CategoriesCarousel({ title, subCategories }: ProductCarouselProp
           "
                         >
                             {/* Image */}
-                            <div className="relative bg-slate-100 rounded-2xl h-56 flex items-center justify-center">
+                            <div className="relative bg-slate-100 rounded-md sm:rounded-2xl h-24 max-h-32 sm:h-56 flex items-center justify-center">
                                 <SafeImage
                                     src={product.image}
                                     alt={product.name}
@@ -98,15 +97,15 @@ export function CategoriesCarousel({ title, subCategories }: ProductCarouselProp
     object-contain
     transition-transform
     duration-300
-    rounded-2xl
+     h-auto
     group-hover:scale-105
   "
                                 />
                             </div>
 
                             {/* Content */}
-                            <div className="p-4 text-center">
-                                <h2 className="text-2xl font-semibold text-slate-900 line-clamp-2">
+                            <div className="p-0 sm:p-4 text-center">
+                                <h2 className="text-sm sm:text-xl md:text-2xl font-semibold text-slate-700  sm:line-clamp-2">
                                     {product.name}
                                 </h2>
 

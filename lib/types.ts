@@ -6,6 +6,7 @@ export interface ProductsDataTypes {
   position: number;
   products: ProductTypes[];
   banner: string | null;
+  url: string;
 }
 
 export interface BannerDataTypes {
@@ -19,7 +20,7 @@ export interface HomePageDataTypes {
 }
 
 export interface ProductTypes {
-  url: number;
+  url: string;
   name: string;
   image: string;
   price: string;

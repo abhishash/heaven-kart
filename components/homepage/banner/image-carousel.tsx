@@ -96,7 +96,7 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
   return (
     <section className="w-full">
       <div
-        className="group relative w-full overflow-hidden rounded-xl md:rounded-2xl 
+        className="group relative w-full overflow-hidden bg-green-50 rounded-sm md:rounded-md 
     h-[180px] sm:h-[240px] md:h-[320px] lg:h-[420px]"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
@@ -123,7 +123,7 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
                   src={`${imageBaseUrl}${img.image}`}
                   alt={img.name || `Banner ${index + 1}`}
                   fill
-                  className="object-cover object-center"
+                  className="object-fill object-center"
                   priority={index === 0}
                   sizes="(max-width: 640px) 100vw, 
                      (max-width: 1024px) 100vw, 
