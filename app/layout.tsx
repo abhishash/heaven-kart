@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Manrope } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import ReactQueryProviders from "./providers/react-providers";
@@ -7,19 +7,12 @@ import { getQueryClient } from "@/lib/query-client";
 import { getHomeData } from "@/lib/api/home";
 import { Toaster } from "@/components/ui/sonner";
 import ReduxProviders from "./providers/redux-provider";
+
+
 const manrope = Manrope({
   variable: "--font-display",
   subsets: ["latin"],
   weight: ["200", "300", "400", "500", "600", "700", "800"],
-});
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
