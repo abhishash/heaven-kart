@@ -80,7 +80,8 @@ export default async function Home() {
       {/* Product Carousel Section */}
       {data?.map((item, index) => (
         <div key={index} className="grid grid-cols-12 gap-x-4 py-8">
-          <div className="col-span-3">
+          {
+            item?.banner ? <div className="col-span-12 sm:col-span-3">
             {/* Image Container */}
             <div className="relative bg-slate-50 h-full flex items-center justify-center overflow-hidden">
               <Image
@@ -94,10 +95,13 @@ export default async function Home() {
                 className="object-fill rounded-xl w-full h-full p-2"
               />
             </div>
-          </div>
+          </div> : null
+          }
+          
           <ProductCarousel
             key={index}
             title={item?.name}
+            isBanner= {item?.banner ? true : false}
             products={item?.products}
           />
         </div>

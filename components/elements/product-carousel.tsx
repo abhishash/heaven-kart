@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { ProductCard } from "./product-card";
 import useEmblaCarousel from "embla-carousel-react";
 import { ProductTypes } from "@/lib/types";
+import clsx from "clsx";
 
 export interface Product {
   id: string;
@@ -22,9 +23,10 @@ export interface Product {
 interface ProductCarouselProps {
   title: string;
   products: ProductTypes[];
+  isBanner : boolean;
 }
 
-export function ProductCarousel({ title, products }: ProductCarouselProps) {
+export function ProductCarousel({ title, products, isBanner }: ProductCarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ slidesToScroll: 4 });
   const [prevBtnDisabled, setPrevBtnDisabled] = useState(true);
   const [nextBtnDisabled, setNextBtnDisabled] = useState(true);
@@ -60,7 +62,7 @@ export function ProductCarousel({ title, products }: ProductCarouselProps) {
 
 
   return (
-    <section className="col-span-9">
+    <section className={clsx(isBanner ? "col-span-12 sm:col-span-9" : "col-span-12")}>
       {/* Header */}
       <div className="flex items-center justify-between mb-6 px-0">
         <h2 className="text-2xl font-bold text-slate-900">{title}</h2>

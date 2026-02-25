@@ -90,108 +90,75 @@ export function Footer() {
     <>
       <HowToWorks />
       <footer className="bg-white space-y-12">
-        <div className="container border-y border-solid mx-auto py-12">
-          {/* Popular Searches Section */}
-          <section className="mb-0 pb-12">
-            <h1 className="text-xl font-semibold text-slate-900 mb-8">
-              Popular Searches
-            </h1>
+        <div className="container mx-auto border-y py-8 sm:py-12 px-4">
 
-            <div className="space-y-4">
-              {/* Products Row */}
-              <div className="flex items-center gap-4">
-                <span className="text-sm font-semibold w-18  text-slate-900">
-                  Products
-                </span>
-                <div className="text-slate-600 flex-1">
-                  <span className="text-slate-500">: </span>
-                  {popularSearches.products.map((item, index) => (
-                    <span key={index}>
-                      <Link
-                        href="#"
-                        className="text-slate-600 text-sm hover:text-slate-900"
-                      >
-                        {item}
-                      </Link>
-                      {index < popularSearches.products.length - 1 && (
-                        <span className="mx-1">|</span>
-                      )}
-                    </span>
-                  ))}
-                </div>
-              </div>
+  {/* Popular Searches Section */}
+  <section className="pb-10">
+    <h1 className="text-lg sm:text-xl font-semibold text-slate-900 mb-6 sm:mb-8">
+      Popular Searches
+    </h1>
 
-              {/* Brands Row */}
-              <div className="flex items-center gap-4">
-                <span className="text-sm font-semibold text-slate-900 w-18">
-                  Brands
-                </span>
-                <div className="text-slate-600 flex-1">
-                  <span className="text-slate-500">: </span>
-                  {popularSearches.brands.map((item, index) => (
-                    <span key={index}>
-                      <Link
-                        href="#"
-                        className="text-slate-600 text-sm hover:text-slate-900"
-                      >
-                        {item}
-                      </Link>
-                      {index < popularSearches.brands.length - 1 && (
-                        <span className="mx-1">|</span>
-                      )}
-                    </span>
-                  ))}
-                </div>
-              </div>
+    <div className="space-y-6">
 
-              {/* Categories Row */}
-              <div className="flex items-center gap-4">
-                <span className="text-sm w-18 font-semibold text-slate-900 ">
-                  Categories
-                </span>
-                <div className="text-slate-600 flex-1">
-                  <span className="text-slate-500">: </span>
-                  {popularSearches.categories.map((item, index) => (
-                    <span key={index}>
-                      <Link
-                        href="#"
-                        className="text-slate-600 text-sm hover:text-slate-900"
-                      >
-                        {item}
-                      </Link>
-                      {index < popularSearches.categories.length - 1 && (
-                        <span className="mx-1">|</span>
-                      )}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
+      {/* Reusable Row */}
+      {[
+        { label: "Products", data: popularSearches.products },
+        { label: "Brands", data: popularSearches.brands },
+        { label: "Categories", data: popularSearches.categories },
+      ].map((section, idx) => (
+        <div
+          key={idx}
+          className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-4"
+        >
+          {/* Label */}
+          <span className="text-sm font-semibold text-slate-900 sm:w-24">
+            {section.label}
+          </span>
 
-          {/* Categories Section */}
-          <section>
-            <h2 className="text-xl font-semibold text-slate-900 mb-8">
-              Categories
-            </h2>
+          {/* Links */}
+          <div className="flex flex-wrap text-sm text-slate-600">
+            <span className="hidden sm:inline text-slate-400 mr-2">:</span>
 
-            <div className="flex justify-between gap-2">
-              {categories.map((column, colIndex) => (
-                <div key={colIndex} className="space-y-4">
-                  {column.map((category, catIndex) => (
-                    <Link
-                      key={catIndex}
-                      href="#"
-                      className="block font-medium text-sm text-slate-700 hover:text-slate-600 transition-colors"
-                    >
-                      {category}
-                    </Link>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </section>
+            {section.data.map((item, index) => (
+              <span key={index} className="flex items-center">
+                <Link
+                  href="#"
+                  className="hover:text-slate-900 transition-colors"
+                >
+                  {item}
+                </Link>
+
+                {index < section.data.length - 1 && (
+                  <span className="mx-2 text-slate-400">|</span>
+                )}
+              </span>
+            ))}
+          </div>
         </div>
+      ))}
+    </div>
+  </section>
+
+  {/* Categories Section */}
+  <section>
+    <h2 className="text-lg sm:text-xl font-semibold text-slate-900 mb-6 sm:mb-8">
+      Categories
+    </h2>
+
+    {/* Responsive Grid */}
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-y-4 gap-x-6">
+      {categories.flat().map((category, index) => (
+        <Link
+          key={index}
+          href="#"
+          className="block text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors"
+        >
+          {category}
+        </Link>
+      ))}
+    </div>
+  </section>
+</div>
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 py-10">
             {/* Logo + Social */}

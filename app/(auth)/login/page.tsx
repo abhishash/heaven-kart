@@ -65,7 +65,7 @@ const LoginPage = () => {
             Vendor Portal
           </h1>
         </header>
-<div className=" flex-col md:hidden pb-6 flex w-full items-center">
+        <div className=" flex-col md:hidden pb-6 flex  w-full items-center">
               <img
                 alt="rocket icon"
                 src="http://brands-onboarding.zepto.co.in/assets/icons/rocket.svg"
@@ -77,7 +77,22 @@ const LoginPage = () => {
               <h4 className=" !font-semibold bg-clip-text text-transparent bg-gradient-to-r from-green-700 from-[7.58%] to-primary to-[98.88%]">
                 Selling through HeavenKart
               </h4>
-            </div>
+        </div>
+
+         <div className="flex md:hidden items-center h-20 relative z-10 justify-between md:justify-end">
+          <p className="font-medium text-base text-primary-700  p-4">
+            Not a User?
+          </p>
+          <button
+            className="px-4 py-2 rounded-lg cursor-pointer text-base font-semibold text-white bg-linear-to-r from-green-700 to-[#4ADE80]"
+            type="button"
+          >
+            <Link aria-label="login-button" href="/signup">
+              Create Account
+            </Link>{" "}
+          </button>
+        </div>
+           
         {/* Form Card */}
         <div className="inset-0 static md:absolute flex flex-col md:flex-row items-center justify-center">
           <form
@@ -131,7 +146,7 @@ const LoginPage = () => {
 
       {/* RIGHT */}
       <div className="flex-1 px-4 md:px-6 w-full bg-white">
-        <div className="flex items-center h-20 relative z-10 justify-between md:justify-end">
+        <div className="hidden md:flex items-center h-20 relative z-10 justify-between md:justify-end">
           <p className="font-medium text-base text-primary-700  p-4">
             Not a User?
           </p>
