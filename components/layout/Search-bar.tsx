@@ -1,119 +1,93 @@
 "use client";
 
-import { useCallback, useState, useRef, useEffect } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 import { Search, Loader2, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { ScrollArea } from "../ui/scroll-area";
-
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  category: string;
-  image: string;
-}
-
-interface SearchBarProps {
-  placeholder?: string;
-}
+import { useQuery } from "@tanstack/react-query";
+import { fetchHandler, methods } from "@/lib/api/auth";
+import { SEARCH_PRODUCTS } from "@/lib/constants";
+import { ProductDataTypesList } from "@/lib/types";
+import Link from "next/link";
+import { formatPrice } from "@/lib/utils";
 
 export function SearchBar({
   placeholder = "Search products...",
-}: SearchBarProps) {
+}: { placeholder?: string; }) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [results, setResults] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
-  const debounceRef = useRef<NodeJS.Timeout | null>(null);
-  const abortControllerRef = useRef<AbortController | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // 🔥 Optimized API Call
-  const fetchProducts = async (query: string) => {
-    if (!query.trim() || query.length < 2) {
-      setResults([]);
-      return;
-    }
+  /* ==============================
+     Debounce Logic
+  ============================== */
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 400);
 
-    try {
-      setIsLoading(true);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
-      // Cancel previous request
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
+  /* ==============================
+     TanStack Query
+  ============================== */
+  const { data, isPending } = useQuery<ProductDataTypesList>({
+    queryKey: ["search", debouncedQuery],
+    queryFn: () =>
+      fetchHandler({
+        endpoint: `${SEARCH_PRODUCTS.endpoint}?q=${debouncedQuery}`,
+        method: SEARCH_PRODUCTS.method as methods,
+      }),
+    enabled: debouncedQuery.length >= 2,
+    staleTime: 1000 * 60,
+  });
 
-      const controller = new AbortController();
-      abortControllerRef.current = controller;
+  const results = data?.data ?? [];
 
-      const response = await fetch(`/api/search?${query.toString()}`, {
-        signal: controller.signal,
-      });
-
-      const data = await response.json();
-      setResults(data.products || []);
-    } catch (error: any) {
-      if (error.name !== "AbortError") {
-        console.error("Search error:", error);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // 🔥 Debounced Input Handler
+  /* ==============================
+     Handlers
+  ============================== */
   const handleSearchChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
-      setSearchQuery(value);
+      setSearchQuery(e.target.value);
       setIsOpen(true);
-
-      if (debounceRef.current) {
-        clearTimeout(debounceRef.current);
-      }
-
-      debounceRef.current = setTimeout(() => {
-        fetchProducts(value);
-      }, 300);
     },
     [],
   );
 
   const handleClear = () => {
     setSearchQuery("");
-    setResults([]);
+    setDebouncedQuery("");
     setIsOpen(false);
-    if (debounceRef.current) {
-      clearTimeout(debounceRef.current);
-    }
   };
 
-  // 🔥 Close dropdown outside click
+  /* ==============================
+     Close Dropdown on Outside Click
+  ============================== */
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false);
       }
-    }
+    };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
+    return () =>
       document.removeEventListener("mousedown", handleClickOutside);
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-      if (abortControllerRef.current) abortControllerRef.current.abort();
-    };
   }, []);
 
   return (
     <div className="sm:min-w-sm w-full relative" ref={dropdownRef}>
       <div className="relative flex items-center">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+
         <Input
           type="text"
           placeholder={placeholder}
@@ -123,14 +97,14 @@ export function SearchBar({
           onFocus={() => setIsOpen(true)}
         />
 
-        {isLoading && (
+        {isPending && searchQuery?.length > 2 && (
           <Loader2 className="absolute right-3 h-5 w-5 animate-spin" />
         )}
 
-        {searchQuery && !isLoading && (
+        {searchQuery && !isPending && (
           <button
             onClick={handleClear}
-            className="absolute cursor-pointer right-3"
+            className="absolute right-3 cursor-pointer"
           >
             <X className="h-4 w-4" />
           </button>
@@ -143,29 +117,35 @@ export function SearchBar({
             {results.length > 0 ? (
               <div className="divide-y">
                 {results.map((product) => (
-                  <div
-                    key={product.id}
-                    className="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer"
+                  <Link
+                    href={product?.url}
+                    key={product.url}
+                    onClick={handleClear}
                   >
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-10 h-10 object-cover rounded"
-                    />
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">{product.name}</p>
-                      <p className="text-xs text-gray-500 truncate">
-                        {product.description}
-                      </p>
-                      <p className="text-sm font-semibold">
-                        ${product.price.toFixed(2)}
-                      </p>
+                    <div className="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer" >
+                      <Image
+                        src={`${process.env.ASSET_ENDPOINS}${product?.image}` || "/placeholder.svg"}
+                        alt={product.name}
+                        width={40}
+                        height={40}
+                        className="object-cover rounded"
+                      />
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">{product.name}</p>
+                        <p className="text-xs text-gray-500 truncate">
+                          {product.name}
+                        </p>
+                        <p className="text-sm font-semibold">
+                          {formatPrice(parseInt(product.price), "INR")}
+                        </p>
+                      </div>
                     </div>
-                  </div>
+
+                  </Link>
                 ))}
               </div>
             ) : (
-              !isLoading && (
+              !isPending && (
                 <div className="h-60 flex flex-col items-center justify-center text-sm text-gray-500 text-center gap-2">
                   <Image
                     src="/image.png"

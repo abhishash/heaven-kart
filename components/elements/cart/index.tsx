@@ -36,7 +36,7 @@ export default function Cart() {
   const dispatch = useDispatch();
   const cart = useSelector((state: RootState) => state.cart.cart);
   const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
-
+  
   return (
     <Drawer direction="right" open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger asChild>

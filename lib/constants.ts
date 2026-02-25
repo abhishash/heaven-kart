@@ -37,6 +37,11 @@ export const BRAND_LOGOS = {
     method: "GET",
 }
 
+export const SEARCH_PRODUCTS = {
+    endpoint: "search",
+    method: "GET",
+}
+
 export const HOME_CATEGORIES = {
     endpoint: "category-subcategory",
     method: "GET",
