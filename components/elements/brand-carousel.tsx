@@ -16,12 +16,6 @@ interface BrandCarouselProps {
   brands: Brand[];
 }
 
-
-
-
-
-
-
 export function BrandCarousel({ title = "Our Brands", brands }: BrandCarouselProps) {
 
 
@@ -73,8 +67,8 @@ export function BrandCarousel({ title = "Our Brands", brands }: BrandCarouselPro
   }, [emblaApi]);
 
   return (
-    <section className="w-full bg-white py-6">
-      <h2 className="text-2xl font-bold text-slate-900 mb-4 px-4">
+    <section className="w-full bg-white py-4 sm:py-6">
+      <h2 className="text-lg sm:text-2xl font-bold text-slate-900 mb-2 sm:mb-4 px-0 sm:px-4">
         {title}
       </h2>
 
@@ -88,14 +82,14 @@ export function BrandCarousel({ title = "Our Brands", brands }: BrandCarouselPro
           {extendedBrands.map((brand, index) => (
             <div
               key={`${brand.id}-${index}`}
-              className="flex-shrink-0 w-40 h-40 flex items-center justify-center overflow-hidden rounded-full transition"
+              className="flex-shrink-0 min-w-20 bg-green-50 min-h-20 sm:w-40 sm:h-40 flex items-center justify-center overflow-hidden rounded-full transition"
             >
               <Image
                 src={`${imageBaseUrl}${brand.image}`}
                 alt={brand.name}
                 width={120}
                 height={80}
-                className="object-contain"
+                className="object-contain object-center max-w-20 max-h-20 sm:w-40 sm:h-40"
               />
             </div>
           ))}

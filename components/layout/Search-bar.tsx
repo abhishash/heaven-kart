@@ -91,7 +91,7 @@ export function SearchBar({
         <Input
           type="text"
           placeholder={placeholder}
-          className="pl-10 pr-10"
+          className="pl-10 pr-10 !bg-white"
           value={searchQuery}
           onChange={handleSearchChange}
           onFocus={() => setIsOpen(true)}

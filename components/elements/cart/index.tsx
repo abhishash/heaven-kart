@@ -30,6 +30,7 @@ import { RootState } from "../store/store";
 import { imageBaseUrl } from "@/lib/constants";
 import Image from "next/image";
 import { useCartDetail } from "@/components/hooks/useCartDetails";
+import { CartItem } from "@/lib/types";
 
 export default function Cart() {
   const [isOpen, setIsOpen] = useState(false);
@@ -134,56 +135,7 @@ export default function Cart() {
           <ScrollArea className="h-[50vh] pr-3">
             <div className="flex flex-col gap-y-2">
               {cart?.map((item) => (
-                <div key={item?.id} className="p-4 bg-green-50 shadow-none">
-                  <div className="flex gap-4">
-                    <div className="w-12 h-12 bg-gray-400/20 rounded flex items-center justify-center flex-shrink-0">
-                      <Image
-                        src={`${imageBaseUrl}${item?.image}`}
-                        alt={item?.name}
-                        height={80}
-                        width={80}
-                      />
-                    </div>
-
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-xs text-gray-900">
-                        {item?.name}
-                      </h4>
-                      <p className="text-xs text-gray-500">1 pack (5 L)</p>
-                    </div>
-
-                    <div className="flex flex-col items-end">
-                      <div className="flex items-center gap-2 mb-2">
-                        <button
-                          onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                          className="w-6 h-6 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100"
-                        >
-                          <Minus size={14} />
-                        </button>
-
-                        <span className="w-6 text-center font-semibold">
-                          {item?.qty}
-                        </span>
-
-                        <button
-                          onClick={() => setQuantity(quantity + 1)}
-                          className="w-6 h-6 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100"
-                        >
-                          <Plus size={14} />
-                        </button>
-                      </div>
-
-                      <div className="text-right flex items-end gap-x-1.5">
-                        <p className="font-bold text-gray-900 text-xs">
-                          ₹{(item?.price).toLocaleString("en-IN")}
-                        </p>
-                        <p className="text-xs text-gray-400 line-through">
-                          ₹{(1716).toLocaleString("en-IN")}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <CartItemList key={item.cart_id} item={item}/>
               ))}
             </div>
           </ScrollArea>
@@ -260,4 +212,61 @@ export default function Cart() {
       </DrawerContent>
     </Drawer>
   );
+}
+
+
+export const CartItemList = ({item}: {item: CartItem})=> {
+    const [quantity, setQuantity] = useState(2);
+  return (
+    <div key={item?.id} className="p-4 bg-green-50 shadow-none">
+                  <div className="flex gap-4">
+                    <div className="w-12 h-12 bg-gray-400/20 rounded flex items-center justify-center flex-shrink-0">
+                      <Image
+                        src={`${imageBaseUrl}${item?.image}`}
+                        alt={item?.name}
+                        height={80}
+                        width={80}
+                      />
+                    </div>
+
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-xs text-gray-900">
+                        {item?.name}
+                      </h4>
+                      <p className="text-xs text-gray-500">1 pack (5 L)</p>
+                    </div>
+
+                    <div className="flex flex-col items-end">
+                      <div className="flex items-center gap-2 mb-2">
+                        <button
+                          onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                          className="w-6 h-6 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                        >
+                          <Minus size={14} />
+                        </button>
+
+                        <span className="w-6 text-center font-semibold">
+                          {item?.qty}
+                        </span>
+
+                        <button
+                          onClick={() => setQuantity(quantity + 1)}
+                          className="w-6 h-6 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                        >
+                          <Plus size={14} />
+                        </button>
+                      </div>
+
+                      <div className="text-right flex items-end gap-x-1.5">
+                        <p className="font-bold text-gray-900 text-xs">
+                          ₹{(item?.price).toLocaleString("en-IN")}
+                        </p>
+                        <p className="text-xs text-gray-400 line-through">
+                          ₹{(1716).toLocaleString("en-IN")}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+  )
 }

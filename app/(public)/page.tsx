@@ -10,7 +10,6 @@ import {
   HOMEPAGE_SLIDERS,
   PROMATIONS,
 } from "@/lib/constants";
-import { isArray } from "@/lib/type-guards";
 import {
   BannerDataTypes,
   CategoryResponse,
