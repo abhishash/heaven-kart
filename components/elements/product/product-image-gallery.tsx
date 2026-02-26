@@ -9,7 +9,7 @@ export default function ProductImageGallery({ images, thumbnailImg }: { images: 
     const [selectedImage, setSelectedImage] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
-
+    const activeImage = images?.[selectedImage ?? 0]?.image || thumbnailImg;
     return (
         <div className="flex flex-col  gap-4">
             <div className="sticky top-[100px]">
@@ -17,7 +17,7 @@ export default function ProductImageGallery({ images, thumbnailImg }: { images: 
                     {/* Main Image */}
                     <div className="relative w-full overflow-hidden rounded-lg border border-border bg-muted aspect-square">
                         <Image
-                            src={selectedImage !== null && images?.[selectedImage]?.image ? ` ${imageBaseUrl}/${images?.[selectedImage]?.image}` : `${imageBaseUrl}/${thumbnailImg}`}
+                            src={`${imageBaseUrl}/${activeImage}`}
                             alt="Product image"
                             fill
                             className="object-cover"

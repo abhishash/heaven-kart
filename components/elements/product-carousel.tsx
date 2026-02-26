@@ -71,7 +71,7 @@ export function ProductCarousel({ title, products, isBanner, url }: ProductCarou
 
 
   return (
-    <section className={clsx(isBanner ? "col-span-12 sm:col-span-9" : "col-span-12")}>
+    <section className={clsx(isBanner ? "col-span-12 sm:col-span-12" : "col-span-12")}>
       {/* Header */}
       <div className="flex items-center justify-between mb-2 md:mb-6 px-0">
         <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900">{title}</h2>

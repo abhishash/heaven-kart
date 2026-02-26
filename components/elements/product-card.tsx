@@ -45,7 +45,7 @@ export function ProductCard({
         {/* Discount Badge */}
         {discountPercent > 0 && (
           <div className="absolute top-2 left-2 bg-green-600 text-white text-[9px] sm:text-xs font-bold px-1 py-0.5 sm:px-2 sm:py-1 rounded">
-            {discountPercent}% <span className="hidden sm:block">OFF</span> 
+            {discountPercent}% <span className="hidden sm:inline">OFF</span> 
           </div>
         )}
 

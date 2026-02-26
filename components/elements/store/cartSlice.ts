@@ -16,14 +16,23 @@ const cartSlice = createSlice({
       state.loading = action.payload;
     },
     addToCart: (state, action: PayloadAction<CartItemPayload>) => {
-      const exist = state.items.find(
+      const existIndex = state.items.findIndex(
         (item) => item.cart_id === action.payload.cart_id
       );
 
-      if (exist) {
-        exist.qty = parseInt(action.payload.qty) ;
+      // console.log( JSON.parse(JSON.stringify(exist)), action.payload  )
+
+      if (existIndex !== -1) {
+
+        // 🔥 Replace entire object
+        state.items[existIndex] = {
+          ...action.payload,
+          qty: Number(action.payload.qty),
+        };
       } else {
-        state.items.push({ ...action.payload, qty : parseInt(action.payload.qty)  });
+        state.items.push({
+          ...action.payload, qty: action.payload.qty as unknown as number,
+        });
       }
 
       // 🔥 Recalculate total properly
@@ -34,9 +43,13 @@ const cartSlice = createSlice({
     },
 
     removeFromCart: (state, action: PayloadAction<number>) => {
-      // state.cart = state.cart.filter(
-      //   (item) => item.id !== action.payload
-      // );
+      state.items = state.items.filter(
+        (item) => item.cart_id !== action.payload
+      );
+      state.totalAmount = state.items.reduce(
+        (acc, item) => acc + (item.qty),
+        0
+      );
     },
 
     setCart(state, action: PayloadAction<{ total: number, data: CartItem[] }>) {

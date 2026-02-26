@@ -54,7 +54,7 @@ export function SearchBar({
   const handleSearchChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setSearchQuery(e.target.value);
-      setIsOpen(true);
+        setIsOpen(true);
     },
     [],
   );
@@ -97,7 +97,7 @@ export function SearchBar({
           onFocus={() => setIsOpen(true)}
         />
 
-        {isPending && searchQuery?.length > 2 && (
+        {isPending && searchQuery?.length > 1 && (
           <Loader2 className="absolute right-3 h-5 w-5 animate-spin" />
         )}
 
@@ -111,7 +111,7 @@ export function SearchBar({
         )}
       </div>
 
-      {isOpen && searchQuery && (
+      {isOpen && searchQuery.length > 1 && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg z-50 animate-in fade-in zoom-in-95 duration-150">
           <ScrollArea className="h-80 py-4">
             {results.length > 0 ? (

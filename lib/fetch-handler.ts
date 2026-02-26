@@ -12,7 +12,8 @@ export const fetchHandler = async <T>({
   method = "GET",
   data,
   token,
-}: FetchHandlerProps<T>) => {
+  revalidate = 60,
+}: FetchHandlerProps<T> & { revalidate?: number }) => {
 
   const res = await fetch(`${API_ENDPOINT}${endpoint}`, {
     method,
@@ -21,7 +22,9 @@ export const fetchHandler = async <T>({
       ...(token && { Authorization: `Bearer ${token}` }),
     },
     body: data ? JSON.stringify(data) : undefined,
-    // cache: "no-store",
+     // Next.js caching
+     next: { revalidate }, // 🔥 cache for X seconds
+    
   });
 
   if (!res.ok) {

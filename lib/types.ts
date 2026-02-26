@@ -133,6 +133,7 @@ export interface CartItem {
   price: number;
   image?: string;
   qty: number;
+  product_id : string;
 }
 
 export interface CartItemPayload {
@@ -142,6 +143,7 @@ export interface CartItemPayload {
   price: number;
   image?: string;
   qty: string;
+  product_id: string;
 }
 
 export interface CartState {

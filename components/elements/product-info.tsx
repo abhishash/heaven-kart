@@ -64,12 +64,8 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
       }),
   });
 
-  const [qty, setQty] = useState(1);
 
-  const increaseQty = () => setQty(qty + 1);
-  const decreaseQty = () => {
-    if (qty > 1) setQty(qty - 1);
-  };
+ 
   const { register, handleSubmit, setValue, watch } = useForm({
     defaultValues: {
       qty: 1

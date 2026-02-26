@@ -24,7 +24,7 @@ export const useCartDetail = () => {
                     token: session?.user?.accessToken,
                 })
 
-                dispatch(setCart({ total: cartData.total, data: cartData.data }));
+                dispatch(setCart({ total: cartData.total_qty, data: cartData.data }));
             } catch (error) {
                 console.error("Cart fetch error:", error);
             } finally {

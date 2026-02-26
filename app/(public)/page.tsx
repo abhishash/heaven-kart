@@ -81,9 +81,9 @@ export default async function Home() {
       {data?.map((item, index) => (
         <div key={index} className="grid grid-cols-12 gap-2 sm:gap-4 py-2 sm:py-8">
           {
-            item?.banner ? <div className="col-span-12 sm:col-span-3">
+            item?.banner ? <div className="col-span-12 sm:col-span-12">
               {/* Image Container */}
-              <div className="relative bg-slate-50 max-h-28 sm:h-full rounded-sm md:rounded-xl flex items-center justify-center overflow-hidden">
+              <div className="relative bg-slate-50 max-h-60 rounded-sm md:rounded-xl flex items-center justify-center overflow-hidden">
                 <Image
                   src={
                     item?.banner
