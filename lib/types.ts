@@ -1,5 +1,4 @@
-import { ReactNode } from "react";
-
+export type SortOption = 'featured' | 'price-low' | 'price-high' | 'newest' | 'rating'
 export interface ProductsDataTypes {
   id: number;
   name: string;

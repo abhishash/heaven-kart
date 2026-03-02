@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
@@ -11,17 +10,12 @@ import {
 } from "@/components/ui/drawer";
 import {
   ShoppingCart,
-  ChevronLeft,
-  MoveLeftIcon,
   ArrowLeft,
-  Check,
   BadgePercent,
   Zap,
   Minus,
   Plus,
-  CirclePlus,
   X,
-  XCircle,
 } from "lucide-react";
 import { useState } from "react";
 import { ChevronRightIcon } from "lucide-react";
@@ -38,17 +32,15 @@ import { useMutation } from "@tanstack/react-query";
 import { fetchHandler } from "@/lib/fetch-handler";
 import { useSession } from "next-auth/react";
 import { addToCart, removeFromCart } from "../store/cartSlice";
+import { isArray } from "@/lib/type-guards";
 
 export default function Cart() {
   const [isOpen, setIsOpen] = useState(false);
-  const [quantity, setQuantity] = useState(2);
   useCartDetail()
 
-  const { items, totalAmount, loading } = useSelector(
+  const { totalAmount, loading } = useSelector(
     (state: RootState) => state.cart
   );
-
-  const dispatch = useDispatch();
   const cart = useSelector((state: RootState) => state.cart.items);
 
   return (
@@ -63,7 +55,8 @@ export default function Cart() {
           )}
         </button >
       </DrawerTrigger>
-      <DrawerContent className="w-[420px] sm:w-[500px] md:min-w-[400px]">
+      {
+        isArray(cart) ? <DrawerContent className="w-[420px] sm:w-[500px] md:min-w-[400px]">
         <DrawerHeader className="shadow-xl py-0 px-0">
           <DrawerTitle
             onClick={() => setIsOpen(false)}
@@ -76,9 +69,9 @@ export default function Cart() {
             Set your <strong>daily activity</strong> goal.
           </DrawerDescription>
         </DrawerHeader>
+      
         <ScrollArea className="no-scrollbar overflow-y-auto bg-gray-50/20 px-3">
-          {/* <div className="no-scrollbar overflow-y-auto bg-gray-50/20 px-3"> */}
-          {/* {/* No Fees Section /} */}
+         
 
 
           {/* Promo Code Section */}
@@ -187,12 +180,44 @@ export default function Cart() {
           </div>
           <Link
             href={"/checkout"}
-            className="cursor-pointer rounded-lg py-2.5 bg-primary text-center text-white text-lg font-semibold"
+            className="cursor-pointer rounded-lg py-2 bg-primary text-center text-white text-lg font-semibold"
           >
             Checkout
           </Link>
         </DrawerFooter>
+      </DrawerContent> : <DrawerContent className="w-[420px] sm:w-[500px] md:min-w-[400px]">
+        <DrawerHeader className="shadow-xl py-0 px-0">
+          <DrawerTitle
+            onClick={() => setIsOpen(false)}
+            className="flex gap-x-1 cursor-pointer group px-3 !py-2"
+          >
+            <ArrowLeft className="group-hover:stroke-green-400 transition-all duration-300" />
+            Cart
+          </DrawerTitle>
+          <DrawerDescription className="bg-green-50 tracking-wide text-green-500  py-3 px-3">
+            Set your <strong>daily activity</strong> goal.
+          </DrawerDescription>
+        </DrawerHeader>
+      
+        <div className=" flex items-center justify-center h-full overflow-y-auto bg-gray-50/20 px-3">  
+         <div className="h-fit flex items-center flex-col justify-center">
+<Image src="/image.png" alt="procust-cart image" height={120} width={120} />
+   
+          <p className="text-slate-700 text-center font-semibold">There are no products in your cart at the moment.</p>
+         </div>
+        </div>
+        <DrawerFooter>
+          <Link
+            href={"/"}
+            onClick={() => setIsOpen(false)}
+            className="cursor-pointer bg-gradient-to-r from-green-700 to-primary cursor-pointer rounded-lg py-2 bg-primary text-center text-white text-lg font-semibold"
+          >
+            Browser Your products
+          </Link>
+        </DrawerFooter>
       </DrawerContent>
+      }
+      
     </Drawer>
   );
 }
