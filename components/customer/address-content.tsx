@@ -70,11 +70,11 @@ export function AddressesContent() {
     console.log('[v0] Add new address clicked')
   }
 
-  const handleEditAddress = (id: string) => {
+  const handleEditAddress = (id: number) => {
     console.log('[v0] Edit address:', id)
   }
 
-  const handleDeleteAddress = (id: string) => {
+  const handleDeleteAddress = (id: number) => {
     // setAddresses(addresses.filter(addr => addr.id !== id))
   }
 
