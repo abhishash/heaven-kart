@@ -73,43 +73,28 @@ export function CategoriesCarousel({ title, subCategories }: ProductCarouselProp
                     <Link
                         key={product.url}
                         href={`/${product.url}`}
-                        className="flex-shrink-0"
+                        className="flex-shrink-0 border rounded-lg border-slate-200"
                     >
                         <div
-                            className="
-            w-auto
-            bg-white
-            overflow-hidden
-            hover:-translate-y-1
-            transition-all
-            duration-300
-            group
-          "
+                            className="w-auto bg-white rounded-lg overflow-hidden hover:-translate-y-1 transition-all duration-300 group"
                         >
                             {/* Image */}
-                            <div className="relative bg-slate-100 rounded-md sm:rounded-2xl h-24 max-h-32 sm:h-56 flex items-center justify-center">
+                            <div className="relative max-h-32 sm:max-h-56 flex items-center justify-center">
                                 <SafeImage
                                     src={product.image}
                                     alt={product.name}
                                     width={160}
                                     height={160}
-                                    className="
-    object-contain
-    transition-transform
-    duration-300
-     h-auto
-    group-hover:scale-105
-  "
+                                    className="object-contain transition-transform duration-300 h-auto group-hover:scale-105"
                                 />
                             </div>
 
                             {/* Content */}
                             <div className="p-0 sm:p-4 text-center">
-                                <h2 className="text-sm sm:text-xl md:text-2xl font-semibold text-slate-700  sm:line-clamp-2">
+                                <h2 className="text-sm sm:text-xl font-semibold text-slate-700  sm:line-clamp-2">
                                     {product.name}
                                 </h2>
-
-
+                                <p>233 Items</p>
                             </div>
                         </div>
                     </Link>

@@ -13,7 +13,6 @@ const CustomerLayout = ({ children }: {
                     <Sidebar />
                     {children}
                 </div>
-          
         </main>
     )
 }

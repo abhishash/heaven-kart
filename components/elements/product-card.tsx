@@ -29,7 +29,7 @@ export function ProductCard({
     <div
       className={`group shrink-0 w-24 md:w-56 bg-white rounded-lg overflow-hidden transition-all ${isOutOfStock
           ? "opacity-60 cursor-not-allowed pointer-events-none"
-          : "hover:shadow-md"
+          : "hover:shadow-none"
         }`}
     >
       {/* Image Container */}

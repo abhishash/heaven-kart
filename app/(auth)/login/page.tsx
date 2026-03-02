@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Field, FieldLabel } from "@/components/ui/field";
+import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 
 type FormValues = {
   password: string;
@@ -55,7 +55,7 @@ const LoginPage = () => {
       {/* LEFT */}
       <div className="flex-1 flex relative flex-col bg-green-50  px-4 md:px-6">
         {/* Header */}
-        <header className="flex items-center h-20">
+        <header className="flex items-center pt-4 pb-2">
           <img
             src="http://brands-onboarding.zepto.co.in/assets/icons/zepto-icon.svg"
             alt="Zepto"
@@ -65,22 +65,9 @@ const LoginPage = () => {
             Vendor Portal
           </h1>
         </header>
-        <div className=" flex-col md:hidden pb-6 flex  w-full items-center">
-              <img
-                alt="rocket icon"
-                src="http://brands-onboarding.zepto.co.in/assets/icons/rocket.svg"
-                className="h-18 w-18"
-              />
-              <h5 className=" !font-medium !mt-4 text-gray-500 css-owt45">
-                Grow your Business Faster By
-              </h5>
-              <h4 className=" !font-semibold bg-clip-text text-transparent bg-gradient-to-r from-green-700 from-[7.58%] to-primary to-[98.88%]">
-                Selling through HeavenKart
-              </h4>
-        </div>
-
+       
          <div className="flex md:hidden items-center h-20 relative z-10 justify-between md:justify-end">
-          <p className="font-medium text-base text-primary-700  p-4">
+          <p className="font-medium text-base text-primary-700">
             Not a User?
           </p>
           <button
@@ -117,6 +104,7 @@ const LoginPage = () => {
                   placeholder="Example@gmail.com"
                 />
               </Field>
+              <div className="flex gap-y-1 flex-col">
               <Field className="flex flex-col gap-y-2">
                 <FieldLabel htmlFor="input-password" className="font-medium text-green-700">Password</FieldLabel>
                 <Input
@@ -129,8 +117,10 @@ const LoginPage = () => {
                   placeholder="abc@123"
                 />
               </Field>
-
-              
+              <Link href={"/forget-password"} className="text-end bg-linear-to-br text-sm font-bold ml-auto font-medium bg-clip-text text-transparent bg-gradient-to-r from-green-700 from-[7.58%] to-primary to-[98.88%]" >
+                    Forgot Password
+                </Link>
+              </div>
             </div>
 
             {/* Submit */}

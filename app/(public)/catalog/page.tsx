@@ -21,6 +21,7 @@ import { fetchHandler, methods } from '@/lib/fetch-handler'
 import { ProductDataTypesList, ProductResponse, ProductTypes, SimilarProduct } from '@/lib/types'
 import { ALL_PRODUCTS, CATALOG_DETAIL, PRODUCTS_DETAIL } from '@/lib/constants'
 import { isArray } from '@/lib/type-guards'
+import CategoryFilter from '@/components/elements/product/categories-filter'
 
 
 const CATEGORIES = ['All', 'Decor', 'Textiles', 'Furniture', 'Lighting']
@@ -79,117 +80,43 @@ export default async function Products() {
     // }, [searchQuery, selectedCategory, sortBy, priceRange])
 
     return (
-        <div className="flex flex-col lg:flex-row">
-            {/* Sidebar - Hidden on mobile, toggleable */}
-            {/* <CategorySidebar
-                categories={CATEGORIES}
-                selectedCategory={selectedCategory}
-                onCategoryChange={setSelectedCategory}
-                priceRange={priceRange}
-                onPriceChange={setPriceRange}
-                isOpen={showFilters}
-                onClose={() => setShowFilters(false)}
-            /> */}
+        <div className="container mx-auto">
+  <div className="flex gap-8">
 
-            {/* Main Content */}
-            <div className="flex-1">
-                {/* Top Filter Bar */}
-                <div className="border-b border-border bg-card p-4 lg:p-6">
-                    <div className="mx-auto max-w-7xl">
-                        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-                            {/* Search */}
-                            {/* <div className="relative flex-1 md:max-w-sm">
-                                <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-                                <Input
-                                    placeholder="Search products..."
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="pl-10"
-                                />
-                            </div> */}
+    {/* Sidebar */}
+    <aside className="hidden lg:block w-64 shrink-0">
+      <div className="sticky top-16">
+        <CategoryFilter />
+      </div>
+    </aside>
 
-                            <div className="flex gap-2">
-                                {/* Toggle Filters Button - Mobile */}
-                                {/* <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="lg:hidden bg-transparent"
-                                    onClick={() => setShowFilters(!showFilters)}
-                                >
-                                    <Filter className="mr-2 h-4 w-4" />
-                                    Filters
-                                </Button> */}
+    {/* Products */}
+    <main className="flex-1 min-w-0">
+      {/* Product grid */}
+      {isArray(productList) ? (
+          <>
+            <p className="mb-6 text-sm text-muted-foreground">
+              Showing {productList.length} product
+              {productList.length !== 1 ? 's' : ''}
+            </p>
 
-                                {/* Sort Dropdown */}
-                                {/* <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
-                                    <SelectTrigger className="w-full md:w-48">
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="featured">Featured</SelectItem>
-                                        <SelectItem value="price-low">Price: Low to High</SelectItem>
-                                        <SelectItem value="price-high">Price: High to Low</SelectItem>
-                                        <SelectItem value="newest">Newest</SelectItem>
-                                        <SelectItem value="rating">Highest Rated</SelectItem>
-                                    </SelectContent>
-                                </Select> */}
-                            </div>
-                        </div>
-
-                        {/* Active Filters Display */}
-                        {/* {(searchQuery || selectedCategory !== 'All') && (
-                            <div className="mt-4 flex flex-wrap gap-2">
-                                {searchQuery && (
-                                    <div className="flex items-center gap-2 rounded-full bg-secondary px-3 py-1 text-sm">
-                                        <span>Search: {searchQuery}</span>
-                                        <button
-                                            onClick={() => setSearchQuery('')}
-                                            className="text-muted-foreground hover:text-foreground"
-                                        >
-                                            ×
-                                        </button>
-                                    </div>
-                                )}
-                                {selectedCategory !== 'All' && (
-                                    <div className="flex items-center gap-2 rounded-full bg-secondary px-3 py-1 text-sm">
-                                        <span>{selectedCategory}</span>
-                                        <button
-                                            onClick={() => setSelectedCategory('All')}
-                                            className="text-muted-foreground hover:text-foreground"
-                                        >
-                                            ×
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        )} */}
-                    </div>
-                </div>
-
-                {/* Products Grid */}
-                <div className=" px-4 py-8 lg:px-0">
-                    {isArray(productList) ? (
-                        <>
-                            <p className="mb-6 text-sm text-muted-foreground">
-                                Showing {productList.length} product
-                                {productList.length !== 1 ? 's' : ''}
-                            </p>
-                            <div className="grid grid-cols-6 gap-4">
-                                {productList?.map((product, index) => (
-                                    <ProductCard key={index} {...product as ProductTypes} />
-                                ))}
-                            </div>
-                        </>
-                    ) : (
-                        <div className="flex h-64 flex-col items-center justify-center rounded-lg border border-border bg-card">
-                            <p className="text-lg font-medium text-foreground">No products found</p>
-                            <p className="text-sm text-muted-foreground">
-                                Try adjusting your filters or search query
-                            </p>
-                        </div>
-                    )}
-                </div>
+            <div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+              {productList.map((product, index) => (
+                <ProductCard key={product.url + index} {...product} />
+              ))}
             </div>
-        </div>
+          </>
+        ) : (
+          <div className="flex h-64 flex-col items-center justify-center rounded-lg border border-border bg-card">
+            <p className="text-lg font-medium">No products found</p>
+            <p className="text-sm text-muted-foreground">
+              Try adjusting your filters
+            </p>
+          </div>
+        )}
+    </main>
+
+  </div>
+</div>
     )
 }

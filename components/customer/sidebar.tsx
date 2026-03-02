@@ -6,10 +6,14 @@ import { ReactElement, ReactNode } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { usePathname } from 'next/navigation'
+import { signOut } from 'next-auth/react'
 
 export function Sidebar() {
     const pathname = usePathname()
-
+    const handleLogout = async () => {
+        await fetch("/api/logout", { method: "POST" });
+        await signOut({callbackUrl: "/login", redirect : false });
+    }
     return (
         <aside className="w-96 bg-white border-r border-gray-200 flex flex-col p-6">
             {/* User Profile */}
@@ -51,6 +55,7 @@ export function Sidebar() {
             <div className="space-y-4">
                 <Button
                     variant="outline"
+                    onClick={handleLogout}
                     className="w-full border-green-500 text-green-500 hover:bg-green-50 rounded-lg h-10 bg-transparent"
                 >
                     Log Out
