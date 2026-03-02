@@ -4,6 +4,11 @@ import { useState } from 'react'
 import { Plus, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { AddressCard } from './address-card'
+import { useQuery } from '@tanstack/react-query'
+import { fetchHandler, methods } from '@/lib/fetch-handler'
+import { ADDRESSES } from '@/lib/constants'
+import { useSession } from 'next-auth/react'
+import { UserAddress } from '@/lib/types'
 
 interface Address {
   id: string
@@ -13,38 +18,53 @@ interface Address {
 }
 
 export function AddressesContent() {
-  const [addresses, setAddresses] = useState<Address[]>([
-    {
-      id: '1',
-      type: 'home',
-      title: 'Home',
-      address: 'Floor 2, Block Gali no 1.1, Shajda communication, Shajda communication, Vijay Nagar, Bahr ampur, Budh Vihar, Gzb',
-    },
-    {
-      id: '2',
-      type: 'work',
-      title: 'Work',
-      address: 'H-28 & fllor second, Arv park, Arv Park, H 28 H 28, H Block, Sector 63, Noida, Uttar Pradesh 201301, India',
-    },
-    {
-      id: '3',
-      type: 'other',
-      title: 'Other',
-      address: 'gali no 2, Gali No. 2, Vijay Nagar, Bahrampur, Budh Vihar, Gzb',
-    },
-    {
-      id: '4',
-      type: 'other',
-      title: 'Other',
-      address: '0 floor, hindan river, Vijay Nagar, Bahrampur, Budh Vihar, Gzb',
-    },
-    {
-      id: '5',
-      type: 'other',
-      title: 'Other',
-      address: 'indian petrol pump, Jasola Vihar, New Delhi',
-    },
-  ])
+  // const [addresses, setAddresses] = useState<Address[]>([
+  //   {
+  //     id: '1',
+  //     type: 'home',
+  //     title: 'Home',
+  //     address: 'Floor 2, Block Gali no 1.1, Shajda communication, Shajda communication, Vijay Nagar, Bahr ampur, Budh Vihar, Gzb',
+  //   },
+  //   {
+  //     id: '2',
+  //     type: 'work',
+  //     title: 'Work',
+  //     address: 'H-28 & fllor second, Arv park, Arv Park, H 28 H 28, H Block, Sector 63, Noida, Uttar Pradesh 201301, India',
+  //   },
+  //   {
+  //     id: '3',
+  //     type: 'other',
+  //     title: 'Other',
+  //     address: 'gali no 2, Gali No. 2, Vijay Nagar, Bahrampur, Budh Vihar, Gzb',
+  //   },
+  //   {
+  //     id: '4',
+  //     type: 'other',
+  //     title: 'Other',
+  //     address: '0 floor, hindan river, Vijay Nagar, Bahrampur, Budh Vihar, Gzb',
+  //   },
+  //   {
+  //     id: '5',
+  //     type: 'other',
+  //     title: 'Other',
+  //     address: 'indian petrol pump, Jasola Vihar, New Delhi',
+  //   },
+  // ])
+  const { data: session } = useSession();
+  const { data, isPending } = useQuery<{ data: UserAddress[] }>({
+    queryKey: ["address"],
+    queryFn: () =>
+      fetchHandler({
+        ...ADDRESSES as {
+          endpoint: string;
+          method: methods;
+        },
+        token: session?.user?.accessToken
+      }),
+  });
+
+  const addresses = data?.data;
+
 
   const handleAddAddress = () => {
     console.log('[v0] Add new address clicked')
@@ -55,7 +75,7 @@ export function AddressesContent() {
   }
 
   const handleDeleteAddress = (id: string) => {
-    setAddresses(addresses.filter(addr => addr.id !== id))
+    // setAddresses(addresses.filter(addr => addr.id !== id))
   }
 
   return (
@@ -75,18 +95,19 @@ export function AddressesContent() {
         {/* Saved Addresses Section */}
         <div>
           <h2 className="text-lg font-semibold text-foreground mb-4">Saved Addresses</h2>
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
-            {addresses.map((addr) => (
-              <AddressCard
-                key={addr.id}
-                type={addr.type}
-                title={addr.title}
-                address={addr.address}
-                onEdit={() => handleEditAddress(addr.id)}
-                onDelete={() => handleDeleteAddress(addr.id)}
-              />
-            ))}
-          </div>
+          {
+            isPending ? "Fetching Addresss.." :
+              <div className="bg-white rounded-lg border border-gray-200 p-4">
+                {addresses?.map((addr) => (
+                  <AddressCard
+                    key={addr.id}
+                    address={addr}
+                    onEdit={() => handleEditAddress(addr.id)}
+                    onDelete={() => handleDeleteAddress(addr.id)}
+                  />
+                ))}
+              </div>
+          }
         </div>
       </div>
     </main>

@@ -151,3 +151,25 @@ export interface CartState {
   loading: boolean;
   totalAmount: number;
 }
+
+export interface UserAddress {
+  id: number;
+  userId: number;        // convert to number instead of string
+  country: string;
+  state: string;
+  district: string;
+  tehsil: string;
+  block: string;
+  village: string;
+  address: string;
+  pincode: number;
+  isDefault: boolean;    // better than 0/1
+  personName: string;
+  contact: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AddressResponse {
+  data: UserAddress[];
+}

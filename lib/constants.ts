@@ -51,3 +51,8 @@ export const CART_DETAILS = {
     endpoint: "cart",
     method: "GET",
 }
+
+export const ADDRESSES = {
+    endpoint: "user-address",
+    method: "GET",
+}
