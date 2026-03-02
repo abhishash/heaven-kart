@@ -290,7 +290,7 @@ export const CartItemList = ({ item }: { item: CartItem }) => {
     <div key={item?.id} className="p-4 bg-green-50 shadow-none">
       <div className="flex gap-4">
         <div className="w-12 h-12 relative bg-gray-400/20 rounded flex items-center justify-center flex-shrink-0">
-          <button className="border bg-red-500 rounded-full border-red-500 absolute -top-2 left-0" onClick={() => removeItem(item?.cart_id)} >
+          <button className="border cursor-pointer bg-red-500 rounded-full border-red-500 absolute -top-2 left-0" onClick={() => removeItem(item?.cart_id)} >
             <X className="size-4 text-white" />
           </button>
           <Image

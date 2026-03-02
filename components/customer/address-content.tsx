@@ -4,11 +4,12 @@ import { useState } from 'react'
 import { Plus, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { AddressCard } from './address-card'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { fetchHandler, methods } from '@/lib/fetch-handler'
 import { ADDRESSES } from '@/lib/constants'
 import { useSession } from 'next-auth/react'
 import { UserAddress } from '@/lib/types'
+import { AddAddressModal } from './add-address-modal'
 
 interface Address {
   id: string
@@ -18,40 +19,9 @@ interface Address {
 }
 
 export function AddressesContent() {
-  // const [addresses, setAddresses] = useState<Address[]>([
-  //   {
-  //     id: '1',
-  //     type: 'home',
-  //     title: 'Home',
-  //     address: 'Floor 2, Block Gali no 1.1, Shajda communication, Shajda communication, Vijay Nagar, Bahr ampur, Budh Vihar, Gzb',
-  //   },
-  //   {
-  //     id: '2',
-  //     type: 'work',
-  //     title: 'Work',
-  //     address: 'H-28 & fllor second, Arv park, Arv Park, H 28 H 28, H Block, Sector 63, Noida, Uttar Pradesh 201301, India',
-  //   },
-  //   {
-  //     id: '3',
-  //     type: 'other',
-  //     title: 'Other',
-  //     address: 'gali no 2, Gali No. 2, Vijay Nagar, Bahrampur, Budh Vihar, Gzb',
-  //   },
-  //   {
-  //     id: '4',
-  //     type: 'other',
-  //     title: 'Other',
-  //     address: '0 floor, hindan river, Vijay Nagar, Bahrampur, Budh Vihar, Gzb',
-  //   },
-  //   {
-  //     id: '5',
-  //     type: 'other',
-  //     title: 'Other',
-  //     address: 'indian petrol pump, Jasola Vihar, New Delhi',
-  //   },
-  // ])
+
   const { data: session } = useSession();
-  const { data, isPending } = useQuery<{ data: UserAddress[] }>({
+  const { data, isPending, refetch } = useQuery<{ data: UserAddress[] }>({
     queryKey: ["address"],
     queryFn: () =>
       fetchHandler({
@@ -66,32 +36,15 @@ export function AddressesContent() {
   const addresses = data?.data;
 
 
-  const handleAddAddress = () => {
-    console.log('[v0] Add new address clicked')
-  }
-
   const handleEditAddress = (id: number) => {
     console.log('[v0] Edit address:', id)
   }
 
-  const handleDeleteAddress = (id: number) => {
-    // setAddresses(addresses.filter(addr => addr.id !== id))
-  }
 
   return (
     <main className="flex-1 bg-gray-50 p-6 overflow-auto">
       <div className="w-full mx-auto">
-        {/* Add New Address Button */}
-        <div className="bg-white sticky top-0 rounded-lg border border-gray-200 p-4 mb-6 cursor-pointer hover:shadow-sm transition-shadow">
-          <button className="w-full flex items-center justify-between text-green-500 font-semibold">
-            <span className="flex items-center gap-2">
-              <Plus size={20} />
-              Add New Address
-            </span>
-            <ChevronRight size={20} />
-          </button>
-        </div>
-
+        <AddAddressModal refetch={refetch} />
         {/* Saved Addresses Section */}
         <div>
           <h2 className="text-lg font-semibold text-foreground mb-4">Saved Addresses</h2>
@@ -102,8 +55,8 @@ export function AddressesContent() {
                   <AddressCard
                     key={addr.id}
                     address={addr}
+                    refetch={refetch}
                     onEdit={() => handleEditAddress(addr.id)}
-                    onDelete={() => handleDeleteAddress(addr.id)}
                   />
                 ))}
               </div>

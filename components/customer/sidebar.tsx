@@ -12,13 +12,13 @@ export function Sidebar() {
     const pathname = usePathname()
     const handleLogout = async () => {
         await fetch("/api/logout", { method: "POST" });
-        await signOut({callbackUrl: "/login", redirect : false });
+        await signOut({callbackUrl: "/login" });
     }
     return (
         <aside className="w-96 bg-white border-r border-gray-200 flex flex-col p-6">
             {/* User Profile */}
             <div className="flex items-center gap-3 mb-6">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-700 to-primary flex items-center justify-center">
                     <span className="text-white text-xl font-bold">A</span>
                 </div>
                 <div>
@@ -28,17 +28,17 @@ export function Sidebar() {
             </div>
 
             {/* Zepto Cash Card */}
-            <div className="bg-linear-to-r to-green-200 from-green-400 rounded-lg p-4 mb-8 border border-gray-200">
+            <div className="bg-gradient-to-r from-green-700 to-primary rounded-lg p-4 mb-8 border border-gray-200">
                 <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
-                        <WalletMinimal className='w-10 h-6 ' />
-                        <span className="font-semibold text-foreground">Zepto Cash & Gift Card</span>
+                        <WalletMinimal className='w-10 h-6 text-white' />
+                        <span className="font-semibold text-white">Heavon Kart Cash & Gift Card</span>
                     </div>
-                    <span className="text-gray-400">&gt;</span>
+                    <span className="text-white">&gt;</span>
                 </div>
                 <div className="mb-4">
-                    <p className="text-xs text-black mb-1">Available Coins</p>
-                    <p className="text-lg font-semibold text-foreground">₹0</p>
+                    <p className="text-xs text-white mb-1">Available Coins</p>
+                    <p className="text-lg font-semibold text-white">₹0</p>
                 </div>
             </div>
 
@@ -52,11 +52,11 @@ export function Sidebar() {
             </nav>
 
             {/* Footer */}
-            <div className="space-y-4">
+            <div className="space-y-4 mt-6">
                 <Button
                     variant="outline"
                     onClick={handleLogout}
-                    className="w-full border-green-500 text-green-500 hover:bg-green-50 rounded-lg h-10 bg-transparent"
+                    className="w-full cursor-pointer !bg-white !border-red-500 text-red-500 hover:bg-green-50 rounded-lg h-10"
                 >
                     Log Out
                 </Button>
@@ -76,7 +76,7 @@ function NavItem({ icon, label, href, active = false }: {
         <Link
             href={href}
             className={`w-full flex items-center cursor-pointer gap-3 px-4 py-3 rounded-lg transition-colors ${active
-                ? 'bg-linear-to-r from-primary to-secondary text-black font-medium'
+                ? 'bg-gradient-to-r from-green-700 to-primary text-white font-medium'
                 : 'text-gray-600 hover:bg-gray-50'
                 }`}
         >

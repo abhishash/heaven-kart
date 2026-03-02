@@ -153,7 +153,10 @@ export interface CartState {
 
 export interface UserAddress {
   id: number;
-  userId: number;        // convert to number instead of string
+  userId: number;    
+  is_default : string;
+  person: string;
+  landmark: string;
   country: string;
   state: string;
   district: string;
