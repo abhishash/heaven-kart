@@ -36,14 +36,12 @@ const LoginPage = () => {
         redirect: false,
         callbackUrl: "/",
       });
-
       if (response?.ok) {
         router.push("/");
       } else {
-        toast.success(response?.error);
+        toast.warning(response?.error);
       }
     } catch (error) {
-      console.log(error)
       toast.warning("Something went wrong");
     } finally {
       setLoading(false);

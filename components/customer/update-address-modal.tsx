@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { ChevronRight, Plus } from 'lucide-react'
+import { ChevronRight, Edit, Plus } from 'lucide-react'
 import { Field, FieldLabel } from '../ui/field'
 import { Controller, FieldValues, useForm } from 'react-hook-form'
 import { Checkbox } from '../ui/checkbox'
@@ -30,53 +30,32 @@ import { fetchHandler } from '@/lib/fetch-handler'
 import { useMutation } from '@tanstack/react-query'
 import { useSession } from 'next-auth/react'
 import { toast } from 'sonner'
+import { UserAddress } from '@/lib/types'
 import { ScrollArea } from '../ui/scroll-area'
 
-interface Address {
-  fullName: string
-  phone: string
-  streetAddress: string
-  city: string
-  state: string
-  postalCode: string
-  country: string
-  addressType: string
-  isDefault: boolean
-}
-
 interface AddAddressModalProps {
-  refetch: () => void
+  refetch: () => void;
+  address : UserAddress;
 }
 
-export function AddAddressModal({ refetch }: AddAddressModalProps) {
+export function UpdateAddressModal({ refetch, address }: AddAddressModalProps) {
   const [open, setOpen] = useState(false)
-  const [formData, setFormData] = useState<Address>({
-    fullName: '',
-    phone: '',
-    streetAddress: '',
-    city: '',
-    state: '',
-    postalCode: '',
-    country: '',
-    addressType: 'home',
-    isDefault: false,
-  })
-  const { register, control, handleSubmit } = useForm();
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-  }
+
+  const { register, control, reset, handleSubmit } = useForm();
+
+   // 👇 THIS IS THE FIX
+  useEffect(() => {
+    if (address) {
+      reset(address);
+    }
+  }, [address, reset]);
+  
 
   const { data: session } = useSession()
   const { data, mutateAsync, isPending } = useMutation({
     mutationFn: (payload: FieldValues) =>
       fetchHandler({
-        endpoint: "add-new-address",
+        endpoint: "update-address",
         method: "POST",
         data: payload,
         token: session?.user?.accessToken,
@@ -85,11 +64,6 @@ export function AddAddressModal({ refetch }: AddAddressModalProps) {
 
   const onSubmit = async (data: FieldValues) => {
     const payload = {
-      country: "india",
-      state: "uttar pradesh", 
-      district: "firozabad", 
-      tehsil: "firozabad", 
-      block: "narkhi",
       ...data,
       is_default: data?.is_default === "on" ? 1 : 0, // default value
     }
@@ -107,26 +81,35 @@ export function AddAddressModal({ refetch }: AddAddressModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild className='!bg-white hover:!bg-white sticky top-0 z-10 rounded-lg border border-gray-200 py-4 px-0 mb-2 cursor-pointer hover:shadow-sm transition-shadow'>
-        <Button variant="default" className='w-full !py-6 flex items-center justify-between text-green-500 font-semibold'>  <span className="flex items-center gap-2">
-          <Plus size={20} />
-          Add New Address
-        </span>
-          <ChevronRight size={20} />
-        </Button>
+      <DialogTrigger asChild >
+        <button
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            className="text-sm rounded mt-0.5 cursor-pointer hover:bg-gray-100"
+          >
+
+            <Edit className='size-4 text-green-700' />
+          </button>
+       
       </DialogTrigger>
       <DialogContent className='max-h-[90vh]'>
-        <div className="flex flex-col h-full">
-           <DialogHeader className='pb-2'>
-          <DialogTitle>Add New Address</DialogTitle>
-          <DialogDescription>
-            Enter your address details below. All fields marked with * are required.
-          </DialogDescription>
-        </DialogHeader>
-<ScrollArea className="flex-1 pr-3 max-h-[calc(90vh-100px)]">
+  <div className="flex flex-col h-full">
 
+    {/* Header (fixed) */}
+    <DialogHeader className='pb-2'>
+      <DialogTitle>Edit Address</DialogTitle>
+      <DialogDescription>
+        Edit your address details below. All fields marked with * are required.
+      </DialogDescription>
+    </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+    {/* Scrollable Form */}
+    <ScrollArea className="flex-1 pr-3 max-h-[calc(90vh-100px)]">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+        
+        {/* your entire form fields here */}
+        
 
           <Field className="flex flex-col gap-y-2">
             <FieldLabel htmlFor="input-full-address" className="font-medium text-xs text-green-700">Full Address</FieldLabel>
@@ -136,7 +119,6 @@ export function AddAddressModal({ refetch }: AddAddressModalProps) {
               {...register("address", {
                 required: "Full address is required",
               })}
-              onChange={handleInputChange}
               required
               rows={1}
             />
@@ -203,11 +185,17 @@ export function AddAddressModal({ refetch }: AddAddressModalProps) {
             />
           </Field>
           <Field orientation="horizontal" className="space-y-1" >
-            <Checkbox
-              color="primary"
-              {...register("is_default")}
-              className="cursor-pointer"
-            />
+            <Controller
+  name="is_default"
+  control={control}
+  render={({ field }) => (
+    <Checkbox
+      checked={field.value === 1}
+      onCheckedChange={(checked) => field.onChange(checked ? 1 : 0)}
+    />
+  )}
+/>
+            
             <FieldLabel htmlFor="terms-checkbox" className="text-sm bg-linear-to-br text-sm font-bold ml-auto font-medium bg-clip-text text-transparent bg-gradient-to-r from-green-700 from-[7.58%] to-primary to-[98.88%]">
               Set As a default Address
             </FieldLabel>
@@ -224,15 +212,17 @@ export function AddAddressModal({ refetch }: AddAddressModalProps) {
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isPending} variant="default">
-              {isPending ? "Add Address..." : "Add Address"}
+            <Button type="submit" disabled={isPending} className='cursor-pointer' variant="default">
+              {isPending ? "Add Address..." : "Submit"}
             </Button>
           </div>
         </form>
-</ScrollArea>
-        </div>
-       
-      </DialogContent>
+
+     
+    </ScrollArea>
+  </div>
+</DialogContent>
+    
     </Dialog>
   )
 }

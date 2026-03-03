@@ -165,7 +165,6 @@ export interface UserAddress {
   village: string;
   address: string;
   pincode: number;
-  isDefault: boolean;    // better than 0/1
   personName: string;
   contact: string;
   createdAt: string;

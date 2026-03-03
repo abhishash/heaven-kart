@@ -10,13 +10,8 @@ import { ADDRESSES } from '@/lib/constants'
 import { useSession } from 'next-auth/react'
 import { UserAddress } from '@/lib/types'
 import { AddAddressModal } from './add-address-modal'
+import { ScrollArea } from '../ui/scroll-area'
 
-interface Address {
-  id: string
-  type: 'home' | 'work' | 'other'
-  title: string
-  address: string
-}
 
 export function AddressesContent() {
 
@@ -35,31 +30,27 @@ export function AddressesContent() {
 
   const addresses = data?.data;
 
-
-  const handleEditAddress = (id: number) => {
-    console.log('[v0] Edit address:', id)
-  }
-
-
   return (
-    <main className="flex-1 bg-gray-50 p-6 overflow-auto">
+    <main className="flex-1 bg-gray-50 p-6 max-h-[682px] overflow-hidden">
       <div className="w-full mx-auto">
         <AddAddressModal refetch={refetch} />
         {/* Saved Addresses Section */}
         <div>
-          <h2 className="text-lg font-semibold text-foreground mb-4">Saved Addresses</h2>
+          <h2 className="text-lg font-semibold text-foreground px-1 mb-2">Saved Addresses</h2>
           {
             isPending ? "Fetching Addresss.." :
-              <div className="bg-white rounded-lg border border-gray-200 p-4">
-                {addresses?.map((addr) => (
+            <ScrollArea className="h-[550px] pr-4 ">
+              <div className=" flex flex-col gap-y-2 ">
+                {addresses?.map((addr, index) => (
                   <AddressCard
                     key={addr.id}
                     address={addr}
                     refetch={refetch}
-                    onEdit={() => handleEditAddress(addr.id)}
+                    isBorder={(addresses.length-1) === index}
                   />
                 ))}
               </div>
+            </ScrollArea>
           }
         </div>
       </div>

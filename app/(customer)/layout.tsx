@@ -9,7 +9,7 @@ const CustomerLayout = ({ children }: {
     return (
         <main>
             <Header />
-            <div className="flex max-w-7xl overflow-auto mx-auto mt-28 mb-14 border border-gray-300 rounded-2xl bg-background">
+            <div className=" max-w-7xl flex overflow-hidden mx-auto mt-28 mb-14 border border-border rounded-2xl bg-background">
                 <Sidebar />
                 {children}
             </div>

@@ -56,7 +56,7 @@ export function Sidebar() {
                 <Button
                     variant="outline"
                     onClick={handleLogout}
-                    className="w-full cursor-pointer !bg-white !border-red-500 text-red-500 hover:bg-green-50 rounded-lg h-10"
+                    className="w-full cursor-pointer !bg-white hover:text-red-600 !border-red-500 text-red-500 hover:bg-green-50 rounded-lg h-10"
                 >
                     Log Out
                 </Button>
@@ -77,7 +77,7 @@ function NavItem({ icon, label, href, active = false }: {
             href={href}
             className={`w-full flex items-center cursor-pointer gap-3 px-4 py-3 rounded-lg transition-colors ${active
                 ? 'bg-gradient-to-r from-green-700 to-primary text-white font-medium'
-                : 'text-gray-600 hover:bg-gray-50'
+                : 'text-gray-600 hover:bg-green-50'
                 }`}
         >
             {icon}

@@ -36,7 +36,7 @@ export default async function RootLayout({
           <ReduxProviders>
             <ReactQueryProviders>
               <main className="min-h-[calc(100vh-522px)]">{children}</main>
-              <Toaster />
+              <Toaster richColors={true} theme="light" closeButton={true} />
             </ReactQueryProviders>
           </ReduxProviders>
         </SessionProviders>
