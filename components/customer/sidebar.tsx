@@ -14,7 +14,7 @@ export function Sidebar() {
         await signOut({callbackUrl: "/login" });
     }
     return (
-        <aside className="w-full hidden sm:flex bg-white border border-border rounded-2xl border-gray-200 flex-col p-3 sm:p-6">
+        <aside className="w-96 hidden sm:flex bg-white border border-border rounded-2xl border-gray-200 flex-col p-3 sm:p-6">
             {/* User Profile */}
             <div className="flex items-center gap-3 mb-6">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-700 to-primary flex items-center justify-center">
