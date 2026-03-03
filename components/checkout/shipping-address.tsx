@@ -1,7 +1,57 @@
 'use client'
 
-import { Home, Briefcase, MapPin, Trash2, Edit2, Phone, Edit, MapPinCheck } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { useQuery } from '@tanstack/react-query'
+import {  methods } from '@/lib/fetch-handler'
+import { ADDRESSES } from '@/lib/constants'
+import { ScrollArea } from '../ui/scroll-area'
+import { AddAddressModal } from '../customer/add-address-modal'
+
+
+export function ShippingAddress() {
+
+  const { data: session } = useSession();
+  const { data, isPending, refetch } = useQuery<{ data: UserAddress[] }>({
+    queryKey: ["address"],
+    queryFn: () =>
+      fetchHandler({
+        ...ADDRESSES as {
+          endpoint: string;
+          method: methods;
+        },
+        token: session?.user?.accessToken
+      }),
+  });
+
+  const addresses = data?.data;
+
+  return (
+      <div className="w-full mx-auto">
+        <AddAddressModal isCheckout={true} refetch={refetch} />
+        {/* Saved Addresses Section */}
+        <div>
+          {
+            isPending ? "Fetching Addresss.." :
+            <ScrollArea className="h-[410px] pr-4 ">
+              <div className=" flex flex-col gap-y-2 ">
+                {addresses?.map((addr, index) => (
+                  <AddressCard
+                    key={addr.id}
+                    address={addr}
+                    refetch={refetch}
+                    isBorder={(addresses.length-1) === index}
+                  />
+                ))}
+              </div>
+            </ScrollArea>
+          }
+        </div>
+      </div>
+  )
+}
+
+
+
+import { MapPin, Phone, MapPinCheck } from 'lucide-react'
 import { UserAddress } from '@/lib/types'
 import { useMutation } from '@tanstack/react-query'
 import { fetchHandler } from '@/lib/fetch-handler'
@@ -9,7 +59,7 @@ import { useSession } from 'next-auth/react'
 import clsx from 'clsx'
 import { toast } from 'sonner'
 import Spinner from '../ui/spinner'
-import { UpdateAddressModal } from './update-address-modal'
+import { UpdateAddressModal } from '../customer/update-address-modal'
 
 interface AddressCardProps {
   address: UserAddress;
@@ -17,7 +67,7 @@ interface AddressCardProps {
   isBorder: boolean;
 }
 
-export function AddressCard({ address, refetch, isBorder }: AddressCardProps) {
+function AddressCard({ address, refetch, isBorder }: AddressCardProps) {
   const { data: session } = useSession();
   const { mutateAsync, isPending: isDeleteing } = useMutation({
     mutationFn: (payload: { id: number }) =>
@@ -83,20 +133,7 @@ export function AddressCard({ address, refetch, isBorder }: AddressCardProps) {
           }
           
           <UpdateAddressModal refetch={refetch} address={address} />
-          {address?.is_default == "0" && (
-            <button
-               onClick={(e) => {
-                e.stopPropagation();   
-                onDelete(address?.id);
-              }}
-              disabled={isDeleteing}
-              className="text-sm cursor-pointer rounded hover:bg-red-50"
-            >
-              {
-                isDeleteing ? <Spinner /> : <Trash2 className='size-4 text-red-500' />
-              }
-            </button>
-          )}
+         
         </div>
       </div>
       <div className="text-sm text-gray-600 flex items-center gap-1">

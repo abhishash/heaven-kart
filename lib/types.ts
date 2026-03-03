@@ -30,6 +30,7 @@ export interface ProductTypes {
   slug: string | null;
   discount: string | null;
   brand: string;
+  id: number;
 }
 
 
@@ -174,3 +175,5 @@ export interface UserAddress {
 export interface AddressResponse {
   data: UserAddress[];
 }
+
+export type PaymentMethod = 'card' | 'apple' | 'paypal' | 'google';

@@ -1,20 +1,3 @@
-// import { useState, useMemo } from 'react'
-// import { Search, Filter, ChevronDown, Heart, ShoppingCart } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select'
-import {
-    DropdownMenu,
-    DropdownMenuCheckboxItem,
-    DropdownMenuContent,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { ProductCard } from '@/components/elements/product-card'
 import CategorySidebar from '@/components/elements/product/category-sidebar'
 import { fetchHandler, methods } from '@/lib/fetch-handler'

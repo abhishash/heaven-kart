@@ -2,7 +2,7 @@
 
 import React from "react"
 import { useState } from 'react'
-import { Check, MapPin, CreditCard, Package, AlertCircle, Eye, EyeOff } from 'lucide-react'
+import { Check, MapPin, CreditCard, Package, AlertCircle, Eye, EyeOff, Smartphone, Wallet, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -41,20 +41,20 @@ interface PaymentData {
 const steps: Step[] = [
     {
         id: 1,
-        title: 'Shipping',
-        description: 'Enter your address',
+        title: 'Shipping Address',
+        description: 'Select shipping addresses to delivery',
         icon: <MapPin className="w-5 h-5" />,
     },
     {
         id: 2,
         title: 'Payment',
-        description: 'Add payment method',
+        description: 'Select a secure payment option to complete your purchase. All transactions are protected.',
         icon: <CreditCard className="w-5 h-5" />,
     },
     {
         id: 3,
-        title: 'Review',
-        description: 'Review your order',
+        title: 'Place Order',
+        description: 'Place your order in one more click.',
         icon: <Package className="w-5 h-5" />,
     },
 ]
@@ -92,7 +92,43 @@ const validateExpiryDate = (date: string): boolean => {
 }
 
 import { useForm } from "react-hook-form";
-
+import { ShippingAddress } from "@/components/checkout/shipping-address"
+import { PaymentMethod } from "@/lib/types"
+import { fetchHandler } from "@/lib/fetch-handler"
+import { useMutation } from "@tanstack/react-query"
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { encodeId } from "@/lib/utils"
+const paymentMethods = [
+    {
+        id: 'card' as const,
+        name: 'Credit Card',
+        description: 'Visa, Mastercard, or American Express',
+        icon: CreditCard,
+        color: 'from-blue-500 to-blue-600',
+    },
+    {
+        id: 'apple' as const,
+        name: 'Apple Pay',
+        description: 'Fast and secure payment',
+        icon: Smartphone,
+        color: 'from-gray-700 to-gray-900',
+    },
+    {
+        id: 'google' as const,
+        name: 'Google Pay',
+        description: 'One tap checkout',
+        icon: Wallet,
+        color: 'from-red-500 to-blue-600',
+    },
+    {
+        id: 'paypal' as const,
+        name: 'PayPal',
+        description: 'Buy now, pay later available',
+        icon: Wallet,
+        color: 'from-blue-600 to-indigo-600',
+    },
+];
 type ShippingFormValues = {
     firstName: string;
     email: string;
@@ -105,31 +141,8 @@ type ShippingFormValues = {
 export function CheckoutStepper() {
     const [currentStep, setCurrentStep] = useState(1)
     const [completedSteps, setCompletedSteps] = useState<number[]>([])
-    const [showCVV, setShowCVV] = useState(false)
 
-    const [shippingData, setShippingData] = useState<ShippingData>({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        street: '',
-        city: '',
-        state: '',
-        zipCode: '',
-        country: 'United States',
-    })
-
-    const [paymentData, setPaymentData] = useState<PaymentData>({
-        cardNumber: '',
-        cardHolder: '',
-        expiryDate: '',
-        cvv: '',
-        saveCard: false,
-    })
-
-    const [shippingErrors, setShippingErrors] = useState<FormErrors>({})
-    const [paymentErrors, setPaymentErrors] = useState<FormErrors>({})
-
+    const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>('card');
     const cartItems: CartItem[] = [
         {
             id: '1',
@@ -167,66 +180,33 @@ export function CheckoutStepper() {
         mode: "onBlur",
     });
 
-    const validateShipping = (): boolean => {
-        const errors: FormErrors = {}
+    const { data: sesssion } = useSession();
+    const { data, mutateAsync, isPending } = useMutation({
+        mutationFn: () =>
+            fetchHandler({
+                endpoint: "orders",
+                method: "POST",
+                token: sesssion?.user?.accessToken,
+            })
+    });
 
-        if (!shippingData.firstName.trim()) errors.firstName = 'First name is required'
-        if (!shippingData.lastName.trim()) errors.lastName = 'Last name is required'
-        if (!shippingData.email.trim()) {
-            errors.email = 'Email is required'
-        } else if (!validateEmail(shippingData.email)) {
-            errors.email = 'Invalid email format'
-        }
-        if (!shippingData.phone.trim()) {
-            errors.phone = 'Phone is required'
-        } else if (!validatePhone(shippingData.phone)) {
-            errors.phone = 'Invalid phone format'
-        }
-        if (!shippingData.street.trim()) errors.street = 'Street address is required'
-        if (!shippingData.city.trim()) errors.city = 'City is required'
-        if (!shippingData.state.trim()) errors.state = 'State is required'
-        if (!shippingData.zipCode.trim()) {
-            errors.zipCode = 'ZIP code is required'
-        } else if (!/^\d{5}(-\d{4})?$/.test(shippingData.zipCode)) {
-            errors.zipCode = 'Invalid ZIP code format'
-        }
+    const router = useRouter();
 
-        setShippingErrors(errors)
-        return Object.keys(errors).length === 0
-    }
-
-    const validatePayment = (): boolean => {
-        const errors: FormErrors = {}
-
-        if (!paymentData.cardNumber.trim()) {
-            errors.cardNumber = 'Card number is required'
-        } else if (!validateCardNumber(paymentData.cardNumber)) {
-            errors.cardNumber = 'Invalid card number (16 digits required)'
-        }
-        if (!paymentData.cardHolder.trim()) errors.cardHolder = 'Card holder name is required'
-        if (!paymentData.expiryDate.trim()) {
-            errors.expiryDate = 'Expiry date is required'
-        } else if (!validateExpiryDate(paymentData.expiryDate)) {
-            errors.expiryDate = 'Invalid format (use MM/YY)'
-        }
-        if (!paymentData.cvv.trim()) {
-            errors.cvv = 'CVV is required'
-        } else if (!validateCVV(paymentData.cvv)) {
-            errors.cvv = 'Invalid CVV (3-4 digits)'
-        }
-
-        setPaymentErrors(errors)
-        return Object.keys(errors).length === 0
-    }
-
-    const handleNext = () => {
-        if (currentStep === 1 && !validateShipping()) return
-        if (currentStep === 2 && !validatePayment()) return
-
-        if (currentStep < steps.length) {
+    const handleNext = (step: number) => {
+        if (currentStep < steps.length - 1) {
             setCompletedSteps([...completedSteps, currentStep])
             setCurrentStep(currentStep + 1)
         }
+        if (step === 2) {
+            mutateAsync()?.then((res) => {
+                if (res?.status) {
+                    router?.push(`/success/${encodeId(res?.order_no)}`);
+                }
+            })
+        }
+        // if (currentStep === 1 && !validateShipping()) return
+        // if (currentStep === 2 && !validatePayment()) return
+
     }
 
     const handlePrevious = () => {
@@ -247,33 +227,14 @@ export function CheckoutStepper() {
     const isStepAccessible = (stepId: number) =>
         isStepCompleted(stepId) || isStepCurrent(stepId) || stepId < currentStep
 
-    const handleShippingChange = (field: keyof ShippingData, value: string) => {
-        setShippingData({ ...shippingData, [field]: value })
-        if (shippingErrors[field]) {
-            setShippingErrors({ ...shippingErrors, [field]: '' })
-        }
-    }
-
-    const handlePaymentChange = (field: keyof PaymentData, value: string | boolean) => {
-        if (field === 'cardNumber') {
-            const formatted = value.toString().replace(/\s/g, '').replace(/(\d{4})/g, '$1 ').trim()
-            setPaymentData({ ...paymentData, [field]: formatted })
-        } else {
-            setPaymentData({ ...paymentData, [field]: value })
-        }
-        if (field !== 'saveCard' && paymentErrors[field]) {
-            setPaymentErrors({ ...paymentErrors, [field]: '' })
-        }
-    }
 
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="max-w-7xl mx-auto p-6">
-                <h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <h1 className="text-2xl font-bold text-gray-900 mb-8">HeavenKart</h1>
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
                     {/* Left Column - Checkout Form */}
-                    <div className="lg:col-span-2">
+                    <div className="lg:col-span-3">
                         {/* Step Indicators */}
                         <div className="mb-8">
                             <div className="flex items-center justify-between">
@@ -286,10 +247,10 @@ export function CheckoutStepper() {
                                                 }`}
                                         >
                                             <div
-                                                className={`w-12 h-12 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${isStepCompleted(step.id)
-                                                    ? 'bg-blue-600 text-white'
+                                                className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${isStepCompleted(step.id)
+                                                    ? 'bg-green-700 text-white'
                                                     : isStepCurrent(step.id)
-                                                        ? 'bg-blue-100 text-blue-600 ring-2 ring-blue-600'
+                                                        ? 'bg-green-100 text-green-700 ring-2 ring-green-700'
                                                         : isStepAccessible(step.id)
                                                             ? 'bg-gray-200 text-gray-600'
                                                             : 'bg-gray-100 text-gray-400'
@@ -306,7 +267,7 @@ export function CheckoutStepper() {
                                         {index < steps.length - 1 && (
                                             <div className="flex-1 h-1 mx-2">
                                                 <div
-                                                    className={`h-full transition-all duration-300 ${isStepCompleted(step.id) ? 'bg-blue-600' : 'bg-gray-200'
+                                                    className={`h-full transition-all duration-300 ${isStepCompleted(step.id) ? 'bg-green-700' : 'bg-gray-200'
                                                         }`}
                                                 ></div>
                                             </div>
@@ -326,12 +287,12 @@ export function CheckoutStepper() {
                         </div>
 
                         {/* Step Content */}
-                        <Card className="border-2 border-gray-200">
-                            <CardHeader className="border-b-2 border-gray-100 pb-6">
-                                <div className="flex items-center gap-3">
-                                    <div className="text-blue-600">{steps[currentStep - 1].icon}</div>
+                        <div className="border rounded-lg p-4 bg-white border-gray-200">
+                            <div className="border-b-2 border-gray-100 pb-2">
+                                <div className="flex items-base gap-1.5">
+                                    <div className="text-green-700 mt-1.5">{steps[currentStep - 1].icon}</div>
                                     <div>
-                                        <h2 className="text-2xl font-bold text-gray-900">
+                                        <h2 className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-green-700 from-[7.58%] to-primary to-[98.88%]">
                                             {steps[currentStep - 1].title}
                                         </h2>
                                         <p className="text-gray-500 text-sm mt-1">
@@ -339,331 +300,114 @@ export function CheckoutStepper() {
                                         </p>
                                     </div>
                                 </div>
-                            </CardHeader>
+                            </div>
 
-                            <CardContent className="pt-8">
+                            <div className="pt-0">
                                 {/* Step 1 - Shipping */}
                                 {currentStep === 1 && (
-                                    <form
-                                        onSubmit={handleSubmit((data) => {
-                                            console.log("Shipping Data:", data);
-                                            handleNext();
-                                        })}
-                                        className="space-y-6"
-                                    >
-                                        <div className="grid grid-cols-2 gap-4">
-                                            {/* Shop Name */}
-                                            <div>
-                                                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                                                    Shop Name Or Name <span className="text-red-500">*</span>
-                                                </label>
-
-                                                <Input
-                                                    placeholder="John"
-                                                    {...register("firstName", {
-                                                        required: "Name is required",
-                                                    })}
-                                                    className={`border ${errors.firstName ? "border-red-500" : "border-gray-300"
-                                                        }`}
-                                                />
-
-                                                {errors.firstName && (
-                                                    <div className="flex items-center gap-2 mt-1 text-red-600 text-sm">
-                                                        <AlertCircle className="w-4 h-4" />
-                                                        {errors.firstName.message}
-                                                    </div>
-                                                )}
-                                            </div>
-
-                                            {/* Email */}
-                                            <div>
-                                                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                                                    Email <span className="text-red-500">*</span>
-                                                </label>
-
-                                                <Input
-                                                    type="email"
-                                                    placeholder="john@example.com"
-                                                    {...register("email", {
-                                                        required: "Email is required",
-                                                        pattern: {
-                                                            value: /^\S+@\S+$/i,
-                                                            message: "Invalid email address",
-                                                        },
-                                                    })}
-                                                    className={`border ${errors.email ? "border-red-500" : "border-gray-300"
-                                                        }`}
-                                                />
-
-                                                {errors.email && (
-                                                    <div className="flex items-center gap-2 mt-1 text-red-600 text-sm">
-                                                        <AlertCircle className="w-4 h-4" />
-                                                        {errors.email.message}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        {/* Phone */}
-                                        <div>
-                                            <label className="block text-sm font-semibold text-gray-900 mb-2">
-                                                Phone <span className="text-red-500">*</span>
-                                            </label>
-
-                                            <Input
-                                                type="tel"
-                                                placeholder="+1 (555) 000-0000"
-                                                {...register("phone", {
-                                                    required: "Phone number is required",
-                                                    minLength: {
-                                                        value: 10,
-                                                        message: "Phone number must be at least 10 digits",
-                                                    },
-                                                })}
-                                                className={`border ${errors.phone ? "border-red-500" : "border-gray-300"
-                                                    }`}
-                                            />
-
-                                            {errors.phone && (
-                                                <div className="flex items-center gap-2 mt-1 text-red-600 text-sm">
-                                                    <AlertCircle className="w-4 h-4" />
-                                                    {errors.phone.message}
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        {/* Street */}
-                                        <div>
-                                            <label className="block text-sm font-semibold text-gray-900 mb-2">
-                                                Street Address <span className="text-red-500">*</span>
-                                            </label>
-
-                                            <Input
-                                                placeholder="123 Main Street"
-                                                {...register("street", {
-                                                    required: "Street address is required",
-                                                })}
-                                                className={`border ${errors.street ? "border-red-500" : "border-gray-300"
-                                                    }`}
-                                            />
-
-                                            {errors.street && (
-                                                <div className="flex items-center gap-2 mt-1 text-red-600 text-sm">
-                                                    <AlertCircle className="w-4 h-4" />
-                                                    {errors.street.message}
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        <div className="grid grid-cols-2 gap-4">
-                                            {/* ZIP */}
-                                            <div>
-                                                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                                                    ZIP Code <span className="text-red-500">*</span>
-                                                </label>
-
-                                                <Input
-                                                    placeholder="10001"
-                                                    {...register("zipCode", {
-                                                        required: "ZIP code is required",
-                                                    })}
-                                                    className={`border ${errors.zipCode ? "border-red-500" : "border-gray-300"
-                                                        }`}
-                                                />
-
-                                                {errors.zipCode && (
-                                                    <div className="flex items-center gap-2 mt-1 text-red-600 text-sm">
-                                                        <AlertCircle className="w-4 h-4" />
-                                                        {errors.zipCode.message}
-                                                    </div>
-                                                )}
-                                            </div>
-
-                                            {/* Village */}
-                                            <div>
-                                                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                                                    Village <span className="text-red-500">*</span>
-                                                </label>
-
-                                                <Input
-                                                    placeholder="NY"
-                                                    {...register("state", {
-                                                        required: "Village is required",
-                                                    })}
-                                                    className={`border ${errors.state ? "border-red-500" : "border-gray-300"
-                                                        }`}
-                                                />
-
-                                                {errors.state && (
-                                                    <div className="flex items-center gap-2 mt-1 text-red-600 text-sm">
-                                                        <AlertCircle className="w-4 h-4" />
-                                                        {errors.state.message}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                            <p className="text-sm text-blue-900">
-                                                Free shipping on orders over $50
-                                            </p>
-                                        </div>
-
-                                        <button
-                                            type="submit"
-                                            className="w-full bg-black text-white py-3 rounded-lg"
-                                        >
-                                            Continue
-                                        </button>
-                                    </form>
+                                    <ShippingAddress />
                                 )}
 
                                 {/* Step 2 - Payment */}
                                 {currentStep === 2 && (
-                                    <div className="space-y-6">
-                                        <div>
-                                            <label className="block text-sm font-semibold text-gray-900 mb-2">
-                                                Card Holder Name <span className="text-red-500">*</span>
-                                            </label>
-                                            <Input
-                                                value={paymentData.cardHolder}
-                                                onChange={(e) => handlePaymentChange('cardHolder', e.target.value)}
-                                                placeholder="John Doe"
-                                                className={`border ${paymentErrors.cardHolder ? 'border-red-500' : 'border-gray-300'}`}
-                                            />
-                                            {paymentErrors.cardHolder && (
-                                                <div className="flex items-center gap-2 mt-1 text-red-600 text-sm">
-                                                    <AlertCircle className="w-4 h-4" />
-                                                    {paymentErrors.cardHolder}
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-semibold text-gray-900 mb-2">
-                                                Card Number <span className="text-red-500">*</span>
-                                            </label>
-                                            <Input
-                                                value={paymentData.cardNumber}
-                                                onChange={(e) => handlePaymentChange('cardNumber', e.target.value)}
-                                                placeholder="1234 5678 9012 3456"
-                                                maxLength={19}
-                                                className={`border font-mono ${paymentErrors.cardNumber ? 'border-red-500' : 'border-gray-300'}`}
-                                            />
-                                            {paymentErrors.cardNumber && (
-                                                <div className="flex items-center gap-2 mt-1 text-red-600 text-sm">
-                                                    <AlertCircle className="w-4 h-4" />
-                                                    {paymentErrors.cardNumber}
-                                                </div>
-                                            )}
-                                        </div>
+                                    <div className="mt-4">
+                                        <div className="grid gap-4">
+                                            {paymentMethods.map((method) => {
+                                                const Icon = method.icon;
+                                                const isSelected = selectedMethod === method.id;
 
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <div>
-                                                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                                                    Expiry Date <span className="text-red-500">*</span>
-                                                </label>
-                                                <Input
-                                                    value={paymentData.expiryDate}
-                                                    onChange={(e) => handlePaymentChange('expiryDate', e.target.value)}
-                                                    placeholder="MM/YY"
-                                                    maxLength={5}
-                                                    className={`border ${paymentErrors.expiryDate ? 'border-red-500' : 'border-gray-300'}`}
-                                                />
-                                                {paymentErrors.expiryDate && (
-                                                    <div className="flex items-center gap-2 mt-1 text-red-600 text-sm">
-                                                        <AlertCircle className="w-4 h-4" />
-                                                        {paymentErrors.expiryDate}
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                                                    CVV <span className="text-red-500">*</span>
-                                                </label>
-                                                <div className="relative">
-                                                    <Input
-                                                        type={showCVV ? 'text' : 'password'}
-                                                        value={paymentData.cvv}
-                                                        onChange={(e) => handlePaymentChange('cvv', e.target.value)}
-                                                        placeholder="123"
-                                                        maxLength={4}
-                                                        className={`border pr-10 ${paymentErrors.cvv ? 'border-red-500' : 'border-gray-300'}`}
-                                                    />
+                                                return (
                                                     <button
-                                                        type="button"
-                                                        onClick={() => setShowCVV(!showCVV)}
-                                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-900"
+                                                        key={method.id}
+                                                        onClick={() => setSelectedMethod(method.id)}
+                                                        className={`group relative w-full text-left rounded-xl border transition-all duration-300 overflow-hidden
+                                           ${isSelected
+                                                                ? "border-green-700 shadow-md bg-gradient-to-r from-primary/5 to-green-50"
+                                                                : "border-border hover:border-primary/30 hover:shadow-sm"
+                                                            }`}
                                                     >
-                                                        {showCVV ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                                                    </button>
-                                                </div>
-                                                {paymentErrors.cvv && (
-                                                    <div className="flex items-center gap-2 mt-1 text-red-600 text-sm">
-                                                        <AlertCircle className="w-4 h-4" />
-                                                        {paymentErrors.cvv}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
+                                                        {/* subtle glow */}
+                                                        {isSelected && (
+                                                            <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-green-200/10 opacity-70" />
+                                                        )}
 
-                                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                                            <div className="flex items-center gap-3">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={paymentData.saveCard}
-                                                    onChange={(e) => handlePaymentChange('saveCard', e.target.checked)}
-                                                    className="w-4 h-4 cursor-pointer"
-                                                />
-                                                <label className="text-sm text-gray-700 cursor-pointer">
-                                                    Save this card for future purchases
-                                                </label>
-                                            </div>
+                                                        <div className="relative flex items-center justify-between p-3 py-3">
+                                                            {/* Left Section */}
+                                                            <div className="flex items-center gap-4">
+
+                                                                {/* Icon */}
+                                                                <div
+                                                                    className={`flex items-center justify-center w-12 h-12 rounded-xl transition-all
+                                                 ${isSelected
+                                                                            ? "bg-green-700 text-white shadow"
+                                                                            : "bg-muted group-hover:bg-primary/10"
+                                                                        }`}
+                                                                >
+                                                                    <Icon className="w-5 h-5" />
+                                                                </div>
+
+                                                                {/* Text */}
+                                                                <div>
+                                                                    <h3 className="font-semibold text-base text-foreground">
+                                                                        {method.name}
+                                                                    </h3>
+
+                                                                    <p className="text-sm text-muted-foreground">
+                                                                        {method.description}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+
+                                                            {/* Right Selection Indicator */}
+                                                            <div className="flex items-center">
+                                                                <div
+                                                                    className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all
+                                                 ${isSelected
+                                                                            ? "bg-green-700  border-primary"
+                                                                            : "border-muted-foreground/40"
+                                                                        }`}
+                                                                >
+                                                                    {isSelected && (
+                                                                        <Check className="w-4 h-4 text-white" />
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </button>
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                 )}
 
                                 {/* Step 3 - Review */}
-                                {currentStep === 3 && (
-                                    <div className="space-y-6">
-                                        <h2 className="text-2xl font-bold text-gray-900">Review Your Order</h2>
-                                        <div className="bg-white border border-gray-200 rounded-lg p-6">
-                                            <h3 className="font-semibold text-gray-900 mb-4">Cart Summary</h3>
-                                            <div className="space-y-4">
-                                                {cartItems.map((item) => (
-                                                    <div key={item.id} className="flex justify-between items-center">
-                                                        <div>
-                                                            <p className="font-semibold text-gray-900">{item.name}</p>
-                                                            <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
-                                                        </div>
-                                                        <p className="font-semibold text-gray-900">${(item.price * item.quantity).toFixed(2)}</p>
-                                                    </div>
-                                                ))}
-                                                <div className="flex justify-between items-center border-t border-gray-200 pt-4">
-                                                    <p className="text-gray-600">Subtotal</p>
-                                                    <p className="text-gray-900">${subtotal.toFixed(2)}</p>
-                                                </div>
-                                                <div className="flex justify-between items-center border-t border-gray-200 pt-4">
-                                                    <p className="text-gray-600">Shipping</p>
-                                                    <p className="text-gray-900">${shipping.toFixed(2)}</p>
-                                                </div>
-                                                <div className="flex justify-between items-center border-t border-gray-200 pt-4">
-                                                    <p className="text-gray-600">Tax</p>
-                                                    <p className="text-gray-900">${tax.toFixed(2)}</p>
-                                                </div>
-                                                <div className="flex justify-between items-center pt-4 border-t border-gray-200">
-                                                    <p className="font-semibold text-lg text-gray-900">Total</p>
-                                                    <p className="font-bold text-2xl text-blue-600">${total.toFixed(2)}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                            </CardContent>
-                        </Card>
+
+                                {/* Navigation Buttons */}
+                                <div className="flex justify-between mt-10 pt-6 border-t border-gray-200">
+                                    <Button
+                                        onClick={handlePrevious}
+                                        disabled={currentStep === 1}
+                                        variant="outline"
+                                        className="min-w-32 bg-transparent"
+                                    >
+                                        Previous
+                                    </Button>
+
+                                    <Button
+                                        onClick={() => handleNext(currentStep)}
+                                        className="min-w-32 bg-green-600 cursor-pointer hover:bg-green-700 text-white"
+                                    >
+                                        {currentStep === steps.length - 1 ? 'Place Order' : 'Next'}
+                                    </Button>
+                                </div>
+                            </div>
+
+                        </div>
+
                     </div>
 
                     {/* Right Column - Cart Summary */}
-                    <div className="lg:col-span-1">
+                    <div className="lg:col-span-2">
                         <Card className="border-2 border-gray-200 sticky top-6">
                             <CardHeader className="border-b-2 border-gray-100 pb-4">
                                 <h2 className="text-xl font-bold text-gray-900">Order Summary</h2>
@@ -723,24 +467,7 @@ export function CheckoutStepper() {
                     </div>
                 </div>
 
-                {/* Navigation Buttons */}
-                <div className="flex justify-between mt-10 pt-6 border-t border-gray-200">
-                    <Button
-                        onClick={handlePrevious}
-                        disabled={currentStep === 1}
-                        variant="outline"
-                        className="min-w-32 bg-transparent"
-                    >
-                        Previous
-                    </Button>
 
-                    <Button
-                        onClick={handleNext}
-                        className="min-w-32 bg-blue-600 hover:bg-blue-700 text-white"
-                    >
-                        {currentStep === steps.length ? 'Complete Order' : 'Next'}
-                    </Button>
-                </div>
             </div>
         </div>
     )

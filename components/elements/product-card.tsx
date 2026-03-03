@@ -5,6 +5,14 @@ import { Heart, Star } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 import { ProductTypes } from "@/lib/types";
+import { useSession } from "next-auth/react";
+import { useMutation } from "@tanstack/react-query";
+import { fetchHandler } from "@/lib/fetch-handler";
+import { FieldValues } from "react-hook-form";
+import { addToCart } from "./store/cartSlice";
+import { useDispatch } from "react-redux";
+import Spinner from "../ui/spinner";
+import clsx from "clsx";
 
 export function ProductCard({
   url,
@@ -17,19 +25,50 @@ export function ProductCard({
   summer_id,
   slug,
   discount,
-  brand
+  brand,
+  id
 }: ProductTypes) {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const discountPercent = Math.round(
     ((parseFloat(ac_price) - parseFloat(price)) / parseFloat(ac_price)) * 100,
   );
-
   const isOutOfStock = Number(in_stock) === 0;
+  const { data: session } = useSession();
+  const dispatch = useDispatch();
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: (payload: {
+      product_id: number;
+      qty: number;
+      type: "custom" | "remove" | "add";
+    }) =>
+      fetchHandler({
+        endpoint: "cart/add",
+        method: "POST",
+        data: payload,
+        token: session?.user?.accessToken,
+      }),
+  });
+  const handleAddToCart = async (product_id: number) => {
+    try {
+      await mutateAsync({
+        product_id: product_id,
+        qty: 1,
+        type: "add",
+      }).then((res) => {
+        if (res?.status) {
+          dispatch(addToCart({ ...res?.data })); // ✅ Redux update
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      alert("Error adding to cart");
+    }
+  };
   return (
     <div
       className={`group shrink-0 w-24 md:w-56 bg-white rounded-lg overflow-hidden transition-all ${isOutOfStock
-          ? "opacity-60 cursor-not-allowed pointer-events-none"
-          : "hover:shadow-none"
+        ? "opacity-60 cursor-not-allowed pointer-events-none"
+        : "hover:shadow-none"
         }`}
     >
       {/* Image Container */}
@@ -45,7 +84,7 @@ export function ProductCard({
         {/* Discount Badge */}
         {discountPercent > 0 && (
           <div className="absolute top-2 left-2 bg-green-600 text-white text-[9px] sm:text-xs font-bold px-1 py-0.5 sm:px-2 sm:py-1 rounded">
-            {discountPercent}% <span className="hidden sm:inline">OFF</span> 
+            {discountPercent}% <span className="hidden sm:inline">OFF</span>
           </div>
         )}
 
@@ -66,8 +105,13 @@ export function ProductCard({
             OUT OF STOCK
           </div>
         ) : (
-          <button className="absolute bottom-1 sm:bottom-2 cursor-pointer right-2 bg-red-500 hover:bg-red-600 text-white rounded-full px-1.5 sm:px-3 py-0.5 sm:py-1 text-[9px] sm:text-xs font-bold transition-colors">
-            ADD
+          <button disabled={isPending} onClick={() => handleAddToCart(id)} className="absolute bottom-1 sm:bottom-2 cursor-pointer right-2 bg-red-500 hover:bg-red-600 text-white rounded-full px-1.5 sm:px-3 py-0.5 sm:py-1 text-[9px] sm:text-xs font-bold transition-colors">
+            {isPending ? <div className="py-1"><div className='flex space-x-0.5 justify-center items-center  h-fit'>
+              <span className='sr-only'>Loading...</span>
+              <div className={clsx('size-1.5 rounded-full animate-bounce [animation-delay:-0.3s]', "bg-white")}></div>
+              <div className={clsx('size-2 rounded-full animate-bounce [animation-delay:-0.15s]', "bg-white")}></div>
+              <div className={clsx('size-1.5 rounded-full animate-bounce', "bg-white")}></div>
+            </div></div> : "ADD"}
           </button>
         )}
 
