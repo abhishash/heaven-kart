@@ -88,10 +88,8 @@ export function UpdateAddressModal({ refetch, address }: AddAddressModalProps) {
             }}
             className="text-sm rounded mt-0.5 cursor-pointer hover:bg-gray-100"
           >
-
             <Edit className='size-4 text-green-700' />
           </button>
-       
       </DialogTrigger>
       <DialogContent className='max-h-[90vh]'>
   <div className="flex flex-col h-full">

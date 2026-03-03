@@ -59,23 +59,7 @@ export function Header() {
                 className="text-xl md:text-2xl font-semibold text-green-600"
               >
                 HeavenKart
-              </Link>
-
-              {/* Location */}
-              <div className="hidden md:block">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="flex gap-2">
-                      Select Location
-                      <ChevronDown className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start">
-                    <DropdownMenuItem>Delhi</DropdownMenuItem>
-                    <DropdownMenuItem>Mumbai</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
+              </Link>              
             </div>
 
             {/* RIGHT */}

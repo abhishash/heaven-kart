@@ -31,7 +31,6 @@ export function AddressesContent() {
   const addresses = data?.data;
 
   return (
-    <main className="flex-1 bg-gray-50 p-6 max-h-[682px] overflow-hidden">
       <div className="w-full mx-auto">
         <AddAddressModal refetch={refetch} />
         {/* Saved Addresses Section */}
@@ -54,6 +53,5 @@ export function AddressesContent() {
           }
         </div>
       </div>
-    </main>
   )
 }
