@@ -8,7 +8,6 @@ import SessionProviders from "./providers/session-providers";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 
-
 const manrope = Manrope({
   variable: "--font-display",
   subsets: ["latin"],
@@ -30,7 +29,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-  className={`${manrope.variable} font-display antialiased bg-surface text-slate-900`}
+        className={`${manrope.variable} font-display antialiased bg-surface text-slate-900`}
       >
         <SessionProviders session={session}>
           <ReduxProviders>

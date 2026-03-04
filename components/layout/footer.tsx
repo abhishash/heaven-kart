@@ -4,6 +4,12 @@ import { Instagram, Twitter, Facebook, Linkedin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import HowToWorks from "../homepage/how-to-work";
+import { fetchHandler, methods } from "@/lib/fetch-handler";
+import { CMS } from "@/lib/constants";
+import { useQuery } from "@tanstack/react-query";
+import { CmsResponse } from "@/lib/types";
+import { isObject } from "@/lib/type-guards";
+import CmsSkeleton from "./placeholder/cms";
 const popularSearches = {
   products: [
     "Avocado",
@@ -86,79 +92,91 @@ const categories = [
 ];
 
 export function Footer() {
+  
+  const { data, isPending } = useQuery<CmsResponse>({
+    queryKey: [`cms-page`],
+    queryFn: () =>
+      fetchHandler({
+        ...(CMS as {
+          endpoint: string;
+          method: methods;
+        }),
+      }),
+  });
+
   return (
     <>
       <HowToWorks />
       <footer className="bg-white space-y-12">
         <div className="container mx-auto border-y py-8 sm:py-12 px-4">
 
-  {/* Popular Searches Section */}
-  <section className="pb-10">
-    <h1 className="text-lg sm:text-xl font-semibold text-slate-900 mb-6 sm:mb-8">
-      Popular Searches
-    </h1>
+          {/* Popular Searches Section */}
+          <section className="pb-10">
+            <h1 className="text-lg sm:text-xl font-semibold text-slate-900 mb-6 sm:mb-8">
+              Popular Searches
+            </h1>
 
-    <div className="space-y-6">
+            <div className="space-y-6">
 
-      {/* Reusable Row */}
-      {[
-        { label: "Products", data: popularSearches.products },
-        { label: "Brands", data: popularSearches.brands },
-        { label: "Categories", data: popularSearches.categories },
-      ].map((section, idx) => (
-        <div
-          key={idx}
-          className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-4"
-        >
-          {/* Label */}
-          <span className="text-sm font-semibold text-slate-900 sm:w-24">
-            {section.label}
-          </span>
-
-          {/* Links */}
-          <div className="flex flex-wrap text-sm text-slate-600">
-            <span className="hidden sm:inline text-slate-400 mr-2">:</span>
-
-            {section.data.map((item, index) => (
-              <span key={index} className="flex items-center">
-                <Link
-                  href="#"
-                  className="hover:text-slate-900 transition-colors"
+              {/* Reusable Row */}
+              {[
+                { label: "Products", data: popularSearches.products },
+                { label: "Brands", data: popularSearches.brands },
+                { label: "Categories", data: popularSearches.categories },
+              ].map((section, idx) => (
+                <div
+                  key={idx}
+                  className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-4"
                 >
-                  {item}
+                  {/* Label */}
+                  <span className="text-sm font-semibold text-slate-900 sm:w-24">
+                    {section.label}
+                  </span>
+
+                  {/* Links */}
+                  <div className="flex flex-wrap text-sm text-slate-600">
+                    <span className="hidden sm:inline text-slate-400 mr-2">:</span>
+
+                    {section.data.map((item, index) => (
+                      <span key={index} className="flex items-center">
+                        <Link
+                          href="#"
+                          className="hover:text-slate-900 transition-colors"
+                        >
+                          {item}
+                        </Link>
+
+                        {index < section.data.length - 1 && (
+                          <span className="mx-2 text-slate-400">|</span>
+                        )}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Categories Section */}
+          <section>
+            <h2 className="text-lg sm:text-xl font-semibold text-slate-900 mb-6 sm:mb-8">
+              Categories
+            </h2>
+
+            {/* Responsive Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-y-4 gap-x-6">
+              {categories.flat().map((category, index) => (
+                <Link
+                  key={index}
+                  href="#"
+                  className="block text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors"
+                >
+                  {category}
                 </Link>
-
-                {index < section.data.length - 1 && (
-                  <span className="mx-2 text-slate-400">|</span>
-                )}
-              </span>
-            ))}
-          </div>
+              ))}
+            </div>
+          </section>
         </div>
-      ))}
-    </div>
-  </section>
-
-  {/* Categories Section */}
-  <section>
-    <h2 className="text-lg sm:text-xl font-semibold text-slate-900 mb-6 sm:mb-8">
-      Categories
-    </h2>
-
-    {/* Responsive Grid */}
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-y-4 gap-x-6">
-      {categories.flat().map((category, index) => (
-        <Link
-          key={index}
-          href="#"
-          className="block text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors"
-        >
-          {category}
-        </Link>
-      ))}
-    </div>
-  </section>
-</div>
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 py-10">
             {/* Logo + Social */}
@@ -205,52 +223,31 @@ export function Footer() {
             </div>
 
             <div className="flex justify-evenly col-span-2">
-              {/* Company */}
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-4">Company</h3>
-                <ul className="space-y-2">
-                  {[
-                    "Home",
-                    "Delivery Areas",
-                    "Careers",
-                    "Customer Support",
-                    "Press",
-                  ].map((item) => (
-                    <li key={item}>
-                      <a
-                        href="#"
-                        className="text-sm text-gray-700 hover:text-green-600 transition"
-                      >
-                        {item}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {isPending ? <CmsSkeleton /> :
+                isObject(data?.data) ? (
+                  Object.entries(data.data).map(([category, pages]) => (
+                    <div key={category}>
+                      <h3 className="font-semibold text-gray-900 mb-4">
+                        {category}
+                      </h3>
 
-              {/* Legal */}
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-4">Legal</h3>
-                <ul className="space-y-2">
-                  {[
-                    "Privacy Policy",
-                    "Terms of Use",
-                    "Responsible Disclosure Policy",
-                    "Sell on HeavenKart",
-                    "Deliver with HeavenKart",
-                    "Franchise with HeavenKart",
-                  ].map((item) => (
-                    <li key={item}>
-                      <a
-                        href="#"
-                        className="text-sm text-gray-700 hover:text-green-600 transition"
-                      >
-                        {item}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                      <ul className="space-y-2">
+                        {pages.map((page) => (
+                          <li key={page.id}>
+                            <Link
+                              href={`/${page.url}`}
+                              className="text-sm text-gray-700 hover:text-green-600 transition"
+                            >
+                              {page.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))
+                ) : null
+              }
+
             </div>
 
             {/* App Download */}

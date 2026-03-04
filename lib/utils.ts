@@ -12,18 +12,24 @@ export function formatPrice(amount: number, currencyCode = "USD", locale = "en-U
   }).format(amount);
 }
 
-
-import crypto from "crypto";
-
-const algorithm = "aes-256-cbc";
-const secretKey = process.env.ENCRYPTION_KEY as string; // 32 chars
-const iv = crypto.randomBytes(16);
-
 export const encodeId = (id: number) => {
   return btoa(id.toString());
 };
 
 
-export const decodeId = (encodedId : string) => {
+export const decodeId = (encodedId: string) => {
   return atob(encodedId);
 };
+
+export function formatIndianDateTime(dateString: string) {
+  const date = new Date(dateString);
+
+  return new Intl.DateTimeFormat("en-IN", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+  }).format(date);
+}

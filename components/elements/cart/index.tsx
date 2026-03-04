@@ -20,7 +20,6 @@ import {
 import { useState } from "react";
 import { ChevronRightIcon } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { OrderDetails } from "./order-details";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
@@ -162,7 +161,6 @@ export default function Cart() {
             </div>
           </div>
 
-          <OrderDetails />
           {/* </div> */}
         </ScrollArea>
         <DrawerFooter>

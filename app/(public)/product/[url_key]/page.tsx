@@ -167,7 +167,7 @@ export default async function ProductPage({
                   name: productInformation?.brand_name,
                 }}
               />
-              
+
               <HtmlRender html={productInformation?.description} />
             </div>
           </div>
@@ -183,13 +183,12 @@ export default async function ProductPage({
         ) : null}
 
         {/* Tabs Section */}
-        <div className=" my-12 border-t border-gray-900">
+        <div className=" my-12 border-t border-gray-200">
           <div defaultValue="description" className="w-full py-6">
-            <h2 className="text-xl font-semibold">Reviews</h2>
+            <h2 className="text-xl font-semibold">Customer Reviews</h2>
             <div className="mt-6">
               <ProductReviews
-                rating={product.rating}
-                reviewCount={product.reviewCount}
+                productId={productInformation?.id}
               />
             </div>
           </div>

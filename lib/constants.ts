@@ -57,5 +57,18 @@ export const ADDRESSES = {
     method: "GET",
 }
 
+export const ORDERS = {
+    endpoint: "orders",
+    method: "GET",
+}
 
+export const CMS = {
+    endpoint: "cms",
+    method: "GET",
+}
+
+export const REVIEWS = {
+    endpoint: "review",
+    method: "GET",
+}
 

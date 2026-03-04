@@ -1,3 +1,5 @@
+import { Timestamp } from "next/dist/server/lib/cache-handlers/types";
+
 export type SortOption = 'featured' | 'price-low' | 'price-high' | 'newest' | 'rating'
 export interface ProductsDataTypes {
   id: number;
@@ -73,6 +75,29 @@ export interface ProductResponse {
   aplus: AplusBanner[];
 }
 
+export interface ReviewsTypes {
+
+  data: {
+    rating: number,
+    total_reviews: number,
+    reviews: ReviewItems[]
+    rating_distribution: {
+      stars: number;
+      count: number;
+      percentage: number;
+    }[]
+  }
+}
+
+export interface ReviewItems {
+  user_name: string;
+  user_email: string;
+  rating: number;
+  review: string;
+  date: string;
+}
+
+
 export interface AplusBanner {
   type: "single" | "two" | "three",
   images: string[]
@@ -90,9 +115,11 @@ export interface Product {
   brand_name: string;
   image: string;
   barcode: string;
+  url: string;
   price: string;
   ac_price: string;
   sku: string;
+  sku_code: string;
   hsn: string;
   description: string;
   tags: string;
@@ -103,6 +130,8 @@ export interface Product {
   in_stock: "0" | "1";
   category_url: string | null;
   sub_category_url: string | null;
+  rating: string;
+  review: string;
 }
 
 
@@ -133,7 +162,7 @@ export interface CartItem {
   price: number;
   image?: string;
   qty: number;
-  product_id : string;
+  product_id: string;
 }
 
 export interface CartItemPayload {
@@ -154,8 +183,8 @@ export interface CartState {
 
 export interface UserAddress {
   id: number;
-  userId: number;    
-  is_default : string;
+  userId: number;
+  is_default: string;
   person: string;
   landmark: string;
   country: string;
@@ -177,3 +206,78 @@ export interface AddressResponse {
 }
 
 export type PaymentMethod = 'card' | 'apple' | 'paypal' | 'google';
+
+
+export interface OrderProducts {
+  id: number;
+  order_no: string;
+  status: string;
+  total_amount: number;
+  final_amount: number;
+  payment_method: string;
+  created_at: string;
+  order_rating: {
+    id: number,
+    order_id: number,
+    rating: number,
+    review: string,
+  };
+  products: {
+    id: number,
+    name: string,
+    image: string,
+  }[]
+}
+
+
+export interface OrderResponse {
+  status: boolean;
+  message: string;
+  data: Order;
+}
+
+export interface Order {
+  id: number;
+  order_no: string;
+  user_id: number;
+  address_id: number;
+  total_amount: string;
+  total_discount: string;
+  final_amount: string;
+  status: string;
+  payment_status: string;
+  payment_method: string;
+  delhivery_boy_id: number | null;
+  barcode: string;
+  created_at: string;
+  updated_at: string;
+  items: OrderItem[];
+
+}
+
+export interface OrderItem {
+  id: number;
+  order_id: number;
+  product_id: number;
+  qty: number;
+  price: string;
+  discount: string;
+  final_price: string;
+  created_at: string;
+  updated_at: string;
+  product: Product;
+}
+
+
+export interface CmsResponse {
+  status: boolean;
+  message: string;
+  data: Record<string, CmsItem[]>;
+}
+
+export interface CmsItem {
+  id: number;
+  category: string;
+  name: string;
+  url: string;
+}

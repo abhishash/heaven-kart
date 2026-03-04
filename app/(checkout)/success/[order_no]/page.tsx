@@ -16,8 +16,8 @@ type Props = {
 };
 
 export default async function OrderSuccessPage({ params }: Props) {
+  
   const { order_no } = await params;
-
   const orderNumber = decodeId(decodeURIComponent(order_no));
 
   return (
