@@ -1,18 +1,6 @@
 "use client";
 
-import { User, ChevronDown, Menu } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
+import { User } from "lucide-react";
 import Link from "next/link";
 
 import Cart from "../elements/cart";
@@ -41,6 +29,16 @@ export function Header() {
   }, []);
 
   return (
+    <>
+     <style jsx>{`
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+`}</style>
     <header className="bg-white border-b">
       {/* 🔥 Fixed Header */}
       <div
@@ -48,7 +46,7 @@ export function Header() {
           scrolled ? "shadow-md" : ""
         }`}
       >
-        <div className="container mx-auto px-4 py-3">
+        <div className="container mx-auto px-4 py-3 sm:py-3">
           {/* 🔹 Top Row */}
           <div className="flex items-center justify-between">
             {/* LEFT */}
@@ -89,14 +87,14 @@ export function Header() {
       <nav className="border-t bg-white">
         <div className="container mx-auto px-4">
           {/* Mobile */}
-          <div className="flex gap-6 overflow-x-auto no-scrollbar md:hidden">
+          <div className="flex gap-6 overflow-x-auto no-scrollbar hide-scrollbar scrollbar-none md:hidden">
             {categories.map((c, i) => (
               <CategoryItem key={c.label} item={c} active={i === 0} />
             ))}
           </div>
 
           {/* Desktop */}
-          <div className="hidden md:flex gap-8">
+          <div className="hidden md:flex overflow-x-auto no-scrollbar hide-scrollbar scrollbar-none gap-8">
             {categories.map((c, i) => (
               <CategoryItem key={c.label} item={c} active={i === 0} />
             ))}
@@ -104,6 +102,8 @@ export function Header() {
         </div>
       </nav>
     </header>
+    </>
+   
   );
 }
 
@@ -116,16 +116,20 @@ function CategoryItem({
   active: boolean;
 }) {
   return (
-    <Link
-      href={item.href}
-      className={`flex items-center gap-2 py-3 text-sm font-medium border-b-2 ${
-        active
-          ? "text-green-600 border-green-600"
-          : "border-transparent text-gray-700 hover:text-black"
-      }`}
-    >
-      <span>{item.icon}</span>
-      {item.label}
-    </Link>
+    <div className="flex flex-col">
+  <Link
+    href={item.href}
+    className={`flex items-center gap-2 py-1.5 sm:py-3 text-sm font-semibold ${active ? "text-green-700" : "text-gray-700"}`}
+  >
+    <span>{item.icon}</span>
+    {item.label}
+  </Link>
+
+  <div
+    className={`h-1 rounded-t-lg transition-all duration-300 ${
+      active ? "bg-green-600" : "bg-transparent"
+    }`}
+  />
+</div>
   );
 }

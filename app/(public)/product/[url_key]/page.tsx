@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // import RelatedProducts from '@/components/product/related-products';
 import ProductReviews from "@/components/elements/product-reviews";
 import Image from "next/image";
@@ -13,6 +11,7 @@ import HtmlRender from "@/components/elements/html-render";
 import { ProductCarousel } from "@/components/elements/product-carousel";
 import SingleBanner from "@/components/elements/product/aplus-banner";
 import { isArray } from "@/lib/type-guards";
+import Link from "next/link";
 
 export default async function ProductPage({
   params,
@@ -30,53 +29,23 @@ export default async function ProductPage({
   const relatedProducts = productResponse?.similar_products;
   const aplusBanner = productResponse?.aplus;
 
-  const product = {
-    id: 1,
-    name: "Premium Wireless Headphones",
-    brand: "AudioTech Pro",
-    price: 299.99,
-    originalPrice: 399.99,
-    rating: 4.8,
-    reviewCount: 2543,
-    inStock: true,
-    sku: "ATP-WH-2024",
-    color: "Midnight Black",
-    warranty: "2-year warranty",
-    description:
-      "Experience premium sound quality with our latest wireless headphones. Featuring active noise cancellation, 40-hour battery life, and premium comfort for all-day wear.",
-    features: [
-      "Active Noise Cancellation (ANC)",
-      "40-hour battery life",
-      "Bluetooth 5.3 connectivity",
-      "Premium build with aluminum construction",
-      "Foldable design for portability",
-      "Built-in microphone for calls",
-    ],
-    specs: {
-      "Driver Size": "40mm",
-      "Frequency Response": "20Hz - 20kHz",
-      Impedance: "32 Ohm",
-      Weight: "250g",
-      Connectivity: "Bluetooth 5.3, 3.5mm jack",
-      "Charging Time": "2 hours",
-    },
-  };
-
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
       <nav className="border-b border-border bg-card">
         <div className="mx-auto px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <a href="#" className="hover:text-foreground">
+            <Link href="/" className="hover:text-foreground">
               Home
-            </a>
+            </Link>
             <span>/</span>
-            <a href="#" className="hover:text-foreground">
-              Electronics
-            </a>
-            <span>/</span>
-            <span className="text-foreground text-nowrap">{product.name}</span>
+              {productInformation?.category_url && <>
+                <Link href={`/catalog/${productInformation?.category_url}`} className="hover:text-foreground">
+                  {productInformation?.category}
+              </Link>
+              <span>/</span>
+                </>  }
+            <span className="text-foreground text-green-700 line-clamp-1 text-wrap">{productInformation?.name}</span>
           </div>
         </div>
       </nav>

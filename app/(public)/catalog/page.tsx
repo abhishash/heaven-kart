@@ -6,6 +6,8 @@ import { ALL_PRODUCTS, CATALOG_DETAIL, PRODUCTS_DETAIL } from '@/lib/constants'
 import { isArray } from '@/lib/type-guards'
 import CategoryFilter from '@/components/elements/product/categories-filter'
 
+import MobileFilter from '@/components/elements/product/filter/mobile-filter'
+
 
 const CATEGORIES = ['All', 'Decor', 'Textiles', 'Furniture', 'Lighting']
 
@@ -63,10 +65,10 @@ export default async function Products() {
     // }, [searchQuery, selectedCategory, sortBy, priceRange])
 
     return (
-        <div className="container mx-auto">
+       
   <div className="flex gap-8">
 
-    {/* Sidebar */}
+    {/* Desktop Category Sidebar */}
     <aside className="hidden lg:block w-64 shrink-0">
       <div className="sticky top-16">
         <CategoryFilter />
@@ -83,7 +85,7 @@ export default async function Products() {
               {productList.length !== 1 ? 's' : ''}
             </p>
 
-            <div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+            <div className="grid gap-4 grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
               {productList.map((product, index) => (
                 <ProductCard key={product.url + index} {...product} />
               ))}
@@ -98,8 +100,9 @@ export default async function Products() {
           </div>
         )}
     </main>
-
+    {/* Mobile Category Sidebar */}
+   <MobileFilter />
   </div>
-</div>
+
     )
 }

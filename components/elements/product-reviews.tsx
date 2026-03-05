@@ -7,6 +7,8 @@ import { fetchHandler, methods } from '@/lib/fetch-handler';
 import { PRODUCTS_DETAIL, REVIEWS } from '@/lib/constants';
 import { ProductResponse, ReviewsTypes } from '@/lib/types';
 import Reviews, { ReviewListSkeleton } from './product/placeholder/review';
+import { isArray } from '@/lib/type-guards';
+import Image from 'next/image';
 
 interface ProductReviewsProps {
   productId: number;
@@ -31,19 +33,11 @@ export default function ProductReviews({
   const startRating = reviews?.rating ?? 0; // star rating
 
   const ratingDistribution = reviews?.rating_distribution;
-  
-  // [
-  //   { stars: 5, count: 2000, percentage: 79 },
-  //   { stars: 4, count: 400, percentage: 16 },
-  //   { stars: 3, count: 100, percentage: 4 },
-  //   { stars: 2, count: 30, percentage: 1 },
-  //   { stars: 1, count: 13, percentage: 0 },
-  // ];
 
   return (
-    <div className="gap-x-6 grid grid-cols-6">
+    <div className="gap-3 sm:gap-6 grid grid-cols-6">
       {/* Rating Summary */}
-      <div className="col-span-2 ">
+      <div className="col-span-6 sm:col-span-2 ">
         {
           isPending ? <Reviews /> : <div className="flex gap-8 flex-col">
             {/* Overall Rating */}
@@ -89,9 +83,9 @@ export default function ProductReviews({
       </div>
 
       {/* Individual Reviews */}
-      <div className="space-y-4 col-span-4">
+      <div className="space-y-4 col-span-6 sm:col-span-4">
         {
-          isPending ? <ReviewListSkeleton /> : <div className="space-y-4">
+          isPending ? <ReviewListSkeleton /> :  isArray(reviews?.reviews) ? <div className="space-y-4">
             {reviews?.reviews?.map((review, index) => (
               <div
                 key={index}
@@ -135,7 +129,7 @@ export default function ProductReviews({
                 </div>
               </div>
             ))}
-          </div>
+          </div> : <div className='flex items-center p-4 sm:p-0 h-full justify-center rounded-lg border border-border flex-col'> <Image src="/icon/customer-satisfaction.png" alt="no-review-found" width={120} height={120} />  <p className='text-green-700'>You can first review still not review found.</p></div>
         }
 
         {

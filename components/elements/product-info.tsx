@@ -164,11 +164,11 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
             <div className="flex items-center gap-1">
               <Star className="h-4 w-4 fill-green-500 text-green-400" />
               <span className="font-semibold text-foreground">
-                {/* {product.rating} */} 0
+                {product?.rating ?? 0}
               </span>
             </div>
             <span className="text-sm text-muted-foreground">
-              {/* ({product.reviewCount.toLocaleString()} reviews) */}
+              ({product?.review ?? 0} reviews)
             </span>
           </div>
         </div>
