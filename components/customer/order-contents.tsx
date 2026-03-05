@@ -49,7 +49,6 @@ export function OrdersContent() {
                   }
                 </div> : "No Orders Found"
               }
-
             </ScrollArea>
         }
       </div>

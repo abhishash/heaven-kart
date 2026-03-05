@@ -47,54 +47,52 @@ export function CategoriesCarousel({ title, subCategories }: ProductCarouselProp
     }, [emblaApi]);
 
     useEffect(() => {
-  if (!emblaApi) return;
+        if (!emblaApi) return;
 
-  emblaApi.on("select", onSelect);
-  emblaApi.on("reInit", onSelect);
+        emblaApi.on("select", onSelect);
+        emblaApi.on("reInit", onSelect);
 
-  // cleanup
-  return () => {
-    emblaApi.off("select", onSelect);
-    emblaApi.off("reInit", onSelect);
-  };
-}, [emblaApi, onSelect]);
+        // cleanup
+        return () => {
+            emblaApi.off("select", onSelect);
+            emblaApi.off("reInit", onSelect);
+        };
+    }, [emblaApi, onSelect]);
 
 
     return (
         <section className="space-y-3 sm:space-y-6">
             {/* Section Title */}
-            <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900">
+            <h1 className="text-lg sm:text-xl font-bold text-slate-900">
                 {title}
             </h1>
 
             {/* Cards Row */}
-            <div className="grid grid-cols-4 sm:grid-cols-6 gap-4 overflow-x-auto px-0 sm:px-4 pb-4 scrollbar-hide">
+            <div className="grid grid-cols-4 sm:grid-cols-7 gap-4 overflow-x-auto px-0  pb-4 scrollbar-hide">
                 {subCategories?.map((product) => (
                     <Link
                         key={product.url}
-                        href={`/${product.url}`}
-                        className="flex-shrink-0 border rounded-lg border-slate-200"
+                        href={`/catalog/${product.url}`}
+                        className="flex-shrink-0 py-4 border rounded-lg border-slate-200"
                     >
                         <div
-                            className="w-auto bg-white rounded-lg overflow-hidden hover:-translate-y-1 transition-all duration-300 group"
+                            className=" flex justify-center flex-col items-center bg-white rounded-lg overflow-hidden hover:-translate-y-1 transition-all duration-300 group"
                         >
                             {/* Image */}
-                            <div className="relative max-h-32 sm:max-h-56 flex items-center justify-center">
-                                <SafeImage
-                                    src={product.image}
-                                    alt={product.name}
-                                    width={160}
-                                    height={160}
-                                    className="object-contain transition-transform duration-300 h-auto group-hover:scale-105"
-                                />
-                            </div>
+                            <SafeImage
+                                src={product.image}
+                                alt={product.name}
+                                width={160}
+                                height={160}
+                                className="object-cover w-32 h-32 transition-transform duration-300  group-hover:scale-105"
+                            />
 
                             {/* Content */}
-                            <div className="p-0 sm:p-4 text-center">
-                                <h2 className="text-sm sm:text-xl font-semibold text-slate-700  sm:line-clamp-2">
+                            <div className="space-y-1 pt-2 text-center">
+                                <h2 className="text-base line-clamp-1 font-semibold text-gray-700">
                                     {product.name}
                                 </h2>
-                                <p>233 Items</p>
+                                <p className="text-xs text-green-700">233 Items</p>
                             </div>
                         </div>
                     </Link>
@@ -127,14 +125,14 @@ export function SafeImage({
         src ? `${process.env.ASSET_ENDPOINS}${src}` : imageNotFound
     );
 
-  return (
-    <Image
-      src={imgSrc}
-      alt={alt}
-      width={width}
-      height={height}
-      onError={() => setImgSrc(imageNotFound)}
-      className={className}
-    />
-  );
+    return (
+        <Image
+            src={imgSrc}
+            alt={alt}
+            width={width}
+            height={height}
+            onError={() => setImgSrc(imageNotFound)}
+            className={className}
+        />
+    );
 }

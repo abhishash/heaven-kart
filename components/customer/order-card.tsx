@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronRight, Check, Star } from 'lucide-react'
+import { ChevronRight, Check, Star, DownloadIcon } from 'lucide-react'
 import Image from 'next/image'
 import { OrderProducts } from '@/lib/types'
 import { encodeId, formatIndianDateTime, formatPrice } from '@/lib/utils'
@@ -12,6 +12,8 @@ import Link from 'next/link'
 
 export function OrderCard({ order, refetch }: { order: OrderProducts, refetch: () => void }) {
   const [imageError, setImageError] = useState<{ [key: number]: boolean }>({})
+  const [open, setOpen] = useState(false);
+  const [orderId, setOrderId] = useState<number | null>(null);
 
   const handleImageError = (itemId: number) => {
     setImageError((prev) => ({ ...prev, [itemId]: true }))
@@ -60,11 +62,15 @@ export function OrderCard({ order, refetch }: { order: OrderProducts, refetch: (
         {/* Status */}
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1">
-            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-teal-100">
-              <Check size={14} className="text-teal-600" />
+            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-100">
+              <Check size={14} className="text-green-700" />
             </span>
             <span className="font-semibold text-foreground">{order.status}</span>
           </div>
+          <button onClick={() => {
+            setOpen(true);
+            setOrderId(order?.id);
+          }} className='text-sm p-1 cursor-pointer' ><DownloadIcon className='size-4' /></button>
         </div>
 
         {/* Date */}

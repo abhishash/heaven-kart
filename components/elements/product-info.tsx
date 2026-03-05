@@ -32,6 +32,7 @@ import { useSession } from "next-auth/react";
 import { Input } from "../ui/input";
 import { Field, FieldLabel } from "../ui/field";
 import { FieldValues, useForm } from "react-hook-form";
+import { formatPrice } from "@/lib/utils";
 
 interface ProductInfoProps {
   product: Product;
@@ -65,7 +66,7 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
   });
 
 
- 
+
   const { register, handleSubmit, setValue, watch } = useForm({
     defaultValues: {
       qty: 1
@@ -188,10 +189,10 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
       <div className="flex items-center gap-4">
         <div className="flex items-baseline gap-2">
           <span className="text-xl font-bold text-foreground">
-            ${parseInt(product.price).toFixed(2)}
+            {formatPrice(parseInt(product.price), "INR")}
           </span>
           <span className="text-base text-muted-foreground line-through">
-            ${parseInt(product.ac_price).toFixed(2)}
+            {formatPrice(parseInt(product.ac_price), "INR")}
           </span>
         </div>
         <Badge className="bg-red-100 text-red-800">
@@ -209,7 +210,7 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
           {parseInt(product?.in_stock) ? "In Stock" : "Out of Stock"}
         </span>
       </div>
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Stock Info */}
         <div className="flex items-center justify-between">
           <p className="text-sm font-medium text-gray-600">
@@ -230,7 +231,7 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
             <button
               type="button"
               onClick={() => setValue("qty", Math.max(1, Number(watch("qty")) - 1))}
-              className="px-4 py-0 bg-gray-50 hover:bg-gray-100 transition text-lg font-semibold"
+              className="px-4 cursor-pointer py-0 bg-gray-50 hover:bg-gray-100 transition text-lg font-semibold"
             >
               −
             </button>
@@ -247,10 +248,10 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
               onClick={() =>
                 setValue(
                   "qty",
-                  Math.min(parseInt(product?.stock)  || 1, Number(watch("qty")) + 1)
+                  Math.min(parseInt(product?.stock) || 1, Number(watch("qty")) + 1)
                 )
               }
-              className="px-4 py-0 bg-gray-50 hover:bg-gray-100 transition text-lg font-semibold"
+              className="px-4 py-0 cursor-pointer bg-gray-50 hover:bg-gray-100 transition text-lg font-semibold"
             >
               +
             </button>
@@ -261,7 +262,7 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
             size="lg"
             type="submit"
             disabled={isPending}
-            className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold px-16 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 active:scale-[0.98]"
+            className="flex items-center !cursor-pointer justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold !px-12 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 active:scale-[0.98]"
           >
             <ShoppingCart className="h-5 w-5" />
             Add to Cart
@@ -273,13 +274,6 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
           <Button
             variant="outline"
             size="lg"
-            className="flex items-center  !bg-white gap-2 border-2 border-green-600  hover:bg-green-50 rounded-xl px-12 font-medium transition"
-          >
-            <ShoppingBasket className="h-5 w-5" />
-            Buy Now
-          </Button>
-
-          <button
             onClick={() => {
               if (navigator.share) {
                 navigator.share({
@@ -291,11 +285,11 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
                 navigator.clipboard.writeText(window.location.href);
               }
             }}
-            className="flex items-center gap-2 px-12 cursor-pointer py-3 rounded-xl border border-gray-300 hover:bg-gray-100 transition text-sm font-medium"
+            className="flex items-center w-full max-w-86 !bg-white gap-2 border-2 border-green-600  hover:bg-green-50 rounded-xl px-12 font-medium transition"
           >
             <Share2 className="h-4 w-4" />
             Share this Product
-          </button>
+          </Button>
         </div>
       </div>
     </div>
