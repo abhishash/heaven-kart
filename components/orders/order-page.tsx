@@ -9,9 +9,12 @@ import { useQuery } from "@tanstack/react-query";
 import { Order, OrderResponse } from "@/lib/types";
 import { fetchHandler } from "@/lib/fetch-handler";
 import { ScrollArea } from "../ui/scroll-area";
+import { InvoiceData } from "./types";
+import InvoiceModal from "./pop-up/invoice-modal";
+import { useState } from "react";
 
-export default function OrderPage({ orderNumber }: { orderNumber: string }) {
-
+export default function OrderPage({ orderNumber, invoice }: { orderNumber: string, invoice: InvoiceData}) {
+const [openInvoice, setOpenInvoice] = useState(false);
   const { data: session } = useSession();
   const { data, isPending, refetch } = useQuery<OrderResponse>({
     queryKey: [`orders`, orderNumber],
@@ -37,6 +40,15 @@ export default function OrderPage({ orderNumber }: { orderNumber: string }) {
           Track your order and manage your purchase
         </p>
       </div>
+
+<button onClick={() => setOpenInvoice(true)}>
+  View Invoice
+</button>
+
+      <InvoiceModal  
+  isOpen={openInvoice}
+  onClose={() => setOpenInvoice(false)}
+   invoice={invoice} />
       <ScrollArea className="h-[550px] pr-4 ">
         {
           isPending ? "fetching order details" :
