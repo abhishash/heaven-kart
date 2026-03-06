@@ -39,7 +39,32 @@ export default function InvoiceModal({ invoice, isOpen, onClose }: Props) {
 
     pdf.save(`invoice-${order.order_no}.pdf`);
   };
+const printInvoice = () => {
+const printContent = invoiceRef.current?.innerHTML;
 
+const newWindow = window.open("", "", "width=900,height=700");  
+
+newWindow?.document.write(`  
+<html>  
+  <head>  
+    <title>Invoice</title>  
+    <style>  
+      body { font-family: Arial; padding: 20px; }  
+      table { width:100%; border-collapse: collapse; }  
+      th,td { border:1px solid #ddd; padding:8px; }  
+    </style>  
+  </head>  
+  <body>  
+    ${printContent}  
+  </body>  
+</html>
+
+`);
+
+newWindow?.document.close();  
+newWindow?.print();
+
+};  
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
 
@@ -55,7 +80,7 @@ export default function InvoiceModal({ invoice, isOpen, onClose }: Props) {
         </button>
 
         {/* Invoice */}
-        <div ref={invoiceRef} className="bg-white p-6">
+        <div ref={invoiceRef} id="invoice" className="bg-white p-6">
 
           {/* Header */}
           <div className="flex justify-between border-b pb-4 mb-6">
@@ -156,7 +181,12 @@ export default function InvoiceModal({ invoice, isOpen, onClose }: Props) {
             Download
           </button>
         </div>
-
+<button
+  onClick={printInvoice}
+  className="bg-gray-700 text-white px-4 py-2 rounded"
+>
+  Print
+</button>
       </div>
     </div>
   );
