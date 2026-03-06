@@ -92,7 +92,7 @@ export function CategoriesCarousel({ title, subCategories }: ProductCarouselProp
                                 <h2 className="text-base line-clamp-1 font-semibold text-gray-700">
                                     {product.name}
                                 </h2>
-                                <p className="text-xs text-green-700">233 Items</p>
+                                <p className="text-xs text-green-700">{product?.products} Items</p>
                             </div>
                         </div>
                     </Link>

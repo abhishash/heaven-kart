@@ -48,6 +48,7 @@ export interface SubCategory {
   url: string;
   name: string;
   image: string;
+  products: number;
 }
 
 /* Main Category */

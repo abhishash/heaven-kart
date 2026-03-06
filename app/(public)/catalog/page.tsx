@@ -1,12 +1,14 @@
 import { ProductCard } from '@/components/elements/product-card'
 import CategorySidebar from '@/components/elements/product/category-sidebar'
 import { fetchHandler, methods } from '@/lib/fetch-handler'
-import { ProductDataTypesList, ProductResponse, ProductTypes, SimilarProduct } from '@/lib/types'
-import { ALL_PRODUCTS, CATALOG_DETAIL, PRODUCTS_DETAIL } from '@/lib/constants'
+import { CategoryResponse, ProductDataTypesList, ProductResponse, ProductTypes, SimilarProduct } from '@/lib/types'
+import { ALL_PRODUCTS, CATALOG_DETAIL, HOME_CATEGORIES, PRODUCTS_DETAIL } from '@/lib/constants'
 import { isArray } from '@/lib/type-guards'
 import CategoryFilter from '@/components/elements/product/categories-filter'
 
 import MobileFilter from '@/components/elements/product/filter/mobile-filter'
+import Categories from '@/components/elements/product/filter/categories'
+import { Category } from '@/components/elements/product/types'
 
 
 const CATEGORIES = ['All', 'Decor', 'Textiles', 'Furniture', 'Lighting']
@@ -15,70 +17,39 @@ type SortOption = 'featured' | 'price-low' | 'price-high' | 'newest' | 'rating'
 
 export default async function Products() {
 
-    const productResponse = await fetchHandler<ProductDataTypesList>({
-        ...ALL_PRODUCTS as {
-            endpoint: string,
-            method: methods,
-        }
-    });
+  const productResponse = await fetchHandler<ProductDataTypesList>({
+    ...ALL_PRODUCTS as {
+      endpoint: string,
+      method: methods,
+    }
+  });
 
-    const productList: ProductTypes[] = productResponse?.data ?? [];
+  const categoriesResponse = await fetchHandler<CategoryResponse>({
+    ...(HOME_CATEGORIES as {
+      endpoint: string;
+      method: methods;
+    }),
+  });
 
-    // const [searchQuery, setSearchQuery] = useState('')
-    // const [selectedCategory, setSelectedCategory] = useState('All')
-    // const [sortBy, setSortBy] = useState<SortOption>('featured')
-    // const [priceRange, setPriceRange] = useState<[number, number]>([0, 500])
-    // const [showFilters, setShowFilters] = useState(true)
+  const { data: categoryResponse } = categoriesResponse;
 
-    // Filter and sort products
-    // const filteredProducts = useMemo(() => {
-    //     let filtered = PRODUCTS.filter((product) => {
-    //         const matchesSearch = product.name
-    //             .toLowerCase()
-    //             .includes(searchQuery.toLowerCase())
-    //         const matchesCategory =
-    //             selectedCategory === 'All' || product.category === selectedCategory
-    //         const matchesPrice =
-    //             product.price >= priceRange[0] && product.price <= priceRange[1]
+  const productList: ProductTypes[] = productResponse?.data ?? [];
 
-    //         return matchesSearch && matchesCategory && matchesPrice
-    //     })
+  return (
 
-    //     // Sort products
-    //     const sorted = [...filtered].sort((a, b) => {
-    //         switch (sortBy) {
-    //             case 'price-low':
-    //                 return a.price - b.price
-    //             case 'price-high':
-    //                 return b.price - a.price
-    //             case 'newest':
-    //                 return b.id - a.id
-    //             case 'rating':
-    //                 return b.rating - a.rating
-    //             case 'featured':
-    //             default:
-    //                 return 0
-    //         }
-    //     })
+    <div className="flex gap-8">
 
-    //     return sorted
-    // }, [searchQuery, selectedCategory, sortBy, priceRange])
+      {/* Desktop Category Sidebar */}
+      <aside className="hidden lg:block w-64 shrink-0">
+        <div className="sticky top-16">
+          <Categories categories={categoryResponse} />
+        </div>
+      </aside>
 
-    return (
-       
-  <div className="flex gap-8">
-
-    {/* Desktop Category Sidebar */}
-    <aside className="hidden lg:block w-64 shrink-0">
-      <div className="sticky top-16">
-        <CategoryFilter />
-      </div>
-    </aside>
-
-    {/* Products */}
-    <main className="flex-1 min-w-0">
-      {/* Product grid */}
-      {isArray(productList) ? (
+      {/* Products */}
+      <main className="flex-1 min-w-0">
+        {/* Product grid */}
+        {isArray(productList) ? (
           <>
             <p className="mb-6 text-sm text-muted-foreground">
               Showing {productList.length} product
@@ -99,10 +70,10 @@ export default async function Products() {
             </p>
           </div>
         )}
-    </main>
-    {/* Mobile Category Sidebar */}
-   <MobileFilter />
-  </div>
+      </main>
+      {/* Mobile Category Sidebar */}
+      <MobileFilter />
+    </div>
 
-    )
+  )
 }

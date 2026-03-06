@@ -9,6 +9,7 @@ import { isArray } from '@/lib/type-guards'
 import { imageBaseUrl } from '@/lib/constants'
 import ReviewModal from '../orders/pop-up/review-modal'
 import Link from 'next/link'
+import InvoiceModal from '../orders/pop-up/invoice-modal'
 
 export function OrderCard({ order, refetch }: { order: OrderProducts, refetch: () => void }) {
   const [imageError, setImageError] = useState<{ [key: number]: boolean }>({})
@@ -22,6 +23,11 @@ export function OrderCard({ order, refetch }: { order: OrderProducts, refetch: (
   return (
     <div className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
       {/* Items Preview */}
+      <InvoiceModal
+        open={open}
+        setOpen={setOpen}
+        orderId={orderId as number}
+      />
       {
         isArray(order.products) ? <div className="px-6 py-4 border-b border-gray-100">
           <div className="flex items-center gap-2 overflow-x-auto pb-2">
