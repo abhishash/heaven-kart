@@ -4,7 +4,7 @@ import { fetchHandler } from "@/lib/fetch-handler";
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner";
@@ -35,6 +35,7 @@ const SignupPage = () => {
     register,
     handleSubmit,
     watch,
+    control,
     formState: { errors },
   } = useForm<FormValues>();
 
@@ -115,7 +116,7 @@ const SignupPage = () => {
       {/* LEFT */}
       <div className="flex-1 flex relative flex-col bg-green-50  px-4 md:px-6">
         {/* Header */}
-         <header className="flex items-center pt-4 pb-2">
+        <header className="flex items-center pt-4 pb-2">
           <img
             src="http://brands-onboarding.zepto.co.in/assets/icons/zepto-icon.svg"
             alt="Zepto"
@@ -125,7 +126,7 @@ const SignupPage = () => {
             Vendor Portal
           </h1>
         </header>
-         <div className="flex md:hidden items-center h-20 relative z-10 justify-between md:justify-end">
+        <div className="flex md:hidden items-center h-20 relative z-10 justify-between md:justify-end">
           <p className="font-medium text-base text-primary-700">
             Already a User
           </p>
@@ -154,19 +155,25 @@ const SignupPage = () => {
             {
               isOtp ? <div className="flex justify-center">
 
-                <Field className="w-fit">
-                  <FieldLabel htmlFor="digits-only">Digits Only</FieldLabel>
-                  <InputOTP id="digits-only" maxLength={6} pattern={REGEXP_ONLY_DIGITS}>
-                    <InputOTPGroup>
-                      <InputOTPSlot index={0} />
-                      <InputOTPSlot index={1} />
-                      <InputOTPSlot index={2} />
-                      <InputOTPSlot index={3} />
-                      <InputOTPSlot index={4} />
-                      <InputOTPSlot index={5} />
-                    </InputOTPGroup>
-                  </InputOTP>
-                </Field>
+                <Controller
+                  name="otp"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <InputOTP
+                      maxLength={6}
+                      value={field.value}
+                      onChange={field.onChange}
+                    >
+                      <InputOTPGroup>
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
+                        <InputOTPSlot index={3} />
+                      </InputOTPGroup>
+                    </InputOTP>
+                  )}
+                />
               </div> :
                 <>
                   <div className="grid grid-cols-1 w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
@@ -176,7 +183,7 @@ const SignupPage = () => {
                         id="input-field-username"
                         type="text"
                         className="!bg-white border border-green-600"
-                          {...register("name", { required: "Name is required" })}
+                        {...register("name", { required: "Name is required" })}
                         placeholder="Enter your Name"
                       />
                     </Field>
@@ -186,7 +193,7 @@ const SignupPage = () => {
                         id="input-field-email"
                         type="email"
                         className="!bg-white border border-green-600"
-                          {...register("email", { required: "Email is required" })}
+                        {...register("email", { required: "Email is required" })}
                         placeholder="example@gmail.com"
                       />
                     </Field>
@@ -196,7 +203,7 @@ const SignupPage = () => {
                         id="input-field-phone"
                         type="text"
                         className="!bg-white border border-green-600"
-                          {...register("phone", { required: "Phone is required" })}
+                        {...register("phone", { required: "Phone is required" })}
                         placeholder="7906XXXXXX"
                       />
                     </Field>
@@ -214,10 +221,10 @@ const SignupPage = () => {
                   {/* Checkbox */}
                   <div className="mt-4">
                     <Field orientation="horizontal" className="space-y-1" >
-                      <Checkbox 
-                      name="terms-checkbox"
-                      color="primary"
-                      className="cursor-pointer"
+                      <Checkbox
+                        name="terms-checkbox"
+                        color="primary"
+                        className="cursor-pointer"
                       />
                       <FieldLabel htmlFor="terms-checkbox" className="text-sm bg-linear-to-br text-sm font-bold ml-auto font-medium bg-clip-text text-transparent bg-gradient-to-r from-green-700 from-[7.58%] to-primary to-[98.88%]">
                         I want to receive important updates on Email & WhatsApp
