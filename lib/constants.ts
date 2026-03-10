@@ -47,6 +47,11 @@ export const HOME_CATEGORIES = {
     method: "GET",
 }
 
+export const CATEGORIES = {
+    endpoint: "category",
+    method: "GET",
+}
+
 export const CART_DETAILS = {
     endpoint: "cart",
     method: "GET",
@@ -71,4 +76,3 @@ export const REVIEWS = {
     endpoint: "review",
     method: "GET",
 }
-

@@ -107,6 +107,7 @@ export interface AplusBanner {
 export interface ProductDataTypesList {
   status: boolean;
   data: ProductTypes[];
+  categories : Category[]
 }
 
 

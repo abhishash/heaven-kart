@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Category } from "../types";
 import { SafeImage } from "../../categories-carousel";
 import { motion, AnimatePresence } from "framer-motion";
+import { isArray } from "@/lib/type-guards";
 
 type Props = {
   categories: Category[];
@@ -19,14 +20,14 @@ export default function Categories({ categories }: Props) {
   };
 
   return (
-    <div className="w-full space-y-4">
-      <h2 className="text-lg font-semibold border-b pb-2">Categories</h2>
+    <div className="w-full border-r min-h-[70vh] border-border pr-2 space-y-4">
+      <h2 className="text-lg font-semibold px-3">Categories</h2>
 
-      {categories.map((category) => {
+      {categories?.map((category) => {
         const isOpen = openCategory === category.url;
 
         return (
-          <div key={category.url} className="border rounded-lg overflow-hidden">
+          <div key={category.url} className=" rounded-lg  overflow-hidden">
             {/* Category */}
             <button
               onClick={() => toggleCategory(category.url)}
@@ -34,7 +35,7 @@ export default function Categories({ categories }: Props) {
             >
               <div className="flex items-center gap-3">
                 <SafeImage
-                  src={`${category.image}`}
+                  src={category.image}
                   alt={category.name}
                   width={32}
                   height={32}
@@ -42,12 +43,13 @@ export default function Categories({ categories }: Props) {
                 />
                 <span className="text-sm font-medium">{category.name}</span>
               </div>
+              {
+                isArray(category?.subcategories) ? <ChevronDown
+                  className={`size-4 transition-transform text-gray-600 duration-300 ${isOpen ? "rotate-180" : ""
+                    }`}
+                /> : null
+              }
 
-              <ChevronDown
-                className={`size-4 transition-transform duration-300 ${
-                  isOpen ? "rotate-180" : ""
-                }`}
-              />
             </button>
 
             {/* Animated Subcategories */}
@@ -59,13 +61,13 @@ export default function Categories({ categories }: Props) {
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
-                  className="border-t overflow-hidden"
+                  className=" pl-10 overflow-hidden"
                 >
-                  {category.subCategories.map((sub) => (
+                  {category?.subcategories?.map((sub) => (
                     <Link
                       key={sub.url}
                       href={`/catalog/${sub.url}`}
-                      className="flex justify-between px-4 py-2 text-sm hover:bg-gray-50"
+                      className="flex justify-between px-4 py-1 text-sm hover:bg-gray-50"
                     >
                       <span>{sub.name}</span>
                       <span className="text-gray-500">({sub.products})</span>

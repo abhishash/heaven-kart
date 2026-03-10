@@ -3,40 +3,63 @@
 import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { fetchHandler } from "@/lib/fetch-handler";
+import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 type FormValues = {
-    password: string;
-    email: string;
+  password: string;
+  email: string;
 };
 
 const ForgetPassowrd = () => {
-    const [isVisible, setIsVisible] = useState(false);
-    const toggleVisibility = () => setIsVisible(!isVisible);
-    const [loading, setLoading] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const toggleVisibility = () => setIsVisible(!isVisible);
+  const [loading, setLoading] = useState(false);
 
-    const {
-        register,
-        handleSubmit,
-        watch,
-        formState: { errors },
-    } = useForm<FormValues>();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<FormValues>();
 
-    const onSubmit = async (data: FormValues) => {
-      
-    };
+  const { data, mutateAsync, isPending } = useMutation({
+    mutationFn: (payload: { email: string }) =>
+      fetchHandler({
+        endpoint: "forget/password",
+        method: "POST",
+        data: payload,
+      })
+  });
+
+  const onSubmit = async (data: FormValues) => {
+    mutateAsync({
+      email: data?.email
+    }).then((res) => {
+      const response = res?.data;
+      if (response?.status) {
+        toast.success(response?.message)
+        return;
+      }
+      toast.warning(res?.message);
+    }).catch((err) => {
+      toast.error(err?.message);
+    })
+  };
 
 
 
 
-    return (
-        <div className="flex md:flex-row flex-col min-h-screen w-full">
-            {/* LEFT */}
-            <div className="flex-1 flex relative flex-col bg-green-50  px-4 md:px-6">
-                {/* Header */}
-                 <header className="flex items-center pt-4 pb-2">
+  return (
+    <div className="flex md:flex-row flex-col min-h-screen w-full">
+      {/* LEFT */}
+      <div className="flex-1 flex relative flex-col bg-green-50  px-4 md:px-6">
+        {/* Header */}
+        <header className="flex items-center pt-4 pb-2">
           <img
             src="http://brands-onboarding.zepto.co.in/assets/icons/zepto-icon.svg"
             alt="Zepto"
@@ -46,7 +69,7 @@ const ForgetPassowrd = () => {
             Vendor Portal
           </h1>
         </header>
-         <div className="flex md:hidden items-center h-20 relative z-10 justify-between md:justify-end">
+        <div className="flex md:hidden items-center h-20 relative z-10 justify-between md:justify-end">
           <p className="font-medium text-base text-primary-700">
             Not a User?
           </p>
@@ -60,21 +83,21 @@ const ForgetPassowrd = () => {
           </button>
         </div>
 
-                {/* Form Card */}
-                <div className="inset-0 static md:absolute flex flex-col md:flex-row items-center justify-center">
-                    <form
-                        onSubmit={handleSubmit(onSubmit)}
-                        className="w-full max-w-lg bg-white rounded-xl shadow-none md:shadow-lg p-4 md:p-8"
-                    >
-                        <h2 className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-green-700 from-[7.58%] to-primary to-[98.88%]">
+        {/* Form Card */}
+        <div className="inset-0 static md:absolute flex flex-col md:flex-row items-center justify-center">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="w-full max-w-lg bg-white rounded-xl shadow-none md:shadow-lg p-4 md:p-8"
+          >
+            <h2 className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-green-700 from-[7.58%] to-primary to-[98.88%]">
               Welcome to HeavenKart
             </h2>
-                        <p className="text-sm text-gray-500 mb-6">
-                            Create your account to start selling
-                        </p>
+            <p className="text-sm text-gray-500 mb-6">
+              Create your account to start selling
+            </p>
 
-                        <div className="flex flex-col gap-y-1.5 justify-end">
- <Field className="flex flex-col gap-y-2">
+            <div className="flex flex-col gap-y-1.5 justify-end">
+              <Field className="flex flex-col gap-y-2">
                 <FieldLabel htmlFor="input-email" className="font-medium text-green-700">Email</FieldLabel>
                 <Input
                   color="secondary"
@@ -85,25 +108,25 @@ const ForgetPassowrd = () => {
                   placeholder="Example@gmail.com"
                 />
               </Field>
-                            <Link href="/login" className="bg-linear-to-br text-sm font-bold ml-auto font-medium bg-clip-text text-transparent bg-gradient-to-r from-green-700 from-[7.58%] to-primary to-[98.88%]" >Back to Login </Link>
-                        </div>
-                        
-                        {/* Submit */}
-                        <Button
-                            type="submit"
-                            // isLoading={loading}
-                            // disabled={loading}
-                            // isDisabled={loading}
-                            className="w-full mt-6 py-5 text-base cursor-pointer rounded-md text-white font-semibold bg-gradient-to-r from-green-700 to-primary hover:opacity-90 transition"
-                        >
-                            Generate New Password
-                        </Button>
-                    </form>
-                </div>
+              <Link href="/login" className="bg-linear-to-br text-sm font-bold ml-auto font-medium bg-clip-text text-transparent bg-gradient-to-r from-green-700 from-[7.58%] to-primary to-[98.88%]" >Back to Login </Link>
             </div>
 
-            {/* RIGHT */}
-           <div className="flex-1 px-4 md:px-6 w-full bg-white">
+            {/* Submit */}
+            <Button
+              type="submit"
+              // isLoading={loading}
+              // disabled={loading}
+              // isDisabled={loading}
+              className="w-full mt-6 py-5 text-base cursor-pointer rounded-md text-white font-semibold bg-gradient-to-r from-green-700 to-primary hover:opacity-90 transition"
+            >
+              Generate New Password
+            </Button>
+          </form>
+        </div>
+      </div>
+
+      {/* RIGHT */}
+      <div className="flex-1 px-4 md:px-6 w-full bg-white">
         <div className="hidden md:flex items-center h-20 relative z-10 justify-between md:justify-end">
           <p className="font-medium text-base text-primary-700  p-4">
             Not a User?
@@ -254,8 +277,8 @@ const ForgetPassowrd = () => {
           </div>
         </div>
       </div>
-        </div>
-    );
+    </div>
+  );
 };
 
 export default ForgetPassowrd;

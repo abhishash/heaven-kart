@@ -9,7 +9,7 @@ export interface SubCategory {
     url: string;
     name: string;
     image: string;
-    subCategories: SubCategory[];
+    subcategories: SubCategory[];
   }
   
   export interface CategoryResponse {
