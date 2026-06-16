@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { CmsResponse } from "@/lib/types";
 import { isObject } from "@/lib/type-guards";
 import CmsSkeleton from "./placeholder/cms";
+import Image from "next/image";
 const popularSearches = {
   products: [
     "Avocado",
@@ -92,7 +93,7 @@ const categories = [
 ];
 
 export function Footer() {
-  
+
   const { data, isPending } = useQuery<CmsResponse>({
     queryKey: [`cms-page`],
     queryFn: () =>
@@ -108,117 +109,48 @@ export function Footer() {
     <>
       <HowToWorks />
       <footer className="bg-white space-y-12">
-        <div className="container mx-auto border-y py-8 sm:py-12 px-4">
-
-          {/* Popular Searches Section */}
-          <section className="pb-10">
-            <h1 className="text-lg sm:text-xl font-semibold text-slate-900 mb-6 sm:mb-8">
-              Popular Searches
-            </h1>
-
-            <div className="space-y-6">
-
-              {/* Reusable Row */}
-              {[
-                { label: "Products", data: popularSearches.products },
-                { label: "Brands", data: popularSearches.brands },
-                { label: "Categories", data: popularSearches.categories },
-              ].map((section, idx) => (
-                <div
-                  key={idx}
-                  className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-4"
-                >
-                  {/* Label */}
-                  <span className="text-sm font-semibold text-slate-900 sm:w-24">
-                    {section.label}
-                  </span>
-
-                  {/* Links */}
-                  <div className="flex flex-wrap text-sm text-slate-600">
-                    <span className="hidden sm:inline text-slate-400 mr-2">:</span>
-
-                    {section.data.map((item, index) => (
-                      <span key={index} className="flex items-center">
-                        <Link
-                          href="#"
-                          className="hover:text-slate-900 transition-colors"
-                        >
-                          {item}
-                        </Link>
-
-                        {index < section.data.length - 1 && (
-                          <span className="mx-2 text-slate-400">|</span>
-                        )}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Categories Section */}
-          <section>
-            <h2 className="text-lg sm:text-xl font-semibold text-slate-900 mb-6 sm:mb-8">
-              Categories
-            </h2>
-
-            {/* Responsive Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-y-4 gap-x-6">
-              {categories.flat().map((category, index) => (
-                <Link
-                  key={index}
-                  href="#"
-                  className="block text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors"
-                >
-                  {category}
-                </Link>
-              ))}
-            </div>
-          </section>
-        </div>
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 py-10">
             {/* Logo + Social */}
             <div>
               <div className="text-2xl font-bold text-green-600 mb-6">
-                HeavenKart
+                <Image src={"/logo.png"} alt="Heaven-logo" width={200} height={100} />
               </div>
 
               <div className="flex gap-4 mb-6">
-                <Button
-                  variant="ghost"
-                  size="icon"
+                <Link href="https://www.instagram.com/aryawebcoding/"
+
+                  target="_blank"
                   className="text-gray-600 hover:text-gray-900"
                 >
                   <Instagram className="size-6" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
+                </Link>
+                <Link
+                  href="https://x.com/aryawebcoding"
+                  target="_blank"
                   className="text-gray-600 hover:text-gray-900"
                 >
                   <Twitter className="size-6" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
+                </Link>
+                <Link
+                  href="https://www.facebook.com/profile.php?id=100094938452827"
+                  target="_blank"
                   className="text-gray-600 hover:text-gray-900"
                 >
                   <Facebook className="size-6" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
+                </Link>
+                <Link
+                  href="https://www.linkedin.com/in/aryaweb-coding-281a182a6"
                   className="text-gray-600 hover:text-gray-900"
+                  target="_blank"
                 >
                   <Linkedin className="size-6" />
-                </Button>
+                </Link>
               </div>
 
               <div className="text-xs text-gray-500 space-y-1">
                 <p>© HeavenKart Shop Marketplace Private Limited</p>
-                <p>FSSAI lic no : XXXXXXXXXX</p>
+                <p>GST no : XXXXXXXXXX</p>
               </div>
             </div>
 

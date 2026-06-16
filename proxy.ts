@@ -22,9 +22,9 @@ export async function proxy(req: NextRequest) {
 
 
   // If NOT logged in and trying to access protected page
-  if (!token && !isPublic) {
-    return NextResponse.redirect(new URL("/login", req.url));
-  }
+  // if (!token && !isPublic) {
+  //   return NextResponse.redirect(new URL("/login", req.url));
+  // }
 
   // If logged in and trying to access login/register
   if (token && isPublic) {

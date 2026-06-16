@@ -72,7 +72,7 @@ export function ProductCard({
         }`}
     >
       {/* Image Container */}
-      <div className="relative bg-slate-50 h-24 sm:h-60 flex items-center justify-center overflow-hidden">
+      <div className="relative  h-24 sm:h-60 flex items-center justify-center overflow-hidden">
         <Image
           src={`${process.env.ASSET_ENDPOINS}${image}` || "/placeholder.svg"}
           alt={name}

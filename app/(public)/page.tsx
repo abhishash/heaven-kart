@@ -19,6 +19,7 @@ import {
 } from "@/lib/types";
 import clsx from "clsx";
 import Image from "next/image";
+import PromotionCarousel from "@/components/elements/promotionCarousel";
 
 export default async function Home() {
   const homePageBanners = await fetchHandler<{
@@ -111,12 +112,10 @@ export default async function Home() {
 
       {/* Permotions products */}
       <div className="flex flex-col gap-y-2 sm:gap-y-6 py-2 sm:py-6">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900">Permotions</h2>
-        <div className="grid grid-cols-3 gap-x-2 sm:gap-x-6">
-          {permotions?.map((item, index) => (
-            <PermotionBanner key={index} values={item} />
-          ))}
-        </div>
+        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-yellow-400">Permotions</h2>
+
+        <PromotionCarousel promotions={permotions} />
+
       </div>
 
       {/* Category sections */}

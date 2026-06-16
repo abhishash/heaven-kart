@@ -32,7 +32,6 @@ export function BrandLogoInfinite() {
             />
              ))
           }
-         
         </div>
       );
     }

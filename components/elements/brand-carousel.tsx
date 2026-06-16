@@ -1,14 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { imageBaseUrl } from "@/lib/constants";
+import Link from "next/link";
 
 interface Brand {
   id: number;
   name: string;
   image: string;
+  url: string;
 }
 
 interface BrandCarouselProps {
@@ -16,82 +18,101 @@ interface BrandCarouselProps {
   brands: Brand[];
 }
 
-export function BrandCarousel({ title = "Our Brands", brands }: BrandCarouselProps) {
+export function BrandCarousel({
+  title = "Our Brands",
+  brands,
+}: BrandCarouselProps) {
 
-
-  const extendedBrands = [...brands];
   const [emblaRef, emblaApi] = useEmblaCarousel({
     dragFree: true,
     align: "start",
+    loop: true,
   });
 
-  const rafId = useRef<number | null>(null);
-  const isPaused = useRef(false);
-  const speed = 0.6;
+  const animationRef = useRef<number | null>(null);
+  const pausedRef = useRef(false);
 
-  const startAutoScroll = () => {
-    if (!emblaApi || isPaused.current || rafId.current) return;
+  const AUTO_SCROLL_SPEED = 0.6;
+
+  const stopAutoScroll = useCallback(() => {
+    pausedRef.current = true;
+
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
+    }
+  }, []);
+
+  const startAutoScroll = useCallback(() => {
+    if (!emblaApi || pausedRef.current || animationRef.current) return;
 
     const engine = emblaApi.internalEngine();
 
-    const scroll = () => {
-      if (isPaused.current) return;
-      // 🔥 move RIGHT ➝ LEFT
-      engine.location.add(-speed);
+    const animate = () => {
+      if (pausedRef.current) return;
+
+      engine.location.add(-AUTO_SCROLL_SPEED);
       engine.translate.to(engine.location.get());
 
-      rafId.current = requestAnimationFrame(scroll);
+      animationRef.current = requestAnimationFrame(animate);
     };
 
-    rafId.current = requestAnimationFrame(scroll);
-  };
+    animationRef.current = requestAnimationFrame(animate);
+  }, [emblaApi]);
 
-  const stopAutoScroll = () => {
-    isPaused.current = true;
-    if (rafId.current) {
-      if(extendedBrands?.length < 10) return;
-      cancelAnimationFrame(rafId.current);
-      rafId.current = null;
-    }
-  };
-
-  const resumeAutoScroll = () => {
-    isPaused.current = false;
+  const resumeAutoScroll = useCallback(() => {
+    pausedRef.current = false;
     startAutoScroll();
-  };
+  }, [startAutoScroll]);
 
   useEffect(() => {
-    if (!emblaApi || extendedBrands?.length < 10) return;
+    if (!emblaApi || brands.length < 10) return;
+
     startAutoScroll();
-    return () => stopAutoScroll();
-  }, [emblaApi]);
+
+    return () => {
+      stopAutoScroll();
+    };
+  }, [emblaApi, brands.length, startAutoScroll, stopAutoScroll]);
 
   return (
     <section className="w-full bg-white py-4 sm:py-6">
-      <h2 className="text-lg sm:text-2xl font-bold text-slate-900 mb-2 sm:mb-4 px-0 sm:px-4">
+      <h2 className="mb-4 px-0  text-lg font-bold text-yellow-400 sm:px-0 sm:text-2xl">
         {title}
       </h2>
 
       <div
         ref={emblaRef}
-        onMouseEnter={stopAutoScroll}
-        onMouseLeave={resumeAutoScroll}
-        className="overflow-hidden px-2"
+        className="overflow-hidden"
+      // onMouseEnter={stopAutoScroll}
+      // onMouseLeave={resumeAutoScroll}
       >
-        <div className="flex gap-10 items-center">
-          {extendedBrands.map((brand, index) => (
-            <div
-              key={`${brand.id}-${index}`}
-              className="flex-shrink-0 min-w-20 bg-green-50 min-h-20 sm:w-40 sm:h-40 flex items-center justify-center overflow-hidden rounded-full transition"
+        <div className="flex items-center gap-6 sm:gap-10">
+          {brands?.map((brand) => (
+            <Link
+              key={brand.id}
+              href={`/catalog/${brand.url}`}
+              className="
+    group
+    w-36 sm:w-40
+    overflow-hidden
+    rounded-xl
+    bg-white
+    border border-slate-200
+    shadow-sm
+    hover:shadow-2xl
+    transition-all duration-300
+  "
             >
-              <Image
-                src={`${imageBaseUrl}${brand.image}`}
-                alt={brand.name}
-                width={120}
-                height={80}
-                className="object-contain object-center max-w-20 max-h-20 sm:w-40 sm:h-40"
-              />
-            </div>
+              <div className="relative h-36 sm:h-48 bg-gradient-to-b from-green-700 to-green-200">
+                <Image
+                  src={`${imageBaseUrl}${brand.image}`}
+                  alt={brand.name}
+                  fill
+                  className="object-contain rounded-xl px-3 py-3 transition-transform duration-500"
+                />
+              </div>
+            </Link>
           ))}
         </div>
       </div>

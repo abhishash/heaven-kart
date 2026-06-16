@@ -29,15 +29,12 @@ export function Header({ categories }: {
 
   return (
     <>
-
-
       <header className="bg-white border-b">
         {/* 🔥 Fixed Header */}
         <div
-          className={`fixed top-0 left-0 right-0 z-50 bg-white transition-all duration-300 ${scrolled ? "shadow-md" : ""
-            }`}
+          className={`fixed top-0 left-0 right-0 z-50 bg-white transition-all duration-300 ${scrolled ? "shadow-md" : ""}`}
         >
-          <div className="container mx-auto px-4 py-3 sm:py-3">
+          <div className="container mx-auto px-4 sm:px-10 py-3 sm:py-1">
             {/* 🔹 Top Row */}
             <div className="flex items-center justify-between">
               {/* LEFT */}
@@ -47,7 +44,7 @@ export function Header({ categories }: {
                   href="/"
                   className="text-xl md:text-2xl font-semibold text-green-600"
                 >
-                  HeavenKart
+                  <Image src={"/logo.png"} alt="Heaven-logo" width={180} height={100} />
                 </Link>
               </div>
 
@@ -72,11 +69,11 @@ export function Header({ categories }: {
         </div>
 
         {/* Spacer */}
-        <div className="h-[110px] md:h-[70px] " />
+        <div className="h-[110px] md:h-[50px] " />
 
         {/* 🔥 Categories */}
         <nav className="border-t bg-white">
-          <div className="container mx-auto px-4">
+          <div className="container mx-auto px-4 sm:px-15">
             {/* Mobile */}
             <div className="flex gap-6 overflow-x-auto no-scrollbar hide-scrollbar scrollbar-none md:hidden">
               {categories?.map((c, i) => (

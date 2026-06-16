@@ -4,10 +4,11 @@ import { User } from "lucide-react";
 import Link from "next/link";
 import Cart from "../elements/cart";
 import { SearchBar } from "../layout/Search-bar";
+import Image from "next/image";
 
 export function Header() {
-    return (
-         <header className="bg-white border-b">
+  return (
+    <header className="bg-white border-b">
       {/* 🔥 Fixed Header */}
       <div
         className={`fixed top-0 left-0 right-0 shadow-md z-50 bg-white transition-all duration-300`}
@@ -16,14 +17,14 @@ export function Header() {
           {/* 🔹 Top Row */}
           <div className="flex items-center justify-between">
             {/* LEFT */}
-            <div className="flex items-center gap-3">            
+            <div className="flex items-center gap-3">
               {/* Logo */}
               <Link
                 href="/"
                 className="text-xl md:text-2xl font-semibold text-green-600"
               >
-                HeavenKart
-              </Link>              
+                <Image src={"/logo.png"} alt="Heaven-logo" width={180} height={100} />
+              </Link>
             </div>
 
             {/* RIGHT */}
@@ -46,7 +47,7 @@ export function Header() {
       </div>
 
 
-     
+
     </header>
-    );
+  );
 }

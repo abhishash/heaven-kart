@@ -63,7 +63,7 @@ export function CategoriesCarousel({ title, subCategories }: ProductCarouselProp
     return (
         <section className="space-y-3 sm:space-y-6">
             {/* Section Title */}
-            <h1 className="text-lg sm:text-xl font-bold text-slate-900">
+            <h1 className="text-lg sm:text-xl font-bold text-yellow-400">
                 {title}
             </h1>
 

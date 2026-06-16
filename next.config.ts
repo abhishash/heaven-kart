@@ -15,6 +15,7 @@ const nextConfig: NextConfig = {
   env: {
     API_ENDPOINT: process.env.API_ENDPOINT,
     ASSET_ENDPOINS : process.env.ASSET_ENDPOINS,
+    NEXTAUTH_URL : process.env.NEXTAUTH_URL
 }
 };
 

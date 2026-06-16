@@ -24,25 +24,18 @@ export interface Product {
 
 export function PermotionBanner({ values }: { values: PermotionsTypes }) {
   return (
-    <section className="">
-      {/* Carousel Container */}
+    <section>
       <Link
         target="_blank"
         href={values?.url_link}
-        className="relative  rounded-2xl h-full w-full max-h-64 flex items-center justify-center"
+        className="relative block h-[180px] sm:h-[220px] w-full overflow-hidden rounded-xl"
       >
         <Image
-          src={`${imageBaseUrl}${values?.image}` || "/placeholder.svg"}
+          src={`${imageBaseUrl}${values?.image}`}
           alt={values?.name}
-          width={160}
-          height={160}
-          className="object-center w-full h-full"
+          fill
+          className="object-fill"
         />
-        <span className="hidden sm:block absolute left-8 animate-pulse  bottom-6 rounded-md px-0.5 sm:px-4 py-1 bg-red-500 text-white">
-          <h3 className="text-xs sm:text-2xl italic font-semibold text-white line-clamp-2 mb-1">
-            {values?.name}
-          </h3>
-        </span>
       </Link>
     </section>
   );
