@@ -67,9 +67,9 @@ export default async function ProductPage({
 
           {/* Product Info */}
           <div className="flex flex-col gap-6">
-            <ProductInfo  product={productInformation} productUrl={url_key} />
+            {/* <ProductInfo  product={productInformation} productUrl={url_key} /> */}
             {/* Trust Badges */}
-            <div className="grid grid-cols-2 gap-4 rounded-lg bg-green-50 border border-border p-4">
+            <div className="grid grid-cols-2 gap-4 rounded-lg bg-green-50 border border-border">
               <div className="flex items-center gap-3">
                 <Image
                   src="/icon/free.png"
