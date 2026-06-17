@@ -57,7 +57,7 @@ export default async function ProductPage({
 
       {/* Main Product Section */}
       {/* <div className="mx-auto container px-0 py-4 sm:py-8 sm:px-6 lg:px-8"> */}
-        <div className="grid lg:grid-cols-2">
+        <div className="flex flex-row">
           {/* Product Gallery */}
           {/* <ProductImageGallery
             thumbnailImg={productInformation?.image}
