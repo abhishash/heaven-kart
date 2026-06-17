@@ -15,7 +15,7 @@ export default function ProductBarcode({ product }: {
                 <img
                     src={product.barcode}
                     alt={product.name}
-                    className="w-48"
+                    className="w-48 max-h-16"
                 />
             </div>
         </div>

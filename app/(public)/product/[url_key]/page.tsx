@@ -39,12 +39,12 @@ export default async function ProductPage({
               Home
             </Link>
             <span>/</span>
-              {productInformation?.category_url && <>
-                <Link href={`/catalog/${productInformation?.category_url}`} className="hover:text-foreground">
-                  {productInformation?.category}
+            {productInformation?.category_url && <>
+              <Link href={`/catalog/${productInformation?.category_url}`} className="hover:text-foreground">
+                {productInformation?.category}
               </Link>
               <span>/</span>
-                </>  }
+            </>}
             <span className="text-foreground text-green-700 line-clamp-1 text-wrap">{productInformation?.name}</span>
           </div>
         </div>
@@ -128,16 +128,9 @@ export default async function ProductPage({
               </div>
             </div>
             {/* Trust Badges */}
-            <div className="flex flex-col gap-y-2 rounded-md border border-solid px-3 py-3">
-              <h2 className="text-xl font-semibold mb-3">Basic Information</h2>
-              <ProductBarcode
-                product={{
-                  barcode: productInformation?.barcode,
-                  name: productInformation?.brand_name,
-                }}
-              />
-
-              <HtmlRender html={productInformation?.description} />
+            <div className="flex flex-col gap-y-2 rounded-md border border-dotted px-3 py-3">
+              <h2 className="text-xl font-semibold pb-2 mb-2 border-b-2 border-dotted">Basic Information</h2>
+              <HtmlRender isExtend={false} html={productInformation?.short_description} />
             </div>
           </div>
         </div>
@@ -151,8 +144,20 @@ export default async function ProductPage({
           </div>
         ) : null}
 
+        {/* Trust Badges */}
+        <div className="flex flex-col my-6 border-t border-gray-200 gap-y-2 rounded-md border border-dotted px-3 py-3">
+          <h2 className="text-xl font-semibold pb-2 mb-2 border-b-2 border-dotted">Description</h2>
+          <ProductBarcode
+            product={{
+              barcode: productInformation?.barcode,
+              name: productInformation?.brand_name,
+            }}
+          />
+          <HtmlRender isExtend={true} html={productInformation?.description} />
+        </div>
+
         {/* Tabs Section */}
-        <div className=" my-12 border-t border-gray-200">
+        <div className="my-6">
           <div defaultValue="description" className="w-full py-6">
             <h2 className="text-xl font-semibold">Customer Reviews</h2>
             <div className="mt-6">

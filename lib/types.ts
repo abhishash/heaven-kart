@@ -125,6 +125,7 @@ export interface Product {
   hsn: string;
   description: string;
   tags: string;
+  short_description: string;
   meta_tag: string;
   category: string | null;
   sub_category: string | null;
