@@ -29,6 +29,11 @@ export default async function ProductPage({
   const relatedProducts = productResponse?.similar_products;
   const aplusBanner = productResponse?.aplus;
 
+  const discountPercent = Math.round(
+    ((parseFloat(productInformation?.ac_price) - parseFloat(productInformation?.price)) / parseFloat(productInformation?.ac_price)) * 100,
+  );
+  
+
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
@@ -57,11 +62,12 @@ export default async function ProductPage({
           <ProductImageGallery
             thumbnailImg={productInformation?.image}
             images={productResponse?.gallery}
+            discountPercent={discountPercent}
           />
 
           {/* Product Info */}
           <div className="flex flex-col gap-6 px-2">
-            <ProductInfo product={productInformation} productUrl={url_key} />
+            <ProductInfo  product={productInformation} productUrl={url_key} />
             {/* Trust Badges */}
             <div className="grid grid-cols-2 gap-4 rounded-lg bg-green-50 border border-border p-4">
               <div className="flex items-center gap-3">

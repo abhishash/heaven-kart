@@ -39,7 +39,7 @@ interface ProductInfoProps {
   productUrl: string;
 }
 
-export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
+export default function ProductInfo({ product, productUrl,  }: ProductInfoProps) {
   const dispatch = useDispatch();
   const [isFavorite, setIsFavorite] = useState(false);
   const { data: session } = useSession();
