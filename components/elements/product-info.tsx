@@ -155,11 +155,6 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
         </div>
 
         <div className="flex items-center gap-x-2 mt-1">
-          <div>
-            <p className="text-sm  font-semibold text-muted-foreground">
-              Net Qty: 1 pack (500ml)
-            </p>
-          </div>
           {/* Rating */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1">
