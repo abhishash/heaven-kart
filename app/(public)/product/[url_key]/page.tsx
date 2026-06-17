@@ -59,11 +59,11 @@ export default async function ProductPage({
       {/* <div className="mx-auto container px-0 py-4 sm:py-8 sm:px-6 lg:px-8"> */}
         <div className="grid gap-5 lg:grid-cols-2 px-0 py-4 sm:py-8 sm:px-6 lg:px-8">
           {/* Product Gallery */}
-          <ProductImageGallery
+          {/* <ProductImageGallery
             thumbnailImg={productInformation?.image}
             images={productResponse?.gallery}
             discountPercent={discountPercent}
-          />
+          /> */}
 
           {/* Product Info */}
           <div className="flex flex-col gap-6">
