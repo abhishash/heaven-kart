@@ -31,7 +31,7 @@ export default function ProductImageGallery({
             <div className="md:sticky md:top-24">
                 <div className="flex flex-col gap-2 sm:flex-row-reverse">
                     {/* Main Image */}
-                    <div className="relative max-w-[320px] ms:w-full overflow-hidden rounded-2xl border bg-background shadow-sm">
+                    <div className="relative max-w-[325px] ms:w-full overflow-hidden rounded-2xl border bg-background shadow-sm">
                         <div className="relative aspect-square md:aspect-[1/1]">
                             <Image
                                 src={`${imageBaseUrl}/${activeImage}`}
@@ -64,7 +64,7 @@ export default function ProductImageGallery({
                     </div>
 
                     {/* Thumbnails */}
-                    <div className="relative max-w-[320px] mx-auto sm:w-[90px]">
+                    <div className="relative max-w-[320px] sm:w-[90px]">
                         {/* Mobile Left Shadow */}
                         <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-8 bg-gradient-to-r from-background to-transparent sm:hidden" />
 
