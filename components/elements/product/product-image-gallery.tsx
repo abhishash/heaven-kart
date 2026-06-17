@@ -31,7 +31,7 @@ export default function ProductImageGallery({
             <div className="md:sticky md:top-24">
                 <div className="flex flex-col gap-2 sm:flex-row-reverse">
                     {/* Main Image */}
-                    <div className="relative max-w-[345px] ms:w-full overflow-hidden rounded-2xl border bg-background shadow-sm">
+                    <div className="relative max-w-[320px] ms:w-full overflow-hidden rounded-2xl border bg-background shadow-sm">
                         <div className="relative aspect-square md:aspect-[1/1]">
                             <Image
                                 src={`${imageBaseUrl}/${activeImage}`}
