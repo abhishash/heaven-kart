@@ -37,8 +37,8 @@ export default async function ProductPage({
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
-      <nav className="border-b border-border bg-card">
-        <div className="mx-auto px-4 py-4 sm:px-6 lg:px-8">
+      <nav className="border-b border-border bg-card py-2 sm:px-6 lg:px-8">
+        {/* <div className="mx-auto container px-0 py-4 sm:px-6 lg:px-8"> */}
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Link href="/" className="hover:text-foreground">
               Home
@@ -52,12 +52,12 @@ export default async function ProductPage({
             </>}
             <span className="text-foreground text-green-700 line-clamp-1 text-wrap">{productInformation?.name}</span>
           </div>
-        </div>
+        {/* </div> */}
       </nav>
 
       {/* Main Product Section */}
-      <div className="mx-auto container px-0 py-4 sm:py-8 sm:px-6 lg:px-8">
-        <div className="grid gap-5 lg:grid-cols-2">
+      {/* <div className="mx-auto container px-0 py-4 sm:py-8 sm:px-6 lg:px-8"> */}
+        <div className="grid gap-5 lg:grid-cols-2 px-0 py-4 sm:py-8 sm:px-6 lg:px-8">
           {/* Product Gallery */}
           <ProductImageGallery
             thumbnailImg={productInformation?.image}
@@ -66,7 +66,7 @@ export default async function ProductPage({
           />
 
           {/* Product Info */}
-          <div className="flex flex-col gap-6 px-2">
+          <div className="flex flex-col gap-6">
             <ProductInfo  product={productInformation} productUrl={url_key} />
             {/* Trust Badges */}
             <div className="grid grid-cols-2 gap-4 rounded-lg bg-green-50 border border-border p-4">
@@ -134,7 +134,7 @@ export default async function ProductPage({
               </div>
             </div>
             {/* Trust Badges */}
-            <div className="flex flex-col gap-y-2 rounded-md border border-dotted px-3 py-3">
+            <div className="flex flex-col gap-y-2 rounded-md border border-dotted py-3">
               <h2 className="text-xl font-semibold pb-2 mb-2 border-b-2 border-dotted">Basic Information</h2>
               <HtmlRender isExtend={false} html={productInformation?.short_description} />
             </div>
@@ -151,7 +151,7 @@ export default async function ProductPage({
         ) : null}
 
         {/* Trust Badges */}
-        <div className="flex flex-col my-6 border-t border-gray-200 gap-y-2 rounded-md border border-dotted px-3 py-3">
+        <div className="flex flex-col my-6 border-t border-gray-200 gap-y-2 rounded-md border border-dotted px-0 py-3">
           <h2 className="text-xl font-semibold pb-2 mb-2 border-b-2 border-dotted">Description</h2>
           <ProductBarcode
             product={{
@@ -178,7 +178,7 @@ export default async function ProductPage({
         {/* <ProductCarousel title="Recently View" products={laundryProducts} /> */}
         <ProductCarousel title="Related Products" products={relatedProducts} isBanner={false} />
         {/* <ProductCarousel title="Explore More" products={laundryProducts} /> */}
-      </div>
+      {/* </div> */}
     </div>
   );
 }
