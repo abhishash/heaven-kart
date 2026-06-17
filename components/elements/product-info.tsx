@@ -219,7 +219,7 @@ export default function ProductInfo({ product, productUrl }: ProductInfoProps) {
         {/* Quantity + Add To Cart */}
         <form
           onSubmit={handleSubmit(handleAddToCart)}
-          className="flex flex-col sm:flex-row gap-4"
+          className="flex flex-row gap-4"
         >
           {/* Quantity Selector */}
           <div className="flex items-center border border-green-500 rounded-xl overflow-hidden shadow-sm">

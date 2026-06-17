@@ -51,7 +51,7 @@ export default async function ProductPage({
       </nav>
 
       {/* Main Product Section */}
-      <div className="mx-auto container px-0 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto container px-0 py-4 sm:py-8 sm:px-6 lg:px-8">
         <div className="grid gap-5 lg:grid-cols-2">
           {/* Product Gallery */}
           <ProductImageGallery
@@ -60,7 +60,7 @@ export default async function ProductPage({
           />
 
           {/* Product Info */}
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6 px-2">
             <ProductInfo product={productInformation} productUrl={url_key} />
             {/* Trust Badges */}
             <div className="grid grid-cols-2 gap-4 rounded-lg bg-green-50 border border-border p-4">
