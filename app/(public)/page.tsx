@@ -94,7 +94,8 @@ export default async function Home() {
                   alt={item?.name}
                   width={160}
                   height={160}
-                  className="object-contain rounded-sm md:rounded-xl w-full h-full p-0 sm:p-2"
+                  unoptimized={true}
+                  className="object-fill rounded-sm md:rounded-xl w-full h-full"
                 />
               </div>
             </div> : null
