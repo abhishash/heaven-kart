@@ -66,16 +66,16 @@ export default function ProductImageGallery({
                     {/* Thumbnails */}
                     <div className="relative mx-auto max-w-[325px] sm:w-[90px]">
                         {/* Mobile Left Shadow */}
-                        <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-8 bg-gradient-to-r from-background to-transparent sm:hidden" />
+                        {/* <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-8 bg-gradient-to-r from-background to-transparent sm:hidden" /> */}
 
                         {/* Mobile Right Shadow */}
-                        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-8 bg-gradient-to-l from-background to-transparent sm:hidden" />
+                        {/* <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-8 bg-gradient-to-l from-background to-transparent sm:hidden" /> */}
 
                         {/* Desktop Top Shadow */}
-                        <div className="pointer-events-none absolute top-0 left-0 z-10 hidden h-8 w-full bg-gradient-to-b from-background to-transparent sm:block" />
+                        {/* <div className="pointer-events-none absolute top-0 left-0 z-10 hidden h-8 w-full bg-gradient-to-b from-background to-transparent sm:block" /> */}
 
                         {/* Desktop Bottom Shadow */}
-                        <div className="pointer-events-none absolute bottom-0 left-0 z-10 hidden h-8 w-full bg-gradient-to-t from-background to-transparent sm:block" />
+                        {/* <div className="pointer-events-none absolute bottom-0 left-0 z-10 hidden h-8 w-full bg-gradient-to-t from-background to-transparent sm:block" /> */}
 
                         <div className=" flex
   flex-row

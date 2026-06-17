@@ -134,7 +134,7 @@ export default async function ProductPage({
               </div>
             </div>
             {/* Trust Badges */}
-            <div className="flex flex-col gap-y-2 rounded-md border border-dotted py-3">
+            <div className="flex flex-col gap-y-2 rounded-md border border-dotted px-4 py-3">
               <h2 className="text-xl font-semibold pb-2 mb-2 border-b-2 border-dotted">Basic Information</h2>
               <HtmlRender isExtend={false} html={productInformation?.short_description} />
             </div>
@@ -151,7 +151,7 @@ export default async function ProductPage({
         ) : null}
 
         {/* Trust Badges */}
-        <div className="flex flex-col my-6 border-t border-gray-200 gap-y-2 rounded-md border border-dotted px-0 py-3">
+        <div className="flex flex-col my-6 border-t border-gray-200 gap-y-2 rounded-md border border-dotted px-4 py-3">
           <h2 className="text-xl font-semibold pb-2 mb-2 border-b-2 border-dotted">Description</h2>
           <ProductBarcode
             product={{
