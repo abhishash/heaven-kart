@@ -27,7 +27,7 @@ export default async function RootLayout({
 
   return (
     <div >
-      {/* <Header categories={categoryResponse?.data} /> */}
+      <Header categories={categoryResponse?.data} />
       <div className="container mx-auto px-4 lg:px-12 py-2 sm:py-4" >
         {children}
       </div>
