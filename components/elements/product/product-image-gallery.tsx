@@ -27,7 +27,7 @@ export default function ProductImageGallery({
     }, [selectedImage]);
 
     return (
-        <div className="flex w-1/2 flex-col gap-4">
+        <div className="flex w-full sm:w-1/2 flex-col gap-4">
             <div className="md:sticky md:top-24">
                 <div className="flex flex-col gap-2 sm:flex-row-reverse">
                     {/* Main Image */}

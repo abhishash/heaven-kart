@@ -84,7 +84,7 @@ export default async function Home() {
           {
             item?.banner ? <div className="col-span-12 sm:col-span-12">
               {/* Image Container */}
-              <div className="relative bg-slate-50 max-h-60 rounded-sm md:rounded-xl flex items-center justify-center overflow-hidden">
+              <div className="relative bg-slate-50 h-auto rounded-sm md:rounded-xl flex items-center justify-center overflow-hidden">
                 <Image
                   src={
                     item?.banner
@@ -95,7 +95,7 @@ export default async function Home() {
                   width={160}
                   height={160}
                   unoptimized={true}
-                  className="object-fill rounded-sm md:rounded-xl w-full h-full"
+                  className="object-contain rounded-sm md:rounded-xl w-full h-full"
                 />
               </div>
             </div> : null
