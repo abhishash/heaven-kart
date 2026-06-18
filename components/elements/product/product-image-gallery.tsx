@@ -27,7 +27,7 @@ export default function ProductImageGallery({
     }, [selectedImage]);
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex w-1/2 flex-col gap-4">
             <div className="md:sticky md:top-24">
                 <div className="flex flex-col gap-2 sm:flex-row-reverse">
                     {/* Main Image */}
@@ -65,11 +65,6 @@ export default function ProductImageGallery({
 
                     {/* Thumbnails */}
                     <div className="relative mx-auto max-w-[325px] sm:w-[90px]">
-                        {/* Mobile Left Shadow */}
-                        {/* <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-8 bg-gradient-to-r from-background to-transparent sm:hidden" /> */}
-
-                        {/* Mobile Right Shadow */}
-                        {/* <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-8 bg-gradient-to-l from-background to-transparent sm:hidden" /> */}
 
                         {/* Desktop Top Shadow */}
                         {/* <div className="pointer-events-none absolute top-0 left-0 z-10 hidden h-8 w-full bg-gradient-to-b from-background to-transparent sm:block" /> */}

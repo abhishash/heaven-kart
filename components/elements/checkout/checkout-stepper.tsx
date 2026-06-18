@@ -99,6 +99,10 @@ import { useMutation } from "@tanstack/react-query"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { encodeId } from "@/lib/utils"
+import Link from "next/link"
+import Image from "next/image"
+import { RootState } from "../store/store"
+import { useSelector } from "react-redux"
 const paymentMethods = [
     {
         id: 'card' as const,
@@ -143,31 +147,36 @@ export function CheckoutStepper() {
     const [completedSteps, setCompletedSteps] = useState<number[]>([])
 
     const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>('card');
-    const cartItems: CartItem[] = [
-        {
-            id: '1',
-            name: 'Premium Wireless Headphones',
-            price: 199.00,
-            quantity: 1,
-            image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
-        },
-        {
-            id: '2',
-            name: 'Smartphone Case',
-            price: 29.99,
-            quantity: 2,
-            image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&h=400&fit=crop',
-        },
-        {
-            id: '3',
-            name: 'USB-C Cable',
-            price: 14.99,
-            quantity: 3,
-            image: 'https://images.unsplash.com/photo-1625948515291-69613efd103f?w=400&h=400&fit=crop',
-        },
-    ]
 
-    const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+    const { items: cartItems = [],
+        // totalPrice, delhiveryCharge
+    } = useSelector((state: RootState) => state.cart);
+
+    // const cartItems: CartItem[] = [
+    //     {
+    //         id: '1',
+    //         name: 'Premium Wireless Headphones',
+    //         price: 199.00,
+    //         quantity: 1,
+    //         image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
+    //     },
+    //     {
+    //         id: '2',
+    //         name: 'Smartphone Case',
+    //         price: 29.99,
+    //         quantity: 2,
+    //         image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&h=400&fit=crop',
+    //     },
+    //     {
+    //         id: '3',
+    //         name: 'USB-C Cable',
+    //         price: 14.99,
+    //         quantity: 3,
+    //         image: 'https://images.unsplash.com/photo-1625948515291-69613efd103f?w=400&h=400&fit=crop',
+    //     },
+    // ]
+
+    const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
     const shipping = subtotal > 50 ? 0 : 9.99
     const tax = subtotal * 0.08
     const total = subtotal + shipping + tax
@@ -230,8 +239,13 @@ export function CheckoutStepper() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <div className="max-w-7xl mx-auto p-6">
-                <h1 className="text-2xl font-bold text-gray-900 mb-8">HeavenKart</h1>
+            <div className="container mx-auto px-4 lg:px-12 py-2 sm:py-4">
+                <Link
+                    href="/"
+                    className="text-xl md:text-2xl font-semibold text-green-600"
+                >
+                    <Image src={"/logo.png"} alt="Heaven-logo" width={180} height={100} />
+                </Link>
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
                     {/* Left Column - Checkout Form */}
                     <div className="lg:col-span-3">
@@ -418,16 +432,16 @@ export function CheckoutStepper() {
                                 <div className="space-y-3 mb-6 pb-6 border-b border-gray-200">
                                     {cartItems.map((item) => (
                                         <div key={item.id} className="flex gap-3">
-                                            <img
+                                            <Image
                                                 src={item.image || "/placeholder.svg"}
                                                 alt={item.name}
                                                 className="w-16 h-16 rounded-lg object-cover"
                                             />
                                             <div className="flex-1">
                                                 <p className="text-sm font-semibold text-gray-900">{item.name}</p>
-                                                <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                                                <p className="text-xs text-gray-500">Qty: {item.qty}</p>
                                                 <p className="text-sm font-semibold text-gray-900 mt-1">
-                                                    ${(item.price * item.quantity).toFixed(2)}
+                                                    ${(item.price * item.qty).toFixed(2)}
                                                 </p>
                                             </div>
                                         </div>

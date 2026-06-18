@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
+import Image from "next/image";
 
 type FormValues = {
   password: string;
@@ -53,16 +54,15 @@ const LoginPage = () => {
       {/* LEFT */}
       <div className="flex-1 flex relative flex-col bg-green-50  px-4 md:px-6">
         {/* Header */}
-        <header className="flex items-center pt-4 pb-2">
-          <img
-            src="http://brands-onboarding.zepto.co.in/assets/icons/zepto-icon.svg"
-            alt="Zepto"
-            className="w-8 h-8 mr-3"
+        <Link href="/" className="flex items-center pt-4 pb-2">
+          <Image
+            src="/logo.png"
+            alt="Heaven Kart"
+            width={120}
+            height={120}
+            className="w-auto h-16 mr-3"
           />
-          <h1 className="text-xl font-bold bg-linear-to-r from-green-700 to-[#4ADE80] bg-clip-text text-transparent">
-            Vendor Portal
-          </h1>
-        </header>
+        </Link>
        
          <div className="flex md:hidden items-center h-20 relative z-10 justify-between md:justify-end">
           <p className="font-medium text-base text-primary-700">

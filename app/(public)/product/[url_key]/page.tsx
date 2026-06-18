@@ -37,7 +37,7 @@ export default async function ProductPage({
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
-      <nav className="border-b border-border bg-card py-2 sm:px-6 lg:px-8">
+      <nav className="border-b border-border bg-card pb-4 sm:px-6 lg:px-8">
         {/* <div className="mx-auto container px-0 py-4 sm:px-6 lg:px-8"> */}
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Link href="/" className="hover:text-foreground">
@@ -57,7 +57,7 @@ export default async function ProductPage({
 
       {/* Main Product Section */}
       {/* <div className="mx-auto container px-0 py-4 sm:py-8 sm:px-6 lg:px-8"> */}
-        <div className="flex flex-col gap-4 sm:flex-row">
+        <div className="flex flex-col gap-4 sm:flex-row py-4 sm:py-6">
           {/* Product Gallery */}
           <ProductImageGallery
             thumbnailImg={productInformation?.image}
@@ -66,7 +66,7 @@ export default async function ProductPage({
           />
 
           {/* Product Info */}
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col w-1/2 gap-6">
             <ProductInfo  product={productInformation} productUrl={url_key} />
             {/* Trust Badges */}
             <div className="grid grid-cols-2 gap-4 rounded-lg bg-green-50 border border-border p-2">

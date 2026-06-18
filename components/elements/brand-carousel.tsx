@@ -90,8 +90,8 @@ export function BrandCarousel({
         <div className="flex items-center gap-6 sm:gap-10">
           {brands?.map((brand) => (
             <Link
-              key={brand.id}
-              href={`/catalog/${brand.url}`}
+              key={brand?.id}
+              href={brand?.url ? `/catalog/${brand.url}` : "/"}
               className="
     group
     w-36 sm:w-40

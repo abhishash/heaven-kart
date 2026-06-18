@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   title: "Heaven Kart - Your One-Stop Online Shopping Destination",
   description:
     "Shop the latest fashion, electronics, home essentials, beauty products, and more at Heaven Kart. Enjoy great deals, secure payments, and fast delivery.",
+  icons: {
+    icon: "/favicon.png",
+  },
 
 };
 

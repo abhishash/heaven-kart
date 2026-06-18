@@ -18,6 +18,9 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   title: "Heaven Kart",
   description: "Heaven Kart E-Commerce Product",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default async function RootLayout({
