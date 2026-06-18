@@ -157,7 +157,7 @@ export default async function ProductPage({
       {/* A Plus Bannner */}
       {isArray(aplusBanner) ? (
         <div className="my-6 container mx-auto space-y-3">
-          <h2 className="text-2xl text-yellow-400 font-bold">Product Permotion </h2>
+          <h2 className="text-2xl text-yellow-400 font-bold">From the Seller</h2>
           {aplusBanner?.map((item: AplusBanner, index: number) => (
             <SingleBanner key={index} bannerType={item?.type} bannerImage={item?.images} />
           ))}

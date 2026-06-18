@@ -88,9 +88,9 @@ export function BrandCarousel({
       // onMouseLeave={resumeAutoScroll}
       >
         <div className="flex items-center gap-6 sm:gap-10">
-          {brands?.map((brand) => (
+          {brands?.map((brand, index) => (
             <Link
-              key={brand?.id}
+              key={index}
               href={brand?.url ? `/catalog/${brand.url}` : "/"}
               className="
     group

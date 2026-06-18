@@ -8,6 +8,7 @@ import ReduxProviders from "./providers/redux-provider";
 import SessionProviders from "./providers/session-providers";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
+import CartProvider from "./providers/CartProvider";
 
 const manrope = Manrope({
   variable: "--font-display",
@@ -38,8 +39,10 @@ export default async function RootLayout({
         <SessionProviders session={session}>
           <ReduxProviders>
             <ReactQueryProviders>
-              <main className="min-h-[calc(100vh-522px)]">{children}</main>
-              <Toaster richColors={true} theme="light" closeButton={true} />
+              <CartProvider>
+                <main className="min-h-[calc(100vh-522px)]">{children}</main>
+                <Toaster richColors={true} theme="light" closeButton={true} />
+              </CartProvider>
             </ReactQueryProviders>
           </ReduxProviders>
         </SessionProviders>

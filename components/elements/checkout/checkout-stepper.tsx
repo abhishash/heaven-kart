@@ -95,7 +95,7 @@ import { useForm } from "react-hook-form";
 import { ShippingAddress } from "@/components/checkout/shipping-address"
 import { PaymentMethod } from "@/lib/types"
 import { fetchHandler } from "@/lib/fetch-handler"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { encodeId } from "@/lib/utils"
@@ -103,36 +103,11 @@ import Link from "next/link"
 import Image from "next/image"
 import { RootState } from "../store/store"
 import { useSelector } from "react-redux"
-const paymentMethods = [
-    {
-        id: 'card' as const,
-        name: 'Credit Card',
-        description: 'Visa, Mastercard, or American Express',
-        icon: CreditCard,
-        color: 'from-blue-500 to-blue-600',
-    },
-    {
-        id: 'apple' as const,
-        name: 'Apple Pay',
-        description: 'Fast and secure payment',
-        icon: Smartphone,
-        color: 'from-gray-700 to-gray-900',
-    },
-    {
-        id: 'google' as const,
-        name: 'Google Pay',
-        description: 'One tap checkout',
-        icon: Wallet,
-        color: 'from-red-500 to-blue-600',
-    },
-    {
-        id: 'paypal' as const,
-        name: 'PayPal',
-        description: 'Buy now, pay later available',
-        icon: Wallet,
-        color: 'from-blue-600 to-indigo-600',
-    },
-];
+import { isArray } from "@/lib/type-guards"
+import { imageBaseUrl } from "@/lib/constants"
+import { PaymentMethodsResponse } from "@/types/order"
+import PaymentMethodSelector from "./PaymentMethodSelector"
+
 type ShippingFormValues = {
     firstName: string;
     email: string;
@@ -143,38 +118,18 @@ type ShippingFormValues = {
 };
 
 export function CheckoutStepper() {
-    const [currentStep, setCurrentStep] = useState(1)
-    const [completedSteps, setCompletedSteps] = useState<number[]>([])
+    const [currentStep, setCurrentStep] = useState(1);
+    const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+    const [paymentMethod, setPaymentMethod] = useState<string>("");
+    const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
     const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>('card');
 
     const { items: cartItems = [],
-        // totalPrice, delhiveryCharge
+        totalPrice, delhiveryCharge
     } = useSelector((state: RootState) => state.cart);
 
-    // const cartItems: CartItem[] = [
-    //     {
-    //         id: '1',
-    //         name: 'Premium Wireless Headphones',
-    //         price: 199.00,
-    //         quantity: 1,
-    //         image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
-    //     },
-    //     {
-    //         id: '2',
-    //         name: 'Smartphone Case',
-    //         price: 29.99,
-    //         quantity: 2,
-    //         image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&h=400&fit=crop',
-    //     },
-    //     {
-    //         id: '3',
-    //         name: 'USB-C Cable',
-    //         price: 14.99,
-    //         quantity: 3,
-    //         image: 'https://images.unsplash.com/photo-1625948515291-69613efd103f?w=400&h=400&fit=crop',
-    //     },
-    // ]
+
 
     const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
     const shipping = subtotal > 50 ? 0 : 9.99
@@ -189,32 +144,62 @@ export function CheckoutStepper() {
         mode: "onBlur",
     });
 
-    const { data: sesssion } = useSession();
+    const { data: session } = useSession();
+
     const { data, mutateAsync, isPending } = useMutation({
-        mutationFn: () =>
+        mutationFn: (body: any) =>
             fetchHandler({
                 endpoint: "orders",
                 method: "POST",
-                token: sesssion?.user?.accessToken,
+                token: session?.user?.accessToken,
+                data: body,
             })
     });
+
+
+
+    const { data: payments, isPending: isPaymentMethodsPending } = useQuery<PaymentMethodsResponse>({
+        queryKey: [`payment-methods`],
+        queryFn: () =>
+            fetchHandler({
+                endpoint: "payment-methods",
+                method: "GET",
+                token: session?.user?.accessToken,
+            }),
+    });
+
+    const paymentMethods = payments?.data || [];
+
+
 
     const router = useRouter();
 
     const handleNext = (step: number) => {
+
         if (currentStep < steps.length - 1) {
             setCompletedSteps([...completedSteps, currentStep])
             setCurrentStep(currentStep + 1)
         }
         if (step === 2) {
-            mutateAsync()?.then((res) => {
-                if (res?.status) {
-                    router?.push(`/success/${encodeId(res?.order_no)}`);
-                }
+            setIsPlacingOrder(true);
+            mutateAsync({
+                order_type: "delivery",
+                payment_method: paymentMethod
             })
+                .then((res) => {
+                    if (res?.status) {
+                        setTimeout(() => {
+                            router?.push(`/success/${encodeId(res?.order_no)}`);
+                        }, 100);
+                    }
+                })
+                .catch((error) => {
+                    const message =
+                        error instanceof Error ? error.message : "Error placing order";
+                    // toast.error(message);
+                    setIsPlacingOrder(false);
+                });
         }
-        // if (currentStep === 1 && !validateShipping()) return
-        // if (currentStep === 2 && !validatePayment()) return
 
     }
 
@@ -236,6 +221,24 @@ export function CheckoutStepper() {
     const isStepAccessible = (stepId: number) =>
         isStepCompleted(stepId) || isStepCurrent(stepId) || stepId < currentStep
 
+    if (isPlacingOrder) {
+        return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                    <p className="text-sm text-muted-foreground">
+                        Placing your order...
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
+    if (!isArray(cartItems)) {
+        return ("Empty KART"
+            // <EmptyCart /> 
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -246,7 +249,8 @@ export function CheckoutStepper() {
                 >
                     <Image src={"/logo.png"} alt="Heaven-logo" width={180} height={100} />
                 </Link>
-                <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+
+                <div className="grid grid-cols-1 px-4 lg:grid-cols-5 mt-6 gap-8">
                     {/* Left Column - Checkout Form */}
                     <div className="lg:col-span-3">
                         {/* Step Indicators */}
@@ -257,8 +261,7 @@ export function CheckoutStepper() {
                                         <button
                                             onClick={() => goToStep(step.id)}
                                             disabled={!isStepAccessible(step.id)}
-                                            className={`flex-shrink-0 relative ${isStepAccessible(step.id) ? 'cursor-pointer' : 'cursor-not-allowed'
-                                                }`}
+                                            className={`flex-shrink-0 relative ${isStepAccessible(step.id) ? 'cursor-pointer' : 'cursor-not-allowed'}`}
                                         >
                                             <div
                                                 className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${isStepCompleted(step.id)
@@ -281,8 +284,7 @@ export function CheckoutStepper() {
                                         {index < steps.length - 1 && (
                                             <div className="flex-1 h-1 mx-2">
                                                 <div
-                                                    className={`h-full transition-all duration-300 ${isStepCompleted(step.id) ? 'bg-green-700' : 'bg-gray-200'
-                                                        }`}
+                                                    className={`h-full transition-all duration-300 ${isStepCompleted(step.id) ? 'bg-green-700' : 'bg-gray-200'}`}
                                                 ></div>
                                             </div>
                                         )}
@@ -292,7 +294,7 @@ export function CheckoutStepper() {
 
                             <div className="flex justify-between mt-4">
                                 {steps.map((step) => (
-                                    <div key={step.id} className="text-center flex-1">
+                                    <div key={step.id} className="text-left flex-1">
                                         <p className="font-semibold text-gray-900 text-sm">{step.title}</p>
                                         <p className="text-gray-500 text-xs mt-1">{step.description}</p>
                                     </div>
@@ -324,73 +326,12 @@ export function CheckoutStepper() {
 
                                 {/* Step 2 - Payment */}
                                 {currentStep === 2 && (
-                                    <div className="mt-4">
-                                        <div className="grid gap-4">
-                                            {paymentMethods.map((method) => {
-                                                const Icon = method.icon;
-                                                const isSelected = selectedMethod === method.id;
-
-                                                return (
-                                                    <button
-                                                        key={method.id}
-                                                        onClick={() => setSelectedMethod(method.id)}
-                                                        className={`group relative w-full text-left rounded-xl border transition-all duration-300 overflow-hidden
-                                           ${isSelected
-                                                                ? "border-green-700 shadow-md bg-gradient-to-r from-primary/5 to-green-50"
-                                                                : "border-border hover:border-primary/30 hover:shadow-sm"
-                                                            }`}
-                                                    >
-                                                        {/* subtle glow */}
-                                                        {isSelected && (
-                                                            <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-green-200/10 opacity-70" />
-                                                        )}
-
-                                                        <div className="relative flex items-center justify-between p-3 py-3">
-                                                            {/* Left Section */}
-                                                            <div className="flex items-center gap-4">
-
-                                                                {/* Icon */}
-                                                                <div
-                                                                    className={`flex items-center justify-center w-12 h-12 rounded-xl transition-all
-                                                 ${isSelected
-                                                                            ? "bg-green-700 text-white shadow"
-                                                                            : "bg-muted group-hover:bg-primary/10"
-                                                                        }`}
-                                                                >
-                                                                    <Icon className="w-5 h-5" />
-                                                                </div>
-
-                                                                {/* Text */}
-                                                                <div>
-                                                                    <h3 className="font-semibold text-base text-foreground">
-                                                                        {method.name}
-                                                                    </h3>
-
-                                                                    <p className="text-sm text-muted-foreground">
-                                                                        {method.description}
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-
-                                                            {/* Right Selection Indicator */}
-                                                            <div className="flex items-center">
-                                                                <div
-                                                                    className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all
-                                                 ${isSelected
-                                                                            ? "bg-green-700  border-primary"
-                                                                            : "border-muted-foreground/40"
-                                                                        }`}
-                                                                >
-                                                                    {isSelected && (
-                                                                        <Check className="w-4 h-4 text-white" />
-                                                                    )}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </button>
-                                                );
-                                            })}
-                                        </div>
+                                    < div className="bg-card rounded-lg p-6 border border-border">
+                                        <PaymentMethodSelector
+                                            onSelectPayment={setPaymentMethod}
+                                            isLoading={isPaymentMethodsPending}
+                                            paymentMethods={paymentMethods}
+                                        />
                                     </div>
                                 )}
 
@@ -431,10 +372,13 @@ export function CheckoutStepper() {
                                 {/* Cart Items */}
                                 <div className="space-y-3 mb-6 pb-6 border-b border-gray-200">
                                     {cartItems.map((item) => (
-                                        <div key={item.id} className="flex gap-3">
+                                        <div key={item.cart_id} className="flex gap-3">
                                             <Image
-                                                src={item.image || "/placeholder.svg"}
+                                                // src={item.image || "/placeholder.svg"}
+                                                src={`${imageBaseUrl}${item?.image}`}
                                                 alt={item.name}
+                                                width={64}
+                                                height={64}
                                                 className="w-16 h-16 rounded-lg object-cover"
                                             />
                                             <div className="flex-1">
@@ -452,22 +396,22 @@ export function CheckoutStepper() {
                                 <div className="space-y-3">
                                     <div className="flex justify-between items-center text-sm">
                                         <span className="text-gray-600">Subtotal</span>
-                                        <span className="text-gray-900 font-semibold">${subtotal.toFixed(2)}</span>
+                                        <span className="text-gray-900 font-semibold">₹{totalPrice}</span>
                                     </div>
                                     <div className="flex justify-between items-center text-sm">
                                         <span className="text-gray-600">Shipping</span>
                                         <span className="text-gray-900 font-semibold">
-                                            {shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}
+                                            {Number(delhiveryCharge) === 0 ? 'Free' : `₹${Number(delhiveryCharge).toFixed(2)}`}
                                         </span>
                                     </div>
                                     <div className="flex justify-between items-center text-sm">
                                         <span className="text-gray-600">Tax</span>
-                                        <span className="text-gray-900 font-semibold">${tax.toFixed(2)}</span>
+                                        <span className="text-gray-900 font-semibold">₹{tax.toFixed(2)}</span>
                                     </div>
 
                                     <div className="flex justify-between items-center pt-3 border-t border-gray-200">
                                         <span className="font-bold text-gray-900">Total</span>
-                                        <span className="font-bold text-2xl text-blue-600">${total.toFixed(2)}</span>
+                                        <span className="font-bold text-2xl text-blue-600">₹{total.toFixed(2)}</span>
                                     </div>
                                 </div>
 
@@ -483,6 +427,6 @@ export function CheckoutStepper() {
 
 
             </div>
-        </div>
+        </div >
     )
 }
