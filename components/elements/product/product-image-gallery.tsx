@@ -34,7 +34,7 @@ export default function ProductImageGallery({
                     <div className="relative w-full overflow-hidden rounded-2xl border bg-background shadow-sm">
                         <div className="relative aspect-square md:aspect-[1/1]">
                             <Image
-                                src={`${imageBaseUrl}/${activeImage}`}
+                                src={`${imageBaseUrl}${activeImage}`}
                                 alt="Product image"
                                 fill
                                 priority
@@ -103,7 +103,7 @@ export default function ProductImageGallery({
 `}
                                 >
                                     <Image
-                                        src={`${imageBaseUrl}/${image.image}`}
+                                        src={`${imageBaseUrl}${image.image}`}
                                         alt={`Thumbnail ${idx + 1}`}
                                         fill
                                         sizes="80px"
