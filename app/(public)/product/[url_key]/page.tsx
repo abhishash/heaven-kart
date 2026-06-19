@@ -1,4 +1,3 @@
-// import RelatedProducts from '@/components/product/related-products';
 import ProductReviews from "@/components/elements/product-reviews";
 import Image from "next/image";
 import { fetchHandler, methods } from "@/lib/fetch-handler";

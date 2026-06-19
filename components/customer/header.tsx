@@ -45,9 +45,6 @@ export function Header() {
           </div>
         </div>
       </div>
-
-
-
     </header>
   );
 }
