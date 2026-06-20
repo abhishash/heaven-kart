@@ -34,6 +34,8 @@ export interface ProductTypes {
   discount: string | null;
   brand: string;
   id: number;
+  short_description: string;
+  imageClass?: string;
 }
 
 

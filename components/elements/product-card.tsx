@@ -8,11 +8,9 @@ import { ProductTypes } from "@/lib/types";
 import { useSession } from "next-auth/react";
 import { useMutation } from "@tanstack/react-query";
 import { fetchHandler } from "@/lib/fetch-handler";
-import { FieldValues } from "react-hook-form";
-import { addToCart } from "./store/cartSlice";
 import { useDispatch } from "react-redux";
-import Spinner from "../ui/spinner";
 import clsx from "clsx";
+import { addToCart } from "@/redux/slices/cartSlice";
 
 export function ProductCard({
   url,
@@ -22,11 +20,13 @@ export function ProductCard({
   ac_price,
   stock,
   in_stock,
+  short_description,
   summer_id,
   slug,
   discount,
   brand,
-  id
+  id,
+  imageClass
 }: ProductTypes) {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const discountPercent = Math.round(
@@ -72,7 +72,7 @@ export function ProductCard({
         }`}
     >
       {/* Image Container */}
-      <div className="relative  h-24 sm:h-60 flex items-center justify-center overflow-hidden">
+      <div className={`relative h-24 sm:h-60 flex items-center justify-center overflow-hidden ${imageClass}`}>
         <Image
           src={`${process.env.ASSET_ENDPOINS}${image}` || "/placeholder.svg"}
           alt={name}
@@ -118,7 +118,7 @@ export function ProductCard({
       </div>
 
       {/* Content */}
-      <div className="p-0">
+      <div className="py-0 px-2">
         {/* Price */}
         <div className="flex items-center gap-0.5 sm:gap-2 my-2">
           <span className="bg-green-600 text-white text-[9px] sm:text-xs font-bold px-1 sm:px-2 py-0.5 sm:py-1 rounded">
@@ -130,19 +130,14 @@ export function ProductCard({
         </div>
 
         {/* Title */}
-        <Link href={`/product/${url}`}>
-          <h3 className="text-[10px] sm:text-xs font-bold line-clamp-2 text-slate-900  mb-1">
+        <Link href={`/product/${url}`} className="mb-2" >
+          <h3 className="text-[10px] h-8 sm:text-xs font-bold line-clamp-2 text-slate-900  mb-1">
             {name}
           </h3>
+          
+          <p className="text-[9px] sm:text-xs font-semibold text-green-600 mb-0 sm:mb-2">{stock ?? 0} <span className="text-black">Quantity</span> </p>
 
-          {/* Description */}
-          <p className="text-[9px] sm:text-xs text-slate-600 mb-1 sm:mb-2 line-clamp-2">
-            {name}
-          </p>
         </Link>
-
-        {/* Quantity */}
-        <p className="text-[9px] sm:text-xs text-slate-600 mb-0 sm:mb-2">{stock ?? 0}  Quantity</p>
 
         {/* Rating */}
         {/* <div className="flex items-center gap-1">

@@ -3,10 +3,10 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSession } from "next-auth/react";
-import { AppDispatch } from "../elements/store/store";
 import { fetchHandler, methods } from "@/lib/fetch-handler";
-import { setCart, setCartLoading } from "../elements/store/cartSlice";
 import { CART_DETAILS } from "@/lib/constants";
+import { AppDispatch } from "@/redux/store";
+import { setCart, setCartLoading } from "@/redux/slices/cartSlice";
 
 export const useCartDetail = () => {
     const dispatch = useDispatch<AppDispatch>();

@@ -20,6 +20,7 @@ import {
 import clsx from "clsx";
 import Image from "next/image";
 import PromotionCarousel from "@/components/elements/promotionCarousel";
+import RecentlyViewedProducts from "@/components/elements/product/RecentView/RecentViewProduct";
 
 export default async function Home() {
   const homePageBanners = await fetchHandler<{
@@ -78,6 +79,11 @@ export default async function Home() {
     <>
       <ImageCarousel options={homePageBannerLists} />
       <BrandLogoInfinite />
+      {
+        // Recently View products
+      }
+
+      <RecentlyViewedProducts />
       {/* Product Carousel Section */}
       {data?.map((item, index) => (
         <div key={index} className="grid grid-cols-12 gap-2 sm:gap-4 py-2 sm:py-8">

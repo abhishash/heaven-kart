@@ -27,13 +27,13 @@ import {
 } from "@/components/ui/breadcrumb";
 import { useMutation } from "@tanstack/react-query";
 import { fetchHandler } from "@/lib/fetch-handler";
-import { addToCart } from "./store/cartSlice";
 import { useDispatch } from "react-redux";
 import { useSession } from "next-auth/react";
 import { Input } from "../ui/input";
 import { Field, FieldLabel } from "../ui/field";
 import { FieldValues, useForm } from "react-hook-form";
 import { formatPrice } from "@/lib/utils";
+import { addToCart } from "@/redux/slices/cartSlice";
 
 interface ProductInfoProps {
   product: Product;

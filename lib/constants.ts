@@ -11,6 +11,16 @@ export const HOMEPAGE_PRODUCTS = {
     method: "GET",
 }
 
+export const RECENTLY_VIEW_PRODUCT = {
+    endpoint: "recently-viewed/add",
+    method: "POST"
+}
+
+export const RECENTLY_VIEW = {
+    endpoint: "recently-viewed",
+    method: "GET"
+}
+
 export const PRODUCTS_DETAIL = {
     endpoint: "products",
     method: "GET",

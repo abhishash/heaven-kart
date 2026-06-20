@@ -108,7 +108,7 @@ function CategoryItem({
     <div className="flex flex-col">
       <Link
         href={`/catalog/${item.url}`}
-        className={`flex items-center gap-2 py-1.5 sm:py-3 text-sm font-semibold ${active ? "text-green-700" : "text-gray-700"}`}
+        className={`flex items-center gap-2 text-nowrap py-1.5 sm:py-3 text-sm font-semibold ${active ? "text-green-700" : "text-gray-700"}`}
       >
         {item.name}
       </Link>

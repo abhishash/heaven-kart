@@ -4,8 +4,8 @@ import { ReactNode, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSession } from "next-auth/react";
 import { isObject } from "framer-motion";
-import { RootState } from "@/components/elements/store/store";
-import { fetchCart } from "@/components/elements/store/cartSlice";
+import { RootState } from "@/redux/store";
+import { fetchCart } from "@/redux/slices/cartSlice";
 
 export default function CartProvider({ children }: { children: ReactNode }) {
   const dispatch = useDispatch();

@@ -6,12 +6,14 @@ interface HtmlRenderProps {
   html: string | null | undefined;
   className?: string;
   isExtend?: boolean;
+  isFullContent?: boolean;
 }
 
 const HtmlRender: React.FC<HtmlRenderProps> = ({
   html,
   className,
   isExtend = false,
+  isFullContent = false,
 }) => {
   const [expanded, setExpanded] = useState(isExtend);
 
@@ -24,13 +26,13 @@ const HtmlRender: React.FC<HtmlRenderProps> = ({
           }`}
         dangerouslySetInnerHTML={{ __html: html }}
       />
-
-      <button
+      {isFullContent ? <button
         onClick={() => setExpanded(!expanded)}
         className="mt-2 text-green-600 cursor-pointer font-medium hover:underline"
       >
         {expanded ? "Read Less" : "Read More"}
-      </button>
+      </button> : null}
+
     </div>
   );
 };

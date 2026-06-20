@@ -22,7 +22,6 @@ import { ChevronRightIcon } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store/store";
 import { imageBaseUrl } from "@/lib/constants";
 import Image from "next/image";
 import { useCartDetail } from "@/components/hooks/useCartDetails";
@@ -30,8 +29,9 @@ import { CartItem } from "@/lib/types";
 import { useMutation } from "@tanstack/react-query";
 import { fetchHandler } from "@/lib/fetch-handler";
 import { useSession } from "next-auth/react";
-import { addToCart, removeFromCart } from "../store/cartSlice";
 import { isArray } from "@/lib/type-guards";
+import { RootState } from "@/redux/store";
+import { addToCart, removeFromCart } from "@/redux/slices/cartSlice";
 
 export default function Cart() {
   const [isOpen, setIsOpen] = useState(false);

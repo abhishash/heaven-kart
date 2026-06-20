@@ -11,6 +11,8 @@ import { ProductCarousel } from "@/components/elements/product-carousel";
 import SingleBanner from "@/components/elements/product/aplus-banner";
 import { isArray } from "@/lib/type-guards";
 import Link from "next/link";
+import SaveRecentlyViewProduct from "@/components/elements/product/SaveRecentlyView";
+import RecentlyViewedProducts from "@/components/elements/product/RecentView/RecentViewProduct";
 
 export default async function ProductPage({
   params,
@@ -180,6 +182,8 @@ export default async function ProductPage({
       {isArray(relatedProducts) ? <ProductCarousel title="Related Products" products={relatedProducts} isBanner={false} /> : null}
       {/* <ProductCarousel title="Explore More" products={laundryProducts} /> */}
       {/* </div> */}
+      <SaveRecentlyViewProduct id={productInformation?.id} />
+
     </div>
   );
 }
