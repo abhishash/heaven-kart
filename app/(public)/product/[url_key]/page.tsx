@@ -175,11 +175,9 @@ export default async function ProductPage({
         </div>
       </div>
 
-
-
       {/* Related Products */}
       {/* <ProductCarousel title="Recently View" products={laundryProducts} /> */}
-      <ProductCarousel title="Related Products" products={relatedProducts} isBanner={false} />
+      {isArray(relatedProducts) ? <ProductCarousel title="Related Products" products={relatedProducts} isBanner={false} /> : null}
       {/* <ProductCarousel title="Explore More" products={laundryProducts} /> */}
       {/* </div> */}
     </div>

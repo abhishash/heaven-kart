@@ -100,10 +100,11 @@ export function CategoriesCarousel({ title, subCategories }: ProductCarouselProp
                             </div>
 
                             {/* Content */}
-                            <div className="py-3 text-center w-full">
+                            <div className="py-2 sm:py-3 text-left px-2 sm:px-3 w-full">
                                 <h2 className="text-xs sm:text-base line-clamp-1 font-semibold text-gray-800">
                                     {product.name}
                                 </h2>
+                                <p className="text-[10px] sm:text-xs text-left text-green-600 font-bold">View Store</p>
                             </div>
                         </div>
                     </Link>

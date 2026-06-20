@@ -15,6 +15,7 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import { Product } from "@/lib/types";
 import Link from "next/link";
+import { toast } from "sonner";
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -39,7 +40,7 @@ interface ProductInfoProps {
   productUrl: string;
 }
 
-export default function ProductInfo({ product, productUrl,  }: ProductInfoProps) {
+export default function ProductInfo({ product, productUrl, }: ProductInfoProps) {
   const dispatch = useDispatch();
   const [isFavorite, setIsFavorite] = useState(false);
   const { data: session } = useSession();
@@ -235,18 +236,65 @@ export default function ProductInfo({ product, productUrl,  }: ProductInfoProps)
               {...register("qty")}
               type="number"
               min={1}
-              className="w-12 text-center border-0 !outline-0 !focus:ring-0 text-sm font-medium"
+              max={Number(product?.stock) || 1}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                }
+              }}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                const stock = Number(product?.stock) || 1;
+
+                if (value > stock) {
+                  setValue("qty", stock);
+                  toast.warning(`Oops! Only ${product?.stock} left in stock 🚀`, {
+                    description: "Grab it before it's gone!",
+                  });
+                  return;
+                }
+
+                if (value < 1 || !value) {
+                  setValue("qty", 1);
+                  return;
+                }
+
+                setValue("qty", value);
+              }}
+              className="
+    w-12
+    text-center
+    border-0
+    !outline-0
+    !focus:ring-0
+    text-sm
+    font-medium
+  "
             />
 
             <button
               type="button"
-              onClick={() =>
+              disabled={Number(watch("qty")) >= Number(product?.stock)}
+              onClick={() => {
+                const currentQty = Number(watch("qty")) || 1;
+                const stock = Number(product?.stock) || 1;
+
                 setValue(
                   "qty",
-                  Math.min(parseInt(product?.stock) || 1, Number(watch("qty")) + 1)
-                )
-              }
-              className="px-4 py-0 cursor-pointer bg-gray-50 hover:bg-gray-100 transition text-lg font-semibold"
+                  Math.min(currentQty + 1, stock)
+                );
+              }}
+              className="
+    px-4 py-0
+    cursor-pointer
+    bg-gray-50
+    hover:bg-gray-100
+    transition
+    text-lg
+    font-semibold
+    disabled:opacity-40
+    disabled:cursor-not-allowed
+  "
             >
               +
             </button>

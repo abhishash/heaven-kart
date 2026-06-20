@@ -26,7 +26,9 @@ const steps = [
 
 export default function HowToWorks() {
   return (
-    <main className="py-10 bg-slate-50">
+    <main className="py-10 bg-gradient-to-b
+      from-white
+      to-green-50">
 
       <div className="max-w-6xl mx-auto px-4">
 
@@ -132,7 +134,7 @@ export default function HowToWorks() {
           >
 
 
-            {steps.map((step,index)=>(
+            {steps.map((step, index) => (
 
               <div
                 key={index}
@@ -155,12 +157,12 @@ export default function HowToWorks() {
                 <motion.div
 
                   animate={{
-                    scale:[1,1.15,1]
+                    scale: [1, 1.15, 1]
                   }}
 
                   transition={{
-                    repeat:Infinity,
-                    duration:2
+                    repeat: Infinity,
+                    duration: 2
                   }}
 
                   className="
@@ -195,7 +197,7 @@ export default function HowToWorks() {
                   z-20
                   "
                 >
-                  {index+1}
+                  {index + 1}
                 </motion.div>
 
 
@@ -205,26 +207,26 @@ export default function HowToWorks() {
                 <motion.div
 
                   initial={{
-                    opacity:0,
-                    y:50
+                    opacity: 0,
+                    y: 50
                   }}
 
                   whileInView={{
-                    opacity:1,
-                    y:0
+                    opacity: 1,
+                    y: 0
                   }}
 
                   viewport={{
-                    once:true
+                    once: true
                   }}
 
                   whileHover={{
-                    y:-10,
-                    scale:1.03
+                    y: -10,
+                    scale: 1.03
                   }}
 
                   transition={{
-                    duration:.5
+                    duration: .5
                   }}
 
                   className="
@@ -257,12 +259,12 @@ export default function HowToWorks() {
                   <motion.div
 
                     animate={{
-                      y:[0,-8,0]
+                      y: [0, -8, 0]
                     }}
 
                     transition={{
-                      repeat:Infinity,
-                      duration:3
+                      repeat: Infinity,
+                      duration: 3
                     }}
 
                     className="

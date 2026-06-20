@@ -1,33 +1,14 @@
-// import { useState, useMemo } from 'react'
-// import { Search, Filter, ChevronDown, Heart, ShoppingCart } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { isArray } from '@/lib/type-guards'
-import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { ProductCard } from '@/components/elements/product-card'
-import CategorySidebar from '@/components/elements/product/category-sidebar'
 import { fetchHandler, methods } from '@/lib/fetch-handler'
 import { ProductResponse, ProductTypes } from '@/lib/types'
 import { CATALOG_DETAIL, PRODUCTS_DETAIL } from '@/lib/constants'
-import { Filter } from 'lucide-react'
-import CategoryFilter from '@/components/elements/product/categories-filter'
 import Categories from '@/components/elements/product/filter/categories'
 import MobileFilter from '@/components/elements/product/filter/mobile-filter'
-
-
-const CATEGORIES = ['All', 'Decor', 'Textiles', 'Furniture', 'Lighting']
+import Link from "next/link";
+import { Sparkles, ShoppingBag } from "lucide-react";
+import { motion } from "framer-motion";
+import EmptyCategory from '@/components/elements/EmptyCategory'
 
 export type SortOption = 'featured' | 'price-low' | 'price-high' | 'newest' | 'rating'
 
@@ -45,9 +26,7 @@ export default async function CatalogPage({ params }: {
   const productList: ProductTypes[] = productResponse?.data ?? [];
   const categoryResponse = productResponse?.categories;
 
-
-
-  return (
+  return (!isArray(productList) ? <EmptyCategory /> :
     <div className="flex gap-8">
       {/* Desktop Category Sidebar */}
       <aside className="hidden lg:block w-64 shrink-0">
@@ -85,6 +64,4 @@ export default async function CatalogPage({ params }: {
       <MobileFilter />
     </div>
   )
-
-
 }
