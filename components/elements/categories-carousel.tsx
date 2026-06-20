@@ -72,7 +72,7 @@ export function CategoriesCarousel({ title, subCategories }: ProductCarouselProp
                 {subCategories?.map((product) => (
                     <Link
                         key={product.url}
-                        href={`/catalog/${product.url}`}
+                        href={`product?.products ? /catalog/${product.url} : "/"`}
                         className="flex-shrink-0"
                     >
                         <div className="relative flex flex-col items-center bg-white rounded-xl border border-slate-200 overflow-hidden hover:-translate-y-1 hover:shadow-lg transition-all duration-300 group">
@@ -105,7 +105,6 @@ export function CategoriesCarousel({ title, subCategories }: ProductCarouselProp
                                     {product.name}
                                 </h2>
                             </div>
-
                         </div>
                     </Link>
                 ))}
