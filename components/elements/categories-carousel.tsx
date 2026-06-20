@@ -68,32 +68,44 @@ export function CategoriesCarousel({ title, subCategories }: ProductCarouselProp
             </h1>
 
             {/* Cards Row */}
-            <div className="grid grid-cols-4 sm:grid-cols-7 gap-4 overflow-x-auto px-0  pb-4 scrollbar-hide">
+            <div className="grid grid-cols-3 sm:grid-cols-7 gap-2 overflow-x-auto px-0  pb-4 scrollbar-hide">
                 {subCategories?.map((product) => (
                     <Link
                         key={product.url}
                         href={`/catalog/${product.url}`}
-                        className="flex-shrink-0 py-4 border rounded-lg border-slate-200"
+                        className="flex-shrink-0"
                     >
-                        <div
-                            className=" flex justify-center flex-col items-center bg-white rounded-lg overflow-hidden hover:-translate-y-1 transition-all duration-300 group"
-                        >
+                        <div className="relative flex flex-col items-center bg-white rounded-xl border border-slate-200 overflow-hidden hover:-translate-y-1 hover:shadow-lg transition-all duration-300 group">
+
                             {/* Image */}
-                            <SafeImage
-                                src={product.image}
-                                alt={product.name}
-                                width={160}
-                                height={160}
-                                className="object-cover w-32 h-32 transition-transform duration-300  group-hover:scale-105"
-                            />
+                            <div className="relative w-32 h-24 sm:w-40 sm:h-32 overflow-hidden rounded-t-lg">
+                                <SafeImage
+                                    src={product.image}
+                                    alt={product.name}
+                                    width={160}
+                                    height={160}
+                                    className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+                                />
+
+                                {/* Status Badge */}
+                                {product?.products === 0 ? (
+                                    <span className="absolute top-2 right-3 bg-white/90 backdrop-blur-sm text-orange-600 text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full shadow-md border border-orange-200">
+                                        Coming Soon
+                                    </span>
+                                ) : (
+                                    <span className="absolute top-2 right-3 bg-green-600 text-white text-[11px] font-semibold px-2.5 py-1 rounded-full shadow-md">
+                                        {product?.products}+
+                                    </span>
+                                )}
+                            </div>
 
                             {/* Content */}
-                            <div className="space-y-1 pt-2 text-center">
-                                <h2 className="text-base line-clamp-1 font-semibold text-gray-700">
+                            <div className="py-3 text-center w-full">
+                                <h2 className="text-xs sm:text-base line-clamp-1 font-semibold text-gray-800">
                                     {product.name}
                                 </h2>
-                                <p className="text-xs text-green-700">{product?.products} Items</p>
                             </div>
+
                         </div>
                     </Link>
                 ))}
