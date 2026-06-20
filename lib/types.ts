@@ -14,6 +14,7 @@ export interface BannerDataTypes {
   id: number,
   name: string,
   image: string
+  link: string;
 }
 
 export interface HomePageDataTypes {
@@ -107,7 +108,7 @@ export interface AplusBanner {
 export interface ProductDataTypesList {
   status: boolean;
   data: ProductTypes[];
-  categories : Category[]
+  categories: Category[]
 }
 
 

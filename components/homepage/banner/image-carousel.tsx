@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Shimmer } from "@/components/elements/shimmer";
 import { imageBaseUrl } from "@/lib/constants";
 import { BannerDataTypes } from "@/lib/types";
+import Link from "next/link";
 
 interface ImageCarouselProps {
   options: BannerDataTypes[];
@@ -110,8 +111,9 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
           const isActive = index === currentIndex;
 
           return (
-            <div
+            <Link
               key={index}
+              href={img?.link ?? "/"}
               className={`absolute inset-0 transition-opacity duration-700 ${
                 isActive ? "opacity-100" : "opacity-0"
               }`}
@@ -130,7 +132,7 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
                      100vw"
                 />
               </div>
-            </div>
+            </Link>
           );
         })}
 
