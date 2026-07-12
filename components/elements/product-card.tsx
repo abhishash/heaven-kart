@@ -32,7 +32,7 @@ export function ProductCard({
   const discountPercent = Math.round(
     ((parseFloat(ac_price) - parseFloat(price)) / parseFloat(ac_price)) * 100,
   );
-  const isOutOfStock = Number(in_stock) === 0;
+  const isOutOfStock = in_stock ? Number(in_stock) === 0 : true;;
   const { data: session } = useSession();
   const dispatch = useDispatch();
   const { mutateAsync, isPending } = useMutation({

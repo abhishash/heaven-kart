@@ -23,6 +23,8 @@ export default async function CatalogPage({ params }: {
     method: CATALOG_DETAIL?.method as methods,
   });
 
+  console.log(productResponse);
+
   const productList: ProductTypes[] = productResponse?.data ?? [];
   const categoryResponse = productResponse?.categories;
 
