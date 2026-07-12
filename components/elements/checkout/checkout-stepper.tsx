@@ -101,12 +101,12 @@ import { useRouter } from "next/navigation"
 import { encodeId } from "@/lib/utils"
 import Link from "next/link"
 import Image from "next/image"
-import { RootState } from "../store/store"
 import { useSelector } from "react-redux"
 import { isArray } from "@/lib/type-guards"
 import { imageBaseUrl } from "@/lib/constants"
 import { PaymentMethodsResponse } from "@/types/order"
 import PaymentMethodSelector from "./PaymentMethodSelector"
+import { RootState } from "@/redux/store"
 
 type ShippingFormValues = {
     firstName: string;
