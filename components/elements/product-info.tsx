@@ -28,12 +28,14 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { fetchHandler } from "@/lib/fetch-handler";
 import { useDispatch } from "react-redux";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { Input } from "../ui/input";
 import { Field, FieldLabel } from "../ui/field";
 import { FieldValues, useForm } from "react-hook-form";
 import { formatPrice } from "@/lib/utils";
 import { addToCart } from "@/redux/slices/cartSlice";
+import { isObject } from "@/lib/type-guards";
+import LoginModal from "../customer/modal/LoginModal";
 
 interface ProductInfoProps {
   product: Product;
@@ -43,6 +45,8 @@ interface ProductInfoProps {
 export default function ProductInfo({ product, productUrl, }: ProductInfoProps) {
   const dispatch = useDispatch();
   const [isFavorite, setIsFavorite] = useState(false);
+  const [openLogin, setOpenLogin] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
 
   const discountPercentage = Math.round(
@@ -75,6 +79,10 @@ export default function ProductInfo({ product, productUrl, }: ProductInfoProps) 
   });
 
   const handleAddToCart = async (data: FieldValues) => {
+    if (!isObject(session?.user)) {
+      setOpenLogin(true);
+      return;
+    }
     try {
       await mutateAsync({
         product_id: product?.id,
@@ -89,6 +97,34 @@ export default function ProductInfo({ product, productUrl, }: ProductInfoProps) 
     } catch (error) {
       console.error(error);
       alert("Error adding to cart");
+    }
+  };
+
+  const handleLogin = async (data: FieldValues) => {
+
+    setLoading(true);
+
+    try {
+      const response = await signIn("credentials", {
+        username: data.email,
+        password: data.password,
+        redirect: false,
+        callbackUrl: "/",
+      });
+
+      if (response?.ok) {
+        toast.success("Login successful");
+        // Submit the form after successful login
+        await handleSubmit(handleAddToCart)();
+      } else {
+        toast.warning(response?.error);
+      }
+
+    } catch (err) {
+      toast.warning("Something went wrong");
+    } finally {
+      setOpenLogin(false);
+      setLoading(false);
     }
   };
 
@@ -335,6 +371,13 @@ export default function ProductInfo({ product, productUrl, }: ProductInfoProps) 
           </Button>
         </div>
       </div>
+
+      <LoginModal
+        open={openLogin}
+        setOpen={setOpenLogin}
+        onLogin={handleLogin}
+        isLoading={loading}
+      />
     </div>
   );
 }

@@ -134,22 +134,23 @@ export function ProductCard({
           <h3 className="text-[10px] h-8 sm:text-xs font-bold line-clamp-2 text-slate-900  mb-1">
             {name}
           </h3>
-          
-          <p className="text-[9px] sm:text-xs font-semibold text-green-600 mb-0 sm:mb-2">{stock ?? 0} <span className="text-black">Quantity</span> </p>
+          {
+            !isOutOfStock ? <p className="text-[9px] sm:text-xs font-semibold text-green-600 mb-0 sm:mb-2">{stock ?? 0} <span className="text-black">Quantity</span> </p> : null
+          }
 
         </Link>
 
         {/* Rating */}
-        {/* <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1">
           <Star size={12} className="fill-green-600 text-green-600" />
           <span className="text-xs font-bold text-slate-900">
-            {rating}
+            {/* {rating} */} 4.5
             <span className="text-slate-600">
-              {" "}
-              ({reviewCount.toLocaleString()})
+              {" "} (46)
+              {/* ({reviewCount.toLocaleString()}) */}
             </span>
           </span>
-        </div> */}
+        </div>
       </div>
     </div>
   );
