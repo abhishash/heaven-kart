@@ -2,7 +2,7 @@
 
 import React from "react"
 import { useState } from 'react'
-import { Check, MapPin, CreditCard, Package, AlertCircle, Eye, EyeOff, Smartphone, Wallet, ArrowRight } from 'lucide-react'
+import { Check, MapPin, CreditCard, Package, AlertCircle, Eye, EyeOff, Smartphone, Wallet, ArrowRight, DivideCircle, DivideCircleIcon, ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -107,6 +107,7 @@ import { imageBaseUrl } from "@/lib/constants"
 import { PaymentMethodsResponse } from "@/types/order"
 import PaymentMethodSelector from "./PaymentMethodSelector"
 import { RootState } from "@/redux/store"
+import { toast } from "sonner"
 
 type ShippingFormValues = {
     firstName: string;
@@ -191,14 +192,18 @@ export function CheckoutStepper() {
                         setTimeout(() => {
                             router?.push(`/success/${encodeId(res?.order_no)}`);
                         }, 100);
+                    } else {
+                        toast.error(res?.message || "Error placing order");
                     }
                 })
                 .catch((error) => {
                     const message =
                         error instanceof Error ? error.message : "Error placing order";
-                    // toast.error(message);
+
+                    toast.error(message);
+                }).finally(() => {
                     setIsPlacingOrder(false);
-                });
+                })
         }
 
     }
@@ -245,9 +250,8 @@ export function CheckoutStepper() {
             <div className="container mx-auto px-4 lg:px-12 py-2 sm:py-4">
                 <Link
                     href="/"
-                    className="text-xl md:text-2xl font-semibold text-green-600"
-                >
-                    <Image src={"/logo.png"} alt="Heaven-logo" width={180} height={100} />
+                    className="text-xl flex items-center gap-2 md:text-2xl font-semibold text-green-600"
+                > <ArrowLeft /> Back to Shopping
                 </Link>
 
                 <div className="grid grid-cols-1 px-4 lg:grid-cols-5 mt-6 gap-8">
@@ -363,12 +367,12 @@ export function CheckoutStepper() {
 
                     {/* Right Column - Cart Summary */}
                     <div className="lg:col-span-2">
-                        <Card className="border-2 border-gray-200 sticky top-6">
-                            <CardHeader className="border-b-2 border-gray-100 pb-4">
+                        <div className="border rounded-xl border-primary p-4 sticky top-6">
+                            <div className="border-b-2 border-gray-100 pb-4">
                                 <h2 className="text-xl font-bold text-gray-900">Order Summary</h2>
-                            </CardHeader>
+                            </div>
 
-                            <CardContent className="pt-6 space-y-4">
+                            <div className="pt-6 space-y-4">
                                 {/* Cart Items */}
                                 <div className="space-y-3 mb-6 pb-6 border-b border-gray-200">
                                     {cartItems.map((item) => (
@@ -420,8 +424,8 @@ export function CheckoutStepper() {
                                         <p className="text-xs text-green-800">Free shipping - Order qualifies!</p>
                                     </div>
                                 )}
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
