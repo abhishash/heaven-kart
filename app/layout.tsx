@@ -9,6 +9,8 @@ import SessionProviders from "./providers/session-providers";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 import CartProvider from "./providers/CartProvider";
+import { NetworkProvider } from "./providers/NetworkProvider";
+import NetworkStatusBanner from "@/components/layout/network-status-banner";
 
 const manrope = Manrope({
   variable: "--font-display",
@@ -39,10 +41,13 @@ export default async function RootLayout({
         <SessionProviders session={session}>
           <ReduxProviders>
             <ReactQueryProviders>
-              <CartProvider>
-                <main className="min-h-[calc(100vh-522px)]">{children}</main>
-                <Toaster richColors={true} theme="light" closeButton={true} />
-              </CartProvider>
+              <NetworkProvider>
+                <CartProvider>
+                  <NetworkStatusBanner />
+                  <main className="min-h-[calc(100vh-522px)]">{children}</main>
+                  <Toaster richColors={true} theme="light" closeButton={true} />
+                </CartProvider>
+              </NetworkProvider>
             </ReactQueryProviders>
           </ReduxProviders>
         </SessionProviders>
