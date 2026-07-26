@@ -1,12 +1,13 @@
 import { InvoiceData, InvoiceResponse } from "@/components/orders/types";
+import { User, UserResponse } from "@/types/service/customer.types";
 import { Order, OrderDetailsResponse } from "@/types/service/order.types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
 
 const APIENDPOINT = process.env.API_ENDPOINT;
 
-export const ordersApi = createApi({
-    reducerPath: "ordersApi",
+export const customerApi = createApi({
+    reducerPath: "customerApi",
 
     baseQuery: fetchBaseQuery({
         baseUrl: APIENDPOINT,
@@ -27,30 +28,18 @@ export const ordersApi = createApi({
 
     endpoints: (builder) => ({
 
-        // GET PRODUCTS
-        getOrdersDetails: builder.query<Order, number>({
+        // GET Customer Profile
+        getCustomerProfile: builder.query<User, void>({
             query: (orderId) => ({
-                url: `orders/details/${orderId}`,
+                url: `user-profile`,
                 method: "GET",
             }),
-            transformResponse: (response: OrderDetailsResponse) => response.data,
+            transformResponse: (response: UserResponse) => response.user,
         }),
-
-        // GET PRODUCTS
-        getInvoiceDetails: builder.query<InvoiceData, number>({
-            query: (orderId) => ({
-                url: `orders/${orderId}/invoice`,
-                method: "GET",
-            }),
-            transformResponse: (response: InvoiceResponse) => response.data,
-        }),
-
-
     }),
 });
 
 
 export const {
-    useGetOrdersDetailsQuery,
-    useGetInvoiceDetailsQuery
-} = ordersApi;
+    useGetCustomerProfileQuery,
+} = customerApi;

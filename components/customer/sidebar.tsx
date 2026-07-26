@@ -5,14 +5,17 @@ import { Button } from '@/components/ui/button'
 import { ReactNode } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { signOut } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 
 export function Sidebar() {
     const pathname = usePathname()
     const handleLogout = async () => {
         await fetch("/api/logout", { method: "POST" });
-        await signOut({callbackUrl: "/login" });
+        await signOut({ callbackUrl: "/login" });
     }
+    
+    const { data: session } = useSession();
+
     return (
         <aside className="w-96 hidden sm:flex bg-white border border-border rounded-2xl border-gray-200 flex-col p-3 sm:p-6">
             {/* User Profile */}
@@ -21,8 +24,8 @@ export function Sidebar() {
                     <span className="text-white text-xl font-bold">A</span>
                 </div>
                 <div>
-                    <h2 className="text-lg font-semibold text-foreground">Abhishek Kumar</h2>
-                    <p className="text-sm text-gray-500">7906948573</p>
+                    <h2 className="text-lg font-semibold text-foreground">{session?.user?.name}</h2>
+                    <p className="text-sm text-gray-500">{session?.user?.phone}</p>
                 </div>
             </div>
 

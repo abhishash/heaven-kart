@@ -64,6 +64,7 @@ export const authOptions: NextAuthOptions = {
             if (isObject(user) && user.token) {
                 token.accessToken = user.token as string;
                 token.role = "customer";
+                token.phone = user.phone as string | undefined;
             }
             return token;
         },
@@ -75,6 +76,7 @@ export const authOptions: NextAuthOptions = {
                     ...session.user,
                     accessToken: token.accessToken as string,
                     role: token.role,
+                    phone: token.phone,
                 },
                 error: token.error,
             };

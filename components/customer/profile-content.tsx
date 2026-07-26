@@ -6,12 +6,26 @@ import { useState } from 'react'
 import { ArrowLeft, ChevronLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useGetCustomerProfileQuery } from "@/redux/services/customer-api"
 
 export function ProfileContent() {
   const [formData, setFormData] = useState({
-    name: 'abhishek Kumar',
-    email: 'akashmaseysci233@gmail.com',
+    name: '',
+    email: '',
+    mobile: '',
   })
+
+  const { data, isLoading } = useGetCustomerProfileQuery();
+
+  React.useEffect(() => {
+    if (data) {
+      setFormData({
+        name: data?.name || '',
+        email: data?.email || '',
+        mobile: data?.phone || '',
+      });
+    }
+  }, [data]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -62,6 +76,20 @@ export function ProfileContent() {
               type="email"
               name="email"
               value={formData.email}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+          </div>
+
+          {/* Mobile Field */}
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              Mobile Number <span className="text-red-500">*</span>
+            </label>
+            <Input
+              type="tel"
+              name="mobile"
+              value={formData.mobile}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
