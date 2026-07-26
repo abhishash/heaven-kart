@@ -303,7 +303,6 @@ export const CartItemList = ({ item }: { item: CartItem }) => {
           <h4 className="font-semibold text-xs text-gray-900">
             {item?.name}
           </h4>
-          <p className="text-xs text-gray-500">1 pack (5 L)</p>
         </div>
 
         <div className="flex flex-col items-end">

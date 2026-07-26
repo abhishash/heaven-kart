@@ -98,7 +98,7 @@ import { fetchHandler } from "@/lib/fetch-handler"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { encodeId } from "@/lib/utils"
+import { encodeId, formatPrice } from "@/lib/utils"
 import Link from "next/link"
 import Image from "next/image"
 import { useSelector } from "react-redux"
@@ -389,7 +389,7 @@ export function CheckoutStepper() {
                                                 <p className="text-sm font-semibold text-gray-900">{item.name}</p>
                                                 <p className="text-xs text-gray-500">Qty: {item.qty}</p>
                                                 <p className="text-sm font-semibold text-gray-900 mt-1">
-                                                    ${(item.price * item.qty).toFixed(2)}
+                                                    {formatPrice(item.price * item.qty, "INR")}
                                                 </p>
                                             </div>
                                         </div>
