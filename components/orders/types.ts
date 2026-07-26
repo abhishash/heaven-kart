@@ -23,6 +23,7 @@ export interface OrderItem {
     final_price: string;
     product: Product;
 }
+
 export interface InvoiceData {
     order: Order;
     items: OrderItem[];
@@ -32,6 +33,7 @@ export interface InvoiceData {
 }
 
 export interface Order {
+    delhivery_charge: string | number;
     order_id: number;
     order_no: string;
     status: string;

@@ -1,19 +1,19 @@
 'use client';
 
 import { imageBaseUrl } from '@/lib/constants';
-import { Order, OrderItem } from '@/lib/types';
 import { formatPrice } from '@/lib/utils';
-import { ShoppingBag, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import ReviewModal from './pop-up/review-modal';
 import ProductReviewModal from './pop-up/product-review-modal';
+import { OrderItem } from '@/types/service/order.types';
 
 export function OrderItemCard({ item, isBorder, refetch }: { item: OrderItem, isBorder: boolean, refetch: () => void }) {
   const originalPrice = parseFloat(item.product.ac_price);
   const currentPrice = parseFloat(item.final_price);
   const savedAmount = originalPrice - currentPrice;
   const savedPercentage = Math.round((savedAmount / originalPrice) * 100);
+  const rating = item?.product?.rating ?? 0;
 
   return (
     <>
@@ -82,17 +82,18 @@ export function OrderItemCard({ item, isBorder, refetch }: { item: OrderItem, is
                 <ProductReviewModal productId={item?.product?.id} orderId={item?.order_id} refetch={refetch} />
               }
 
-              {Array.from({ length: parseInt(item?.product?.rating) }).map((_, i) => (
+              {Array.from({ length: Number(item?.product?.rating) }).map((_, i) => (
                 <Star
                   key={i}
                   size={16}
-                  className={`cursor-pointer ${i <= parseInt(item.product?.rating) 
+                  className={`cursor-pointer ${i <= Number(item.product?.rating)
                     ? "fill-green-700 text-green-700"
                     : "text-gray-300"
                     }`}
                 />
               ))}
             </div>
+
             {
               item?.product?.review &&
               <p className='text-sm text-green-700'>{item?.product?.review}</p>

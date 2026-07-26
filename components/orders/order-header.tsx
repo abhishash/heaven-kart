@@ -2,9 +2,9 @@
 
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, Clock, Package, AlertCircle } from 'lucide-react';
+import { CheckCircle2, Clock, Package, AlertCircle, BadgeCheck } from 'lucide-react';
 import { formatIndianDateTime } from '@/lib/utils';
-import { Order } from '@/lib/types';
+import { Order } from '@/types/service/order.types';
 
 interface OrderHeaderProps {
   order?: Order;
@@ -13,6 +13,12 @@ interface OrderHeaderProps {
 export default function OrderHeader({ order }: OrderHeaderProps) {
   const getStatusConfig = (status: string) => {
     switch (status?.toLowerCase()) {
+      case 'confirm order':
+        return {
+          icon: BadgeCheck ,
+          label: 'Confirm Order',
+          className: 'bg-primary text-primary-foreground',
+        };
       case 'completed':
       case 'delivered':
         return {
@@ -57,7 +63,7 @@ export default function OrderHeader({ order }: OrderHeaderProps) {
   const statusConfig = getStatusConfig(order?.status as string);
   const StatusIcon = statusConfig.icon;
 
-  
+
 
   return (
     <Card className="overflow-hidden border border-border/40 bg-card shadow-sm">
@@ -70,11 +76,8 @@ export default function OrderHeader({ order }: OrderHeaderProps) {
           <div className="space-y-3">
             <div>
               <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                Order Number
+                Order Number: <span className='text-primary font-bold' >#{order?.order_no}</span>
               </p>
-              <h1 className="text-xl font-bold tracking-tight text-foreground md:text-2xl">
-                #{order?.order_no}
-              </h1>
               <p className="mt-2 text-sm text-muted-foreground">
                 Placed on {formatIndianDateTime(order?.created_at as string)} at {formatIndianDateTime(order?.created_at as string)}
               </p>
@@ -104,19 +107,18 @@ export default function OrderHeader({ order }: OrderHeaderProps) {
           {/* Right Column */}
           <div className="space-y-6">
             {/* Payment Method Card */}
-            <div className="rounded-lg border border-border/40 bg-muted/30 p-5">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            <div className="rounded-lg border border-border/40 bg-muted/30 p-3">
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 Payment Method
               </p>
               <p className="text-base font-semibold text-foreground">
-                {paymentMethodDisplay[order?.payment_method as keyof typeof paymentMethodDisplay] ||
-                  order?.payment_method}
+                {paymentMethodDisplay[order?.payment_method as keyof typeof paymentMethodDisplay]}
               </p>
             </div>
 
             {/* Payment Status Card */}
-            <div className="rounded-lg border border-primary/20 bg-primary/5 p-5">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 Payment Status
               </p>
               <div className="flex items-center justify-between">

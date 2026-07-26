@@ -1,60 +1,42 @@
 'use client';
 
-import { useSession } from "next-auth/react";
 import OrderHeader from "./order-header";
 import { OrderItems } from "./order-items";
 import { OrderSummary } from "./order-summary";
 import { OrderTimeline } from "./order-timeline";
-import { useQuery } from "@tanstack/react-query";
-import { Order, OrderResponse } from "@/lib/types";
-import { fetchHandler } from "@/lib/fetch-handler";
 import { ScrollArea } from "../ui/scroll-area";
 import { InvoiceData } from "./types";
 import InvoiceModal from "./pop-up/invoice-modal";
 import { useState } from "react";
+import { useGetOrdersDetailsQuery } from "@/redux/services/order-api";
+import { ReceiptText } from "lucide-react";
+import { Order } from "@/types/service/order.types";
 
-export default function OrderPage({ orderNumber, invoice }: { orderNumber: string, invoice: InvoiceData}) {
-const [openInvoice, setOpenInvoice] = useState(false);
-  const { data: session } = useSession();
-  const { data, isPending, refetch } = useQuery<OrderResponse>({
-    queryKey: [`orders`, orderNumber],
-    enabled: !!orderNumber,
-    queryFn: () =>
-      fetchHandler({
-        endpoint: `orders/${orderNumber}`,
-        method: "GET",
-        token: session?.user?.accessToken
-      }),
-  });
+export default function OrderPage({ orderNumber }: { orderNumber: string }) {
 
-  const order = data?.data;
+  const { data: order, isLoading, refetch } = useGetOrdersDetailsQuery(Number(orderNumber), { skip: !orderNumber });
 
   return (
     <div className="w-full mx-auto">
       {/* Header Section */}
-      <div className="mb-3">
-        <h2 className=" text-balance text-xl font-bold tracking-tight text-foreground sm:text-xl">
-          Order Details
-        </h2>
-        <p className="text-xs text-muted-foreground">
-          Track your order and manage your purchase
-        </p>
+      <div className="mb-3 flex items-center justify-between">
+        <div>
+          <h2 className=" text-balance text-xl font-bold tracking-tight text-foreground sm:text-xl">
+            Order Details
+          </h2>
+          <p className="text-xs text-muted-foreground">
+            Track your order and manage your purchase
+          </p>
+        </div>
+
       </div>
 
-<button onClick={() => setOpenInvoice(true)}>
-  View Invoice
-</button>
-
-      <InvoiceModal  
-  isOpen={openInvoice}
-  onClose={() => setOpenInvoice(false)}
-   invoice={invoice} />
       <ScrollArea className="h-[550px] pr-4 ">
         {
-          isPending ? "fetching order details" :
+          isLoading ? "fetching order details" :
             <div className="">
               {/* Left Column - Main Content */}
-              <div className="space-y-6 lg:col-span-2">
+              <div className="space-y-4 lg:col-span-2">
                 {/* Order Header Card */}
                 <OrderHeader order={order} />
 
@@ -64,12 +46,11 @@ const [openInvoice, setOpenInvoice] = useState(false);
                 {/* Order Items */}
                 <OrderItems items={order?.items || []} refetch={refetch} />
 
-                
               </div>
 
               {/* Right Column - Summary Sidebar */}
-              <div className="lg:col-span-1">
-                <OrderSummary order={order as Order} />
+              <div className="lg:col-span-1 mt-3">
+                <OrderSummary order={order as Order} orderId={orderNumber} />
               </div>
             </div>
         }

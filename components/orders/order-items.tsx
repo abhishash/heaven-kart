@@ -2,10 +2,10 @@
 
 import { Card } from '@/components/ui/card';
 import { OrderItemCard } from './order-item-card';
-import { OrderItem } from '@/lib/types';
+import { OrderItem } from '@/types/service/order.types';
 
 interface OrderItemsProps {
-  items: Array<OrderItem>;
+  items: OrderItem[];
   refetch: () => void;
 }
 
@@ -15,7 +15,7 @@ export function OrderItems({ items, refetch }: OrderItemsProps) {
   return (
     <div className="border bg-white rounded-md px-4 border-border/40 shadow-sm">
       {/* Header */}
-      <div className="border-b border-border/40 px-6 py-4 md:px-4">
+      <div className="border-b border-border/40 px-4 py-4 md:px-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold text-foreground">Order Items</h2>
           <span className="text-sm font-semibold text-muted-foreground">
