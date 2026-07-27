@@ -36,6 +36,9 @@ interface Props {
     lng: number,
     address?: string
   ) => void;
+  initialLatitude?: number;
+  initialLongitude?: number;
+  initialAddress?: string;
 }
 
 interface LocationPickerProps extends Props {
@@ -45,18 +48,21 @@ interface LocationPickerProps extends Props {
 export default function LocationPicker({
   onLocationChange,
   height = "240px",
+  initialLatitude,
+  initialLongitude,
+  initialAddress,
 }: LocationPickerProps) {
   const [loading, setLoading] = useState(false);
 
   const [viewState, setViewState] = useState({
-    latitude: 27.1767,
-    longitude: 78.0081,
+    latitude: initialLatitude ?? 27.1767,
+    longitude: initialLongitude ?? 78.0081,
     zoom: 15,
   });
 
   const [marker, setMarker] = useState({
-    latitude: 27.1767,
-    longitude: 78.0081,
+    latitude: initialLatitude ?? 27.1767,
+    longitude: initialLongitude ?? 78.0081,
   });
 
   const getAddress = async (
@@ -126,9 +132,40 @@ export default function LocationPicker({
     );
   };
 
+  const getCoordinatesFromAddress = async (query: string) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+          query
+        )}&format=json&limit=1`
+      );
+      const results = await response.json();
+
+      if (results?.length > 0) {
+        const result = results[0];
+        await updateLocation(Number(result.lat), Number(result.lon));
+      } else {
+        console.warn("Unable to geocode initial address, keeping default map center.");
+      }
+    } catch (error) {
+      console.log(error);
+      console.warn("Error geocoding initial address, keeping default map center.");
+    }
+  };
+
   useEffect(() => {
+    if (initialLatitude != null && initialLongitude != null) {
+      updateLocation(initialLatitude, initialLongitude);
+      return;
+    }
+
+    if (initialAddress) {
+      getCoordinatesFromAddress(initialAddress);
+      return;
+    }
+
     getCurrentLocation();
-  }, []);
+  }, [initialLatitude, initialLongitude, initialAddress]);
 
   const mapHeight = typeof height === "number" ? `${height}px` : height;
 

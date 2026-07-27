@@ -42,7 +42,7 @@ export function AddressCard({ address, refetch, isBorder }: AddressCardProps) {
     });
   }
 
-  const { mutateAsync: setDefaultAddress, isPending : isSetDefaultAddress } = useMutation({
+  const { mutateAsync: setDefaultAddress, isPending: isSetDefaultAddress } = useMutation({
     mutationFn: (payload: { address_id: number }) =>
       fetchHandler({
         endpoint: "change-address",
@@ -62,58 +62,67 @@ export function AddressCard({ address, refetch, isBorder }: AddressCardProps) {
     });
   }
 
+  const getAddressTypeLabel = (type: string) => {
+    switch (type) {
+      case "Home":
+        return "🏠";
+      case "Work":
+        return "💼";
+      case "Other":
+        return "📍";
+      default:
+        return type || "Other";
+    }
+  }
 
   return (
     <>
-    <div  className={clsx(" px-4 rounded-lg cursor-pointer p-2 space-y-2 relative ", address.is_default == "1" ? "bg-gray-100" :  " bg-white hover:bg-green-50 transition-all duration-300")}>
-      <div className='flex justify-between'>
-        <div className="text-lg font-semibold">{address.person}</div>
-        <div className="flex items-center gap-2">
-          {
-            address.is_default == "1" ? <span className='text-xs text-green-700 mt-1'>Default Address</span> :  <button
-          onClick={() => handleChangeDefaultAddress(address.id)}
-          disabled={isSetDefaultAddress}
-            className="text-sm rounded mt-0.5 cursor-pointer hover:bg-gray-100"
-          >
+      <div className={clsx(" px-4 rounded-lg cursor-pointer p-2 space-y-2 relative ", address.is_default == "1" ? "bg-gray-100" : " bg-white hover:bg-green-50 transition-all duration-300")}>
+        <div className='flex justify-between'>
+          <div className="text-lg font-semibold">{address.person}</div>
+          <div className="flex items-center gap-2">
             {
-              isSetDefaultAddress ? <Spinner /> :  <MapPinCheck className='size-4 text-green-700' />
+              address.is_default == "1" ? <span className='text-xs text-green-700 mt-1'>Default Address</span> : <button
+                onClick={() => handleChangeDefaultAddress(address.id)}
+                disabled={isSetDefaultAddress}
+                className="text-sm rounded mt-0.5 cursor-pointer hover:bg-gray-100"
+              >
+                {isSetDefaultAddress ? <Spinner /> : <MapPinCheck className='size-4 text-green-700' />}
+              </button>
             }
-            
-          </button>
-          }
-          
-          <UpdateAddressModal refetch={refetch} address={address} />
-          {address?.is_default == "0" && (
-            <button
-               onClick={(e) => {
-                e.stopPropagation();   
-                onDelete(address?.id);
-              }}
-              disabled={isDeleteing}
-              className="text-sm cursor-pointer rounded hover:bg-red-50"
-            >
-              {
-                isDeleteing ? <Spinner /> : <Trash2 className='size-4 text-red-500' />
-              }
-            </button>
-          )}
+
+            <UpdateAddressModal refetch={refetch} address={address} />
+            {address?.is_default == "0" && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(address?.id);
+                }}
+                disabled={isDeleteing}
+                className="text-sm cursor-pointer rounded hover:bg-red-50"
+              >
+                {
+                  isDeleteing ? <Spinner /> : <Trash2 className='size-4 text-red-500' />
+                }
+              </button>
+            )}
+          </div>
         </div>
+        <div className="text-sm text-gray-600 flex items-center gap-1">
+          <Phone size={14} />
+          {address?.contact}
+        </div>
+        <div className="text-sm text-gray-700 flex items-start gap-1">
+          {getAddressTypeLabel(address.address_type)}
+          <p>
+            {address.landmark}
+          </p>
+        </div>
+        <p className="text-sm text-gray-500">{address.address}</p>
       </div>
-      <div className="text-sm text-gray-600 flex items-center gap-1">
-        <Phone size={14} />
-        {address?.contact}
-      </div>
-      <div className="text-sm text-gray-700 flex items-start gap-1">
-        <MapPin size={14} className="mt-0.5" />
-        <p>
-          {address.landmark}, {address.village},
-        </p>
-      </div>
-      <p className="text-sm text-gray-500">{address.address}</p>
-    </div>
-    { isBorder ? null : 
-    <div className='border-0 border-b-2 mx-2 border-dotted' />
-    }
+      {isBorder ? null :
+        <div className='border-0 border-b-2 mx-2 border-dotted' />
+      }
     </>
   )
 }

@@ -48,7 +48,6 @@ export function Sidebar() {
             <nav className="flex-1 space-y-2">
                 <NavItem icon={<Settings size={20} />} label="Profile" active={"/customer/profile" === pathname} href="/customer/profile" />
                 <NavItem icon={<Package size={20} />} label="Orders" active={"/customer/orders" === pathname} href="/customer/orders" />
-                <NavItem icon={<Heart size={20} />} label="Wishlist" active={"/customer/wishlist" === pathname} href="/customer/wishlist" />
                 <NavItem icon={<MapPin size={20} />} label="Addresses" active={"/customer/addresses" === pathname} href="/customer/addresses" />
                 <NavItem icon={<MessageSquare size={20} />} label="Customer Support" active={"/customer/support" === pathname} href="/customer/support" />
             </nav>

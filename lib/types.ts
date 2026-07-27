@@ -194,6 +194,7 @@ export interface UserAddress {
   id: number;
   userId: number;
   is_default: string;
+  address_type: string;
   person: string;
   landmark: string;
   country: string;

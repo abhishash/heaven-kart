@@ -59,7 +59,7 @@ export function AddAddressModal({ refetch, isCheckout = false }: AddAddressModal
         receiverContact: "",
         latitude: "",
         longitude: "",
-        address_type: "home",
+        address_type: "Home",
         is_default: false,
       },
     });
@@ -135,11 +135,7 @@ export function AddAddressModal({ refetch, isCheckout = false }: AddAddressModal
 
         <DialogContent className="rounded-2xl overflow-hidden max-h-[90vh] w-full h-full max-w-none m-0  p-0">
 
-
-
           {/* Fixed Map */}
-
-
           <LocationPicker
             height="40vh"
             onLocationChange={(lat, lng, address) => {
@@ -148,10 +144,6 @@ export function AddAddressModal({ refetch, isCheckout = false }: AddAddressModal
               setValue("longitude", String(lng));
             }}
           />
-
-
-
-
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="space-y-4 px-6 pb-6 overflow-auto"
@@ -228,17 +220,17 @@ export function AddAddressModal({ refetch, isCheckout = false }: AddAddressModal
 
                     {[
                       {
-                        value: "home",
+                        value: "Home",
                         label: "Home",
                         icon: Home,
                       },
                       {
-                        value: "office",
+                        value: "Work",
                         label: "Office",
                         icon: Building2,
                       },
                       {
-                        value: "other",
+                        value: "Other",
                         label: "Other",
                         icon: MapPinned,
                       },
@@ -309,7 +301,7 @@ export function AddAddressModal({ refetch, isCheckout = false }: AddAddressModal
 
             {/* Default Address */}
 
-            <div className="rounded-xl border bg-green-50 p-4">
+            <div className="rounded-md border bg-green-50 px-2 py-2">
 
               <Field
                 orientation="horizontal"
@@ -318,11 +310,12 @@ export function AddAddressModal({ refetch, isCheckout = false }: AddAddressModal
                 <Checkbox
                   id="is-default"
                   {...register("is_default")}
+                  className='cursor-pointer'
                 />
 
                 <FieldLabel
                   htmlFor="is-default"
-                  className="ml-3 text-sm font-medium"
+                  className="text-sm font-medium"
                 >
                   Make this my default delivery address
                 </FieldLabel>
@@ -332,8 +325,6 @@ export function AddAddressModal({ refetch, isCheckout = false }: AddAddressModal
             </div>
 
           </form>
-
-
           {/* Sticky Footer */}
 
           <div className="flex justify-end gap-3 border-t bg-white px-6 py-4">
@@ -358,7 +349,6 @@ export function AddAddressModal({ refetch, isCheckout = false }: AddAddressModal
             </Button>
 
           </div>
-
         </DialogContent>
       </Dialog >
     </>
