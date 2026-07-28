@@ -20,3 +20,14 @@ export interface User {
   used_limit: string;
   is_credit_enabled: number;
 }
+
+export interface FaqItems {
+  name: string;
+  description: string;
+}
+
+export interface FaqResponseTypes {
+  status: boolean;
+  message: string;
+  data: FaqItems[];
+}

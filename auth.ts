@@ -23,7 +23,6 @@ export const authOptions: NextAuthOptions = {
                     password: credentials?.password,
                 };
 
-
                 try {
                     const res = await fetchHandler<any>({
                         endpoint: "login",
@@ -41,6 +40,7 @@ export const authOptions: NextAuthOptions = {
                             token: res?.token,
                             email: customerInfo?.email,
                             phone: customerInfo?.phone,
+                            image: customerInfo?.image,
                             id: customerInfo?.id,
                         };
                     } else {
@@ -65,21 +65,28 @@ export const authOptions: NextAuthOptions = {
                 token.accessToken = user.token as string;
                 token.role = "customer";
                 token.phone = user.phone as string | undefined;
+                token.image = user.image as string | undefined;
             }
             return token;
         },
 
         async session({ session, token }) {
-            return {
+            const safeUser = {
+                ...(session?.user ?? {}),
+                accessToken: token.accessToken as string | undefined,
+                role: token.role as string | undefined,
+                phone: token.phone as string | undefined,
+                image: token.image as string | undefined,
+            }
+
+            const result: any = {
                 ...session,
-                user: {
-                    ...session.user,
-                    accessToken: token.accessToken as string,
-                    role: token.role,
-                    phone: token.phone,
-                },
-                error: token.error,
-            };
+                user: safeUser,
+            }
+
+            if (token.error) result.error = token.error
+
+            return result
         },
     },
     pages: {

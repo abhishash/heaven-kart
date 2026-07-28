@@ -6,6 +6,7 @@ import { ReactNode } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut, useSession } from 'next-auth/react'
+import { imageBaseUrl } from '@/lib/constants'
 
 export function Sidebar() {
     const pathname = usePathname()
@@ -13,16 +14,24 @@ export function Sidebar() {
         await fetch("/api/logout", { method: "POST" });
         await signOut({ callbackUrl: "/login" });
     }
-    
+
     const { data: session } = useSession();
 
     return (
         <aside className="w-96 hidden sm:flex bg-white border border-border rounded-2xl border-gray-200 flex-col p-3 sm:p-6">
             {/* User Profile */}
             <div className="flex items-center gap-3 mb-6">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-700 to-primary flex items-center justify-center">
-                    <span className="text-white text-xl font-bold">A</span>
+
+                <div className="h-24 w-24 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center">
+                    {session?.user?.image ? (
+                        <img src={`${imageBaseUrl}${session?.user?.image}`} alt="preview" className="h-full w-full object-cover" />
+                    ) : (
+                        <span className="text-lg font-medium text-gray-700">
+                            {session?.user?.name ? session?.user?.name.charAt(0).toUpperCase() : 'U'}
+                        </span>
+                    )}
                 </div>
+
                 <div>
                     <h2 className="text-lg font-semibold text-foreground">{session?.user?.name}</h2>
                     <p className="text-sm text-gray-500">{session?.user?.phone}</p>

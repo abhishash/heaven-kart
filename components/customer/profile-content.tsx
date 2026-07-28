@@ -3,10 +3,19 @@
 import React from "react"
 
 import { useState } from 'react'
-import { ArrowLeft, ChevronLeft } from 'lucide-react'
+import { ChevronLeft, Camera, Trash2, Edit2Icon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useGetCustomerProfileQuery } from "@/redux/services/customer-api"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { useGetCustomerProfileQuery, useUpdateProfileMutation } from "@/redux/services/customer-api"
+import { imageBaseUrl } from "@/lib/constants"
 
 export function ProfileContent() {
   const [formData, setFormData] = useState({
@@ -16,6 +25,7 @@ export function ProfileContent() {
   })
 
   const { data, isLoading } = useGetCustomerProfileQuery();
+  const [updateProfilem, { isLoading: isSubmitting }] = useUpdateProfileMutation();
 
   React.useEffect(() => {
     if (data) {
@@ -24,6 +34,10 @@ export function ProfileContent() {
         email: data?.email || '',
         mobile: data?.phone || '',
       });
+      // show server image if present
+      if (data?.image) {
+        setProfilePreviewUrl(`${imageBaseUrl}${data.image}`)
+      }
     }
   }, [data]);
 
@@ -34,9 +48,62 @@ export function ProfileContent() {
       [name]: value,
     }))
   }
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [status, setStatus] = useState<{ type: 'success' | 'error' | null; message?: string }>({
+    type: null,
+  })
+  const [profileImageFile, setProfileImageFile] = useState<File | null>(null)
+  const [profilePreviewUrl, setProfilePreviewUrl] = useState<string | null>(null)
+  const [removeImage, setRemoveImage] = useState(false)
+  const fileInputRef = React.useRef<HTMLInputElement | null>(null)
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // store file and make an object URL for preview
+    setProfileImageFile(file)
+    const url = URL.createObjectURL(file)
+    // revoke previous preview if any
+    if (profilePreviewUrl) URL.revokeObjectURL(profilePreviewUrl)
+    setProfilePreviewUrl(url)
+    setRemoveImage(false)
+  }
+
+  React.useEffect(() => {
+    return () => {
+      if (profilePreviewUrl) URL.revokeObjectURL(profilePreviewUrl)
+    }
+  }, [profilePreviewUrl])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    setConfirmOpen(true)
+  }
+
+  const handleConfirm = async () => {
+    setConfirmOpen(false)
+
+    const fd = new FormData()
+    fd.append('name', formData.name)
+    fd.append('phone', formData.mobile)
+    if (profileImageFile) {
+      fd.append('image', profileImageFile)
+    } else if (removeImage) {
+      // signal server to remove existing image
+      fd.append('remove_image', '1')
+    }
+
+    try {
+      await updateProfilem(fd).unwrap()
+      setStatus({ type: 'success', message: 'Profile updated successfully' })
+    } catch (error) {
+      console.error('Failed to update profile', error)
+      setStatus({ type: 'error', message: 'Failed to update profile. Please try again.' })
+    }
+
+    // clear status after a short delay
+    setTimeout(() => setStatus({ type: null }), 4000)
   }
 
   return (
@@ -61,6 +128,7 @@ export function ProfileContent() {
             <Input
               type="text"
               name="name"
+              disabled={isLoading}
               value={formData.name}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -76,8 +144,9 @@ export function ProfileContent() {
               type="email"
               name="email"
               value={formData.email}
+              disabled={true}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full disabled:cursor-not-allowed cursor-pointer px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
 
@@ -89,49 +158,115 @@ export function ProfileContent() {
             <Input
               type="tel"
               name="mobile"
+              disabled={isLoading}
               value={formData.mobile}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
 
-          {/* Privacy Notice */}
-          <p className="text-sm text-amber-700 bg-amber-50 p-3 rounded-lg">
-            We promise not to spam you
-          </p>
+          {/* Profile Image Field */}
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">Profile Image</label>
+
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div className="h-24 w-24 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center">
+                  {profilePreviewUrl ? (
+                    <img src={profilePreviewUrl} alt="preview" className="h-full w-full object-cover" />
+                  ) : (
+                    <span className="text-lg font-medium text-gray-700">
+                      {formData.name ? formData.name.charAt(0).toUpperCase() : 'U'}
+                    </span>
+                  )}
+                </div>
+
+                <div className="absolute top-1 right-1 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex items-center justify-center h-8 w-8 rounded-full bg-white border shadow-sm"
+                    aria-label="Change profile image"
+                  >
+                    <Edit2Icon size={16} />
+                  </button>
+                </div>
+              </div>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="sr-only"
+              />
+              
+              <div className="flex-1">
+                <p className="text-sm text-muted-foreground">
+                  Upload a clear photo so your account is easy to recognize.
+                </p>
+                <div className="mt-0.5 -ml-4">
+                  <Button type="button" variant="ghost" onClick={() => fileInputRef.current?.click()}>
+                    Change Image
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Status Message */}
+          {status.type && (
+            <div
+              className={
+                status.type === 'success'
+                  ? 'mt-3 text-sm text-green-700 bg-green-50 p-3 rounded-lg'
+                  : 'mt-3 text-sm text-red-700 bg-red-50 p-3 rounded-lg'
+              }
+            >
+              {status.message}
+            </div>
+          )}
 
           {/* Submit Button */}
           <div className="flex justify-end pt-4">
             <Button
               type="submit"
-              className="px-8 py-2 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-lg font-medium transition-colors"
+              disabled={isLoading || isSubmitting}
             >
               Submit
             </Button>
           </div>
         </form>
 
-        {/* Divider */}
-        <div className="border-t border-gray-200 my-12"></div>
+        {/* Confirmation Dialog */}
+        <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Confirm changes</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to save changes to your profile?
+              </DialogDescription>
+            </DialogHeader>
 
-        {/* Delete Account Section */}
-        <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-red-500">Delete Account</h2>
-          <p className="text-gray-600 text-sm leading-relaxed">
-            Deleting your account will remove all your orders, wallet amount and
-            any active referral
-          </p>
+            <div className="mt-2">
+              <p className="text-sm text-muted-foreground">
+                Name: <span className="font-medium">{formData.name || '—'}</span>
+              </p>
+              <p className="text-sm text-muted-foreground mt-1">
+                Mobile: <span className="font-medium">{formData.mobile || '—'}</span>
+              </p>
+            </div>
 
-          {/* Delete Button */}
-          <div className="pt-6">
-            <Button
-              variant="outline"
-              className="px-6 py-2 border-red-500 text-red-500 hover:bg-red-50 rounded-lg font-medium transition-colors bg-transparent"
-            >
-              Delete Account
-            </Button>
-          </div>
-        </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setConfirmOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleConfirm} disabled={isSubmitting}>
+                Save
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   )

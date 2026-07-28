@@ -1,5 +1,5 @@
 import { InvoiceData, InvoiceResponse } from "@/components/orders/types";
-import { User, UserResponse } from "@/types/service/customer.types";
+import { FaqItems, FaqResponseTypes, User, UserResponse } from "@/types/service/customer.types";
 import { Order, OrderDetailsResponse } from "@/types/service/order.types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
@@ -18,8 +18,6 @@ export const customerApi = createApi({
             if (token) {
                 headers.set("Authorization", `Bearer ${token}`);
             }
-
-            headers.set("Content-Type", "application/json");
             return headers;
         },
     }),
@@ -36,10 +34,30 @@ export const customerApi = createApi({
             }),
             transformResponse: (response: UserResponse) => response.user,
         }),
+
+        // GET FAQ
+        getFAQs: builder.query<FaqItems[], void>({
+            query: () => ({
+                url: `faq`,
+                method: "GET",
+            }),
+            transformResponse: (response: FaqResponseTypes) => response.data,
+        }),
+
+        // GET FAQ
+        updateProfile: builder.mutation<any, FormData>({
+            query: (body) => ({
+                url: `edit-profile`,
+                method: "POST",
+                body
+            }),
+        }),
     }),
 });
 
 
 export const {
     useGetCustomerProfileQuery,
+    useGetFAQsQuery,
+    useUpdateProfileMutation
 } = customerApi;
