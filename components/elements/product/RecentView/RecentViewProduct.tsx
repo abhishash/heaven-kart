@@ -12,8 +12,10 @@ import { useGetRecentProductsQuery } from "@/redux/services/recentlyViewApi";
 import { isArray } from "@/lib/type-guards";
 import Title from "../../Tittle";
 import { ProductCard } from "../../product-card";
+import { useSession } from "next-auth/react";
 
 export default function RecentlyViewedProducts() {
+  const { data: session } = useSession();
   const { data, isLoading } = useGetRecentProductsQuery();
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -201,9 +203,8 @@ export default function RecentlyViewedProducts() {
               <button
                 key={i}
                 onClick={() => scrollToPage(i)}
-                className={`h-2 rounded-full transition-all ${
-                  activePage === i ? "w-8 bg-white" : "w-2 bg-green-200"
-                }`}
+                className={`h-2 rounded-full transition-all ${activePage === i ? "w-8 bg-white" : "w-2 bg-green-200"
+                  }`}
               />
             ))}
           </div>

@@ -2,35 +2,60 @@
 
 import { User } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import Cart from "../elements/cart";
 import { SearchBar } from "../layout/Search-bar";
 import Image from "next/image";
 
 export function Header() {
+  const [showSearch, setShowSearch] = useState(true);
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          const shouldShow = currentScrollY <= 80 || currentScrollY < lastScrollY;
+          setShowSearch(shouldShow);
+          lastScrollY = currentScrollY;
+          ticking = false;
+        });
+
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header className="bg-white border-b">
-      {/* 🔥 Fixed Header */}
-      <div
-        className={`fixed top-0 left-0 right-0 shadow-md z-50 bg-white transition-all duration-300`}
-      >
-        <div className="container mx-auto px-4 py-3">
-          {/* 🔹 Top Row */}
+    <header className="border-b bg-white">
+      <div className="fixed left-0 right-0 top-0 z-50 bg-white shadow-md transition-all duration-300">
+        <div className="container mx-auto px-4 lg:px-12 py-3">
           <div className="flex items-center justify-between">
-            {/* LEFT */}
             <div className="flex items-center gap-3">
-              {/* Logo */}
               <Link
                 href="/"
-                className="text-xl md:text-2xl font-semibold text-green-600"
+                className="text-xl font-semibold text-green-600 md:text-2xl"
               >
                 <Image src={"/logo.png"} alt="Heaven-logo" width={180} height={100} />
               </Link>
             </div>
 
-            {/* RIGHT */}
             <div className="flex items-center gap-4">
-              {/* Desktop Search */}
-              <div className="hidden md:block w-[400px]">
+              <div
+                className={`hidden w-[400px] transition-all duration-300 ease-in-out md:block ${
+                  showSearch
+                    ? "max-h-12 translate-y-0 opacity-100"
+                    : "pointer-events-none max-h-0 -translate-y-2 opacity-0"
+                }`}
+              >
                 <SearchBar placeholder="Search products..." />
               </div>
               <Link href="/customer/profile">
@@ -39,8 +64,14 @@ export function Header() {
               <Cart />
             </div>
           </div>
-          {/* Mobile Search */}
-          <div className="mt-3 md:hidden">
+
+          <div
+            className={`mt-3 overflow-hidden transition-all duration-300 ease-in-out md:hidden ${
+              showSearch
+                ? "max-h-12 translate-y-0 opacity-100"
+                : "pointer-events-none max-h-0 -translate-y-2 opacity-0"
+            }`}
+          >
             <SearchBar placeholder="Search products..." />
           </div>
         </div>

@@ -7,9 +7,8 @@ import { isObject } from "framer-motion";
 import { RootState } from "@/redux/store";
 import { fetchCart } from "@/redux/slices/cartSlice";
 
-export default function CartProvider({ children }: { children: ReactNode }) {
+export default function CartProvider({ children, session }: { children: ReactNode, session: any }) {
   const dispatch = useDispatch();
-  const { data: session } = useSession();
   const initialized = useSelector(
     (state: RootState) => state.cart.initialized
   );

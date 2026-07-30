@@ -42,7 +42,7 @@ export default async function RootLayout({
           <ReduxProviders>
             <ReactQueryProviders>
               <NetworkProvider>
-                <CartProvider>
+                <CartProvider session={session}>
                   <NetworkStatusBanner />
                   <main className="min-h-[calc(100vh-522px)]">{children}</main>
                   <Toaster richColors={true} theme="light" closeButton={true} />

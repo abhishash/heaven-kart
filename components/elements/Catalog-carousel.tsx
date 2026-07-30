@@ -62,7 +62,7 @@ export function CatalogCarousel({ title, subCategories }: ProductCarouselProps) 
     }, [emblaApi, onSelect]);
 
     return (
-        <section className="space-y-3 my-8 max-w-5xl mx-auto sm:space-y-6">
+        <section className="space-y-3 my-8 sm:space-y-6">
             <div className="relative">
                 <button
                     type="button"

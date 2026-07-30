@@ -1,26 +1,11 @@
-import { InvoiceData, InvoiceResponse } from "@/components/orders/types";
 import { FaqItems, FaqResponseTypes, User, UserResponse } from "@/types/service/customer.types";
-import { Order, OrderDetailsResponse } from "@/types/service/order.types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { getSession } from "next-auth/react";
-
-const APIENDPOINT = process.env.API_ENDPOINT;
+import { baseQuery } from "@/lib/api/baseQuery";
 
 export const customerApi = createApi({
     reducerPath: "customerApi",
 
-    baseQuery: fetchBaseQuery({
-        baseUrl: APIENDPOINT,
-        prepareHeaders: async (headers) => {
-            const session = await getSession();
-            const token = session?.user?.accessToken;
-
-            if (token) {
-                headers.set("Authorization", `Bearer ${token}`);
-            }
-            return headers;
-        },
-    }),
+    baseQuery,
 
     tagTypes: ["recently_view"],
 
